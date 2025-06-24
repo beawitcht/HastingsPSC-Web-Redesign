@@ -92,17 +92,70 @@
 
 
     .logo {
-        width: 77px;
-        height: 80px;
+        width: 110px;
+        height: 110px;
     }
 
     .logo-text {
-        font-family: 'PT Sans';
+        font-family: 'PT Sans Narrow', sans-serif;
         font-weight: 700;
-        line-height: 1.2;
-        font-size: 20px;
+        line-height: 1;
+        font-size: 24px;
         text-transform: uppercase;
         text-decoration: none;
         color: black;
     }
+
+    .socials-container {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .socials {
+        display: inline-flex;
+        margin-left: 5px;
+        text-align: center;
+
+        img {
+            width: 35px;
+            height: 35px;
+        }
+
+    }
+
+    .twitter:hover {
+        filter: drop-shadow(1px 1px 2px #000000);
+    }
+
+    .facebook:hover {
+        filter: drop-shadow(1px 1px 2px #000000);
+    }
+
+    .instagram:hover {
+        filter: drop-shadow(1px 1px 2px #000000);
+    }
+
+    .youtube {
+        img {
+            width: 35px !important;
+            height: 25px !important;
+        }
+
+    }
+
+    .youtube:hover {
+        filter: drop-shadow(1px 1px 2px #000000);
+    }
+
+    .tiktok:hover {
+        filter: drop-shadow(1px 1px 2px #000000);
+    }
+
+    .bluesky:hover {
+        filter: drop-shadow(1px 1px 2px #000000);
+    }
+
+
+
 }
