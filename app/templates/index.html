@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{{ super() }}
+<title>Hastings and District Palestine Solidarity Campaign</title>
+<link rel="canonical" href="https://www.hastingspalestinecampaign.org" />
+<meta name="description"
+    content="Hastings and District Palestine Solidarity Campaign aims to raise public awareness about Israel's occupation of Palestine and the struggle of the Palestinian people against the injustice of Israeli apartheid. We support the Boycott, Divestment and Sanctions (BDS) movement.">
+<meta name="twitter:title" content="Hastings and District Palestine Solidarity Campaign">
+<meta name="twitter:description"
+    content="Hastings and District Palestine Solidarity Campaign aims to raise public awareness about Israel's occupation of Palestine and the struggle of the Palestinian people against the injustice of Israeli apartheid. We support the Boycott, Divestment and Sanctions (BDS) movement.">
+<meta name="og:title" content="Hastings and District Palestine Solidarity Campaign.">
+<meta name="og:description"
+    content="Hastings and District Palestine Solidarity Campaign aims to raise public awareness about Israel's occupation of Palestine and the struggle of the Palestinian people against the injustice of Israeli apartheid. We support the Boycott, Divestment and Sanctions (BDS) movement.">
+<meta name="keywords" content="palestine,hastings,district,PSC,al-mawasi,solidarity,campaign,">
+<link rel="stylesheet" href="/static/css/index.css">
+{% endblock %}
+
+{% block body %}
+<a href="#main" class="skip-to-main">Skip to main content</a>
+<div class="header">
+    {% block header %}
+    {{ super() }}
+
+    <nav class="nav-bar">
+        <div class="header-link-container">
+            <div class="header-link"><a class="nav-link" href="/about">About Us</a></div>
+        </div>
+        <div class="header-link-container">
+            <div class="header-link"><a class="nav-link" href="/al-mawasi">Al-Mawasi</a></div>
+        </div>
+        <div class="header-link-container">
+            <div class="header-link"><a class="nav-link" href="/boycott">Boycott</a></div>
+        </div>
+        <div class="header-link-container">
+            <div class="header-link"><a class="nav-link" href="/shop">Shop</a></div>
+        </div>
+        <div class="header-link-container">
+            <div class="header-link-cta-p"><a class="nav-link-cta" href="/join">Join Us</a></div>
+        </div>
+        <div class="header-link-container">
+            <div class="header-link-cta-s"><a class="nav-link-cta" href="/donate">Donate</a></div>
+        </div>
+    </nav>
+
+    {% endblock %}
+
+
+</div>
+
+<nav class="nav-bar-mobile" id="mobile">
+
+    <span class="mobile-link"><a class="nav-link" href="/about">About Us</a></span>
+
+    <span class="mobile-link"><a class="nav-link" href="/resources">Al-Mawasi</a></span>
+
+    <span class="mobile-link"><a class="nav-link" href="/sources">Boycott</a></span>
+
+    <span class="mobile-link"><a class="nav-link" href="/shop">Shop</a></span>
+
+    <span class="mobile-link"><a class="nav-link" href="/join">Join Us</a></span>
+
+    <span class="mobile-link"><a class="nav-link" href="/donate">Donate</a></span>
+
+</nav>
+
+<div class="main-content" id="main">
+    Test
+</div>
+{% block footer %}
+{{ super() }}
+{% endblock %}
+{% endblock %}

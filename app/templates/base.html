@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    {% block head %}
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://www.hastingspalestinecampaign.org/images/og-homepage.jpg">
+    <meta property="og:image:alt" content="Arial shot of Hastings Pier flying four Palestinian flags.">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@HRyepsc">
+    <meta name="twitter:image" content="https://www.hastingspalestinecampaign.org/images/og-homepage.jpg">
+    <meta property="twitter:image:alt" content="Arial shot of Hastings Pier flying four Palestinian flags.">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/base.css">
+    {% endblock %}
+</head>
+{% block body %}
+{% block header %}
+<a href="/" rel="home">
+    <div class="header-logo-container">
+        <img class="logo" src="/static/images/logo.jpg" alt="Logo home" />
+        <div class="logo-text">Hastings & District <br> Palestine <br> Solidarity <br> Campaign</div>
+    </div>
+</a>
+
+{% endblock %}
+
+{% block footer %}
+
+<footer class="footer">
+    <div class="copyright">
+        <span>©️ Knowledge belongs to all without limits</span>
+    </div>
+    <div class="footer-links">
+        <a class="text-muted" href="https://twitter.com/HRyepsc" target="_blank">
+            <image src="/static/images/twitter.png" class="img-fluid" width="35" height="35" alt="Link to Twitter"
+                role="link">
+            </image>
+        </a>
+        <a class="text-muted" href="https://www.facebook.com/HastingsRyePalestineSolidarityCampaign/" target="_blank">
+            <image src="/static/images/facebook.svg" class="img-fluid" width="35" height="35" alt="Link to facebook"
+                role="link">
+            </image>
+        </a>
+    </div>
+</footer>
+{% endblock %}
+{% endblock %}
+
+</html>

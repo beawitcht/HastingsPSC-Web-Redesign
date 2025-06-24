@@ -1,0 +1,108 @@
+// Large screen header/navigation
+@use '../variables/global-vars';
+
+
+@media (min-width: 778px) {
+    .nav-bar-mobile {
+        display: none;
+    }
+
+    .hamburger-btn {
+        display: none;
+    }
+
+    #hamburger {
+        display: none;
+    }
+
+    .mobile-link-container {
+        display: none;
+    }
+
+    .mobile-link {
+        display: none;
+
+    }
+
+    .header {
+        width: 100%;
+        min-height: 120px;
+        background: #FFF;
+        flex-direction: row;
+        border-bottom: 1px;
+        display: flex;
+    }
+
+    .nav-bar {
+        padding-right: 1em;
+        gap: 1em;
+        margin-left: auto;
+        display: inline-flex;
+    }
+
+    .header-link-container {
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        display: inline-flex;
+        padding-bottom: 10px;
+    }
+
+    .header-link {
+        text-align: center;
+        color: white;
+        font-size: 20px;
+        font-family: global-vars.$font;
+        font-weight: 400;
+        line-height: 36.55px;
+        word-wrap: break-word
+    }
+
+    .header-link-cta-p {
+        text-align: center;
+        font-size: 20px;
+        font-family: global-vars.$font;
+        font-weight: 500;
+        line-height: 36.55px;
+        word-wrap: break-word;
+        background-color: global-vars.$primary;
+        padding: .4em;
+    }
+
+    .header-link-cta-s {
+        text-align: center;
+        font-size: 20px;
+        font-family: global-vars.$font;
+        font-weight: 500;
+        line-height: 36.55px;
+        word-wrap: break-word;
+        background-color: global-vars.$secondary;
+        padding: .4em;
+    }
+
+    .header-logo-container {
+        align-items: center;
+        justify-content: center;
+        display: inline-flex;
+        flex-direction: row;
+        gap: 1em;
+        height: 120px;
+        width: 400px;
+    }
+
+
+    .logo {
+        width: 77px;
+        height: 80px;
+    }
+
+    .logo-text {
+        font-family: 'PT Sans';
+        font-weight: 700;
+        line-height: 1.2;
+        font-size: 20px;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: black;
+    }
+}
