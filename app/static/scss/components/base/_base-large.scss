@@ -34,8 +34,13 @@ $primary: global-vars.$primary;
     }
 
     h1 {
-        @include mixins.text-properties($font-size: 32px, $font-weight: 700, $color: $primary);
-        margin-bottom: 0;
+        font-family: 'PT Sans Narrow', sans-serif;
+        font-weight: 700;
+        line-height: 94px;
+        font-size: 70px;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: black;
         
     }
 
