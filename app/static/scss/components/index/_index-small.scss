@@ -1,5 +1,5 @@
 @use '../../variables/global-vars';
-@use '../../base/mixins';
+@use '../base/mixins';
 
 @media (max-width: 777px) {
     .main-content {

@@ -1,8 +1,10 @@
-@use 'base/base-small';
-@use 'base/base-large';
+@use 'components/base/base-small';
+@use 'components/base/base-large';
 
 @use 'variables/global-vars';
-@use 'base/mixins';
+@use 'components/base/mixins';
+
+$primary: global-vars.$primary;
 
 @keyframes slideIn {
     from {
@@ -21,10 +23,10 @@ body {
     margin: 0;
     flex: 1 1 0;
     align-self: stretch;
-    background: global-vars.$background;
+    background: global-vars.$bg-primary;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
     display: inline-flex;
 }
 
@@ -47,7 +49,7 @@ body {
 }
 
 .footer-links {
-    padding: 8px;
+    padding: 16px;
     gap: 16px;
     display: flex;
     justify-content: center;
@@ -64,7 +66,7 @@ body {
 .nav-link:hover {
     text-decoration: underline;
     text-underline-offset: 8px;
-    text-decoration-color: #FFF;
+    text-decoration-color: $primary;
     transition: text-decoration-color global-vars.$nav-link-hover-transition-in, text-underline-offset global-vars.$nav-link-hover-transition-in;
 }
 
@@ -78,6 +80,7 @@ body {
 .nav-link-cta {
     color: #FFF;
     text-decoration: none;
+    transition: text-decoration-color global-vars.$nav-link-hover-transition-out, text-underline-offset global-vars.$nav-link-hover-transition-out;
 }
 
 .nav-link-cta:hover {
@@ -101,11 +104,12 @@ body {
 
 .skip-to-main {
     position: absolute;
+    top: 0px;
     left: -9999px;
     z-index: 999;
     padding: 1em;
-    background-color: white;
-    color: black;
+    background-color: black;
+    color: white;
     opacity: 0;
 }
 
