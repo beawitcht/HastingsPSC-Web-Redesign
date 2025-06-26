@@ -1,9 +1,10 @@
 from blueprints import core_bp
 from utilities import cache
-from flask import Flask, make_response, render_template
+from flask import Flask, make_response, render_template, g
 from werkzeug.exceptions import HTTPException
 from pathlib import Path
 import os
+import secrets
 
 from dotenv import load_dotenv
 load_dotenv(Path(__file__).resolve().parent / '.env')
@@ -14,7 +15,13 @@ is_dev = os.getenv('IS_DEV')
 # configure app
 app = Flask(__name__)
 
-app.config['WTF_CSRF_ENABLED'] = False
+# configure nonce
+@app.before_request
+def set_nonce():
+    g.nonce = secrets.token_urlsafe(16)
+
+
+app.config['WTF_CSRF_ENABLED'] = True
 
 # disable caching if in development mode
 is_dev = os.getenv('IS_DEV')
@@ -34,11 +41,12 @@ app.register_blueprint(core_bp)
 # Set headers
 @app.after_request
 def add_headers(response):
+    nonce = g.nonce
     response.headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
     if 'Content-Security-Policy' not in response.headers:
         response.headers['Content-Security-Policy'] = (
             "default-src 'none';"
-            "script-src 'self' https://js.stripe.com/v3/;"
+            f"script-src 'self' 'nonce-{nonce}' https://js.stripe.com/v3/;"
             "img-src 'self' data: https://http.cat/;"
             "style-src 'self' https://fonts.gstatic.com/ https://fonts.googleapis.com/;"
             "font-src 'self' https://fonts.gstatic.com/ https://fonts.googleapis.com/;"

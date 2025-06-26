@@ -17,7 +17,6 @@
 {% endblock %}
 
 {% block body %}
-<a href="#main" class="skip-to-main">Skip to main content</a>
 <div class="header">
     {% block header %}
     {{ super() }}
@@ -153,7 +152,7 @@
             </div>
             <div class="layout-card-container">
                 <!-- card start -->
-                <a href="#">
+                <a href="/articles/test-article">
                     <div class="card-container animate-slide-up">
                         <div class="card-image-container">
                             <img class="card-image" alt="placeholder" src="static/images/test1.jpg">
@@ -215,82 +214,6 @@
         </div>
     </div>
 </div>
-<!-- End Section 3 -->
-<!-- Section 1: Newsletter -->
-<div class="section-content">
-
-    <div class="card-section-outer-container">
-
-        <div class="content-section-heading content-section-secondary  animate-slide-up" id="main">
-            <h2>Updates</h2>
-            <hr>
-            <p>The latest news and updates from Hastings & District Palestine Solidarity Campaign, Subcribe to our
-                newsletter to stay up to date </p>
-
-        </div>
-        <div class="layout-card-container">
-            <!-- card start -->
-            <a href="#">
-                <div class="card-container animate-slide-up">
-                    <div class="card-image-container">
-                        <img class="card-image" alt="placeholder" src="static/images/test1.jpg">
-                    </div>
-                    <div class="card-text-container">
-                        <div class="card-heading-container">
-                            <div class="card-heading">Byello i am a title</div>
-                        </div>
-                        <div class="card-description-container">
-                            <div class="card-description">wfduhfaufhawifhu</div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-            <!-- card end -->
-
-            <!-- card start -->
-            <a href="#">
-                <div class="card-container animate-slide-up">
-                    <div class="card-text-container">
-                        {% if tweets %}
-                        <ul class="tweet-list">
-                            {% for tweet in tweets %}
-                            <li class="tweet">
-                                <a href="{{ tweet.url }}" target="_blank" rel="noopener">
-                                    {{ tweet.text }}
-                                </a>
-                                <div class="tweet-date">{{ tweet.created_at.strftime('%b %d, %Y') }}</div>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                        {% else %}
-                            No tweets available.
-                        {% endif %}
-                    </div>
-                </div>
-            </a>
-            <!-- card end -->
-
-            <!-- card start -->
-            <a href="#">
-                <div class="card-container animate-slide-up">
-                    <div class="card-image-container">
-                        <img class="card-image" alt="placeholder" src="static/images/test3.jpg">
-                    </div>
-                    <div class="card-text-container">
-                        <div class="card-heading-container">
-                            <div class="card-heading">nah not me</div>
-                        </div>
-                        <div class="card-description-container">
-                            <div class="card-description">wfduhfaufhawifhu</div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-            <!-- card end -->
-        </div>
-    </div>
-</div>
-<!-- End section 3 -->
 
 
 {% block footer %}
