@@ -23,17 +23,14 @@ $bg-secondary: global-vars.$bg-secondary;
             cursor: zoom-in;
         }
     }
-
     box-sizing: border-box;
     min-height: 100vh;
-    background-image: url('/static/images/banner_full.jpg');
+    background-image: url('/static/images/banner_opt.jpg');
     background-repeat: no-repeat;
-    background-position: 50% 50%;
+    background-position: 95% 50%;
     background-attachment: fixed;
     background-size: cover;
     display: flex;
-
-
 }
 
 .banner-content {
@@ -47,8 +44,32 @@ $bg-secondary: global-vars.$bg-secondary;
     backdrop-filter: blur(3px);
 
     h1 {
-        padding-top: 15vh;
+        color: black;
+        text-shadow: 1px 1px 2px black;
+        margin-bottom: 0;
     }
+    img {
+        filter: drop-shadow(1px 1px 1px black);
+    }
+    
+}
+
+.banner-top {
+    padding-top: 120px;
+}
+
+.arrow-to-content {
+    width: 128px;
+    height: 128px;
+
+    svg {
+        width: 128px;
+        height: 128px;
+        margin-top: 40vh;
+        fill: black;
+        filter: drop-shadow(1px 1px 1px black);
+    }
+
 }
 
 
@@ -79,8 +100,6 @@ $bg-secondary: global-vars.$bg-secondary;
 .content-section-primary {
     background: $bg-primary;
     width: 100%;
-
-
 }
 
 .content-section-heading {
@@ -117,15 +136,15 @@ $bg-secondary: global-vars.$bg-secondary;
     transition-duration: $card-hover-transition;
 
     box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12), 0 1.5px 6px 0 rgba(0, 0, 0, 0.10);
-    border-radius: 8px; 
-    background: $card-text-background; 
+    border-radius: 8px;
+    background: $card-text-background;
     transition:
         box-shadow 0.2s $card-hover-transition,
         transform 0.2s $card-hover-transition;
 }
 
 .card-container:hover {
-    
+
 
     box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.18), 0 3px 12px 0 rgba(0, 0, 0, 0.15);
     transform: translateY(-2px) scale(1.02);
@@ -207,4 +226,29 @@ $bg-secondary: global-vars.$bg-secondary;
     font-weight: 400;
     line-height: 19.49px;
     word-wrap: break-word
+}
+
+@keyframes slideUpIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(.4, 0, .2, 1), transform 0.8s cubic-bezier(.4, 0, .2, 1);
+    will-change: opacity, transform;
+}
+
+.animate-slide-up.in-view {
+    opacity: 1;
+    transform: translateY(0);
+    animation: slideUpIn 0.8s cubic-bezier(.4, 0, .2, 1);
 }

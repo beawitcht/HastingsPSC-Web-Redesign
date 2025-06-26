@@ -1,15 +1,52 @@
-//Back to top button functionality
+//back to top button functionality
 window.onscroll = function () { scrollDetected() };
 backToTop = document.getElementById("backToTop");
 
 backToTop.addEventListener("click", () => {
-  document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+    document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 function scrollDetected() {
-  if (document.body.scrollTop > 120 || document.documentElement.scrollTop > 120) {
-    document.getElementById("backToTop").style.display = "block";
-  } else {
-    document.getElementById("backToTop").style.display = "none";
-  }
+    if (document.body.scrollTop > 120 || document.documentElement.scrollTop > 120) {
+        document.getElementById("backToTop").style.display = "block";
+    } else {
+        document.getElementById("backToTop").style.display = "none";
+    }
 }
+
+//to main body arrow functionality
+$main = document.getElementById("main");
+toBodyArrow = document.getElementById("toBodyArrow");
+toBodyArrow.addEventListener("click", (e) => {
+    e.preventDefault(); // Prevent default anchor jump
+    $main.scrollIntoView({ behavior: 'smooth' });
+});
+
+// intersection observer for slide-up animation
+document.addEventListener("DOMContentLoaded", function () {
+    const observer = new IntersectionObserver(
+        entries => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                } else {
+                    entry.target.classList.remove('in-view');
+                }
+            });
+        },
+        { threshold: 0.15 }
+    );
+
+    document.querySelectorAll('.animate-slide-up').forEach(el => {
+        observer.observe(el);
+    });
+});
+
+document.addEventListener("scroll", function() {
+    const banner = document.querySelector('.banner');
+    if (!banner) return;
+    // Parallax: adjust the 0.5 for more/less effect
+    const scrolled = window.scrollY * 0.1;
+    banner.style.backgroundPosition = `95% calc(50% + ${scrolled}px)`;
+});
+

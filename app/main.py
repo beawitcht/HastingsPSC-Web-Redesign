@@ -1,5 +1,6 @@
+from blueprints import core_bp
+from utilities import cache
 from flask import Flask, make_response, render_template
-from flask_caching import Cache
 from werkzeug.exceptions import HTTPException
 from pathlib import Path
 import os
@@ -16,22 +17,34 @@ app = Flask(__name__)
 app.config['WTF_CSRF_ENABLED'] = False
 
 # disable caching if in development mode
+is_dev = os.getenv('IS_DEV')
 if is_dev == '0':
-    cache = Cache(app, config={'CACHE_TYPE': 'FileSystemCache', 'CACHE_DIR': Path(
-        __file__).resolve().parent / 'tmp' / 'cache', 'CACHE_SOURCE_CHECK': True})
+    app.config['CACHE_TYPE'] = 'FileSystemCache'
+    app.config['CACHE_DIR'] = Path(__file__).resolve().parent / 'tmp' / 'cache'
+    app.config['CACHE_SOURCE_CHECK'] = True
 else:
-    cache = Cache(app, config={'CACHE_TYPE': 'NullCache'})
+    app.config['CACHE_TYPE'] = 'NullCache'
+
+cache.init_app(app)
+
+
+app.register_blueprint(core_bp)
+
 
 # Set headers
-
 @app.after_request
 def add_headers(response):
     response.headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
-    response.headers['Content-Security-Policy'] = 'default-src \'none\'; script-src \'self\'' \
-        ' https://js.stripe.com/v3/; img-src \'self\' data: https://http.cat/;  style-src \'self\'' \
-        ' https://fonts.gstatic.com/ https://fonts.googleapis.com/; font-src \'self\'' \
-        ' https://fonts.gstatic.com/ https://fonts.googleapis.com/; connect-src \'self\'; ' \
-        'frame-src https://js.stripe.com/v3/;'
+    if 'Content-Security-Policy' not in response.headers:
+        response.headers['Content-Security-Policy'] = (
+            "default-src 'none';"
+            "script-src 'self' https://js.stripe.com/v3/;"
+            "img-src 'self' data: https://http.cat/;"
+            "style-src 'self' https://fonts.gstatic.com/ https://fonts.googleapis.com/;"
+            "font-src 'self' https://fonts.gstatic.com/ https://fonts.googleapis.com/;"
+            "connect-src 'self';"
+            "frame-src 'self';"
+        )
     response.headers['X-Frame-Options'] = 'DENY'
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-XSS-Protection'] = '1; mode=block'
@@ -39,9 +52,7 @@ def add_headers(response):
     return response
 
 
-from blueprints import core_bp
 
-app.register_blueprint(core_bp)
 
 
 @app.errorhandler(HTTPException)
