@@ -1,0 +1,116 @@
+// article content page
+@use 'variables/global-vars';
+@use 'components/base/mixins';
+@use 'components/article/article-large';
+@use 'components/article/article-small';
+
+$primary: global-vars.$primary;
+$bg-primary: global-vars.$bg-primary;
+$bg-secondary: global-vars.$bg-secondary;
+
+
+.article-section-break {
+    background: url('/static/images/linebreak.svg');
+    width: 95px;
+    height: 32px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.main-content {
+    flex: 1 1 0;
+    align-self: stretch;
+    background: global-vars.$bg-primary;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    display: inline-flex;
+    padding-top: 120px;
+    overflow-x: hidden;
+}
+
+.section-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 16px;
+    width: 100%;
+}
+p {
+    width: 96%;
+}
+
+.card-section-outer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.content-section-heading {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 24px;
+    background: black;
+
+    p {
+        width: 45%;
+    }
+
+    hr {
+        color: $primary;
+    }
+
+}
+
+.content-section-heading {
+    text-align: left;
+    width: 100%;
+}
+
+
+.content-section-primary {
+    background: $bg-primary;
+    width: 100%;
+    flex: 1 0 auto;
+}
+
+.content-section-secondary {
+    background: $bg-secondary;
+    width: 100%;
+    flex: 1 0 auto;
+}
+
+
+.article-fig-img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+
+.article-caption {
+    display: table-caption;
+    caption-side: bottom;
+    text-align: left;
+    margin-top: 8px;
+    word-break: break-word;
+    @include mixins.text-properties($font-size: 16px, $font-weight: 400);
+}
+
+figure {
+    text-align: center;
+    margin: 0;
+}
+.figure-wrapper {
+    display: table;
+    margin: 0 auto;
+}
+
+.article-img-container {
+    text-align: center;
+}
+
+.article-img-container .article-img {
+    display: inline-block;
+    max-width: 100%;
+    height: auto;
+}

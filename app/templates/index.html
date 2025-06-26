@@ -16,10 +16,12 @@
 <link rel="stylesheet" href="/static/css/index.css">
 {% endblock %}
 
-{% block body %}
-<div class="header">
+
     {% block header %}
     {{ super() }}
+    {% endblock %}
+
+    {% block nav %}
     <nav class="nav-bar">
         <div class="header-link-container">
             <div class="header-link"><a class="nav-link" href="/about">About Us</a></div>
@@ -40,20 +42,21 @@
             <div class="header-link-cta-s"><a class="nav-link-cta" href="/donate">Donate</a></div>
         </div>
     </nav>
+
+    <nav class="nav-bar-mobile" id="mobile">
+        <span class="mobile-link"><a class="nav-link" href="/about">About Us</a></span>
+        <span class="mobile-link"><a class="nav-link" href="/resources">Al-Mawasi</a></span>
+        <span class="mobile-link"><a class="nav-link" href="/sources">Boycott</a></span>
+        <span class="mobile-link"><a class="nav-link" href="/shop">Shop</a></span>
+        <span class="mobile-link"><a class="nav-link" href="/join">Join Us</a></span>
+        <span class="mobile-link"><a class="nav-link" href="/donate">Donate</a></span>
+    </nav>
     {% endblock %}
-</div>
-
-<nav class="nav-bar-mobile" id="mobile">
-    <span class="mobile-link"><a class="nav-link" href="/about">About Us</a></span>
-    <span class="mobile-link"><a class="nav-link" href="/resources">Al-Mawasi</a></span>
-    <span class="mobile-link"><a class="nav-link" href="/sources">Boycott</a></span>
-    <span class="mobile-link"><a class="nav-link" href="/shop">Shop</a></span>
-    <span class="mobile-link"><a class="nav-link" href="/join">Join Us</a></span>
-    <span class="mobile-link"><a class="nav-link" href="/donate">Donate</a></span>
-</nav>
 
 
-<div class="content-section-secondary banner-top">
+
+{% block body %}
+<div class="content-section-secondary">
     <div class="banner">
         <div class="banner-content">
             <h1>Hastings & District <br> Palestine Solidarity Campaign</h1>
@@ -215,8 +218,7 @@
     </div>
 </div>
 
-
+{% endblock %}
 {% block footer %}
 {{ super() }}
-{% endblock %}
 {% endblock %}
