@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, g, abort
-from utilities import cache
+from app.utilities import cache
 # from utilities import get_latest_tweets
 
 core_bp = Blueprint('core', __name__)
