@@ -65,14 +65,15 @@ body {
 
 .nav-link:hover,
 .nav-link:focus {
+    color: $primary;
     text-decoration: underline;
     text-decoration-color: $primary;
     text-underline-offset: 4px;
     transition: text-decoration-color global-vars.$nav-link-hover-transition-in, text-underline-offset global-vars.$nav-link-hover-transition-in;
 }
 
-.nav-link-active {
-    color: global-vars.$nav-link-text-colour;
+.nav-link:active {
+    color: $primary;
     font-weight: bold;
     text-underline-offset: 4px;
 }
@@ -84,7 +85,7 @@ body {
 }
 
 .nav-link-cta:hover,
-.nav-link:focus {
+.nav-link-cta:focus {
     color: #FFF;
     text-decoration: underline;
     text-underline-offset: 4px;
@@ -122,5 +123,5 @@ body {
 }
 
 #main {
-    scroll-margin-top: 120px; // match your nav/header height
+    scroll-margin-top: 120px;
 }

@@ -16,6 +16,8 @@ is_dev = os.getenv('IS_DEV')
 app = Flask(__name__)
 
 # configure nonce
+
+
 @app.before_request
 def set_nonce():
     g.nonce = secrets.token_urlsafe(16)
@@ -47,7 +49,7 @@ def add_headers(response):
         response.headers['Content-Security-Policy'] = (
             "default-src 'none';"
             f"script-src 'self' 'nonce-{nonce}' https://js.stripe.com/v3/;"
-            "img-src 'self' data: https://http.cat/;"
+            "img-src 'self';"
             "style-src 'self' https://fonts.gstatic.com/ https://fonts.googleapis.com/;"
             "font-src 'self' https://fonts.gstatic.com/ https://fonts.googleapis.com/;"
             "connect-src 'self';"
@@ -60,16 +62,27 @@ def add_headers(response):
     return response
 
 
-
-
-
 @app.errorhandler(HTTPException)
 def handle_error(error):
     # make description generic for rate limit
     if error.code == 429:
         error.description = 'Try again later.'
-    return make_response(render_template("error.html", name=error.name, code=error.code, description=error.description),
-                         error.code)
+    nonce = secrets.token_urlsafe(16)
+    response = make_response(render_template("error.html", name=error.name, code=error.code,
+                                             description=error.description, nonce=nonce),
+                             error.code
+                             )
+    response.headers['Content-Security-Policy'] = (
+        "default-src 'none';"
+        "script-src 'self';"
+        "img-src 'self' data: https://http.cat/;"
+        f"style-src 'self' 'nonce-{nonce}' https://fonts.gstatic.com/ https://fonts.googleapis.com/;"
+        "font-src 'self' https://fonts.gstatic.com/ https://fonts.googleapis.com/;"
+        "connect-src 'self';"
+        "frame-src 'self';"
+    )
+
+    return response
 
 
 if __name__ == '__main__':

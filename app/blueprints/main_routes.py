@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, g, abort
 from utilities import cache
 # from utilities import get_latest_tweets
 
@@ -15,4 +15,7 @@ def sources():
 @core_bp.route("/articles/<string:title>", methods=['GET'])
 @cache.cached(timeout=60 * 60 * 24 * 7)
 def article(title):
-    return render_template(f"articles/{title}.html")
+    try:
+        return render_template(f"articles/{title}.html", nonce=g.nonce)
+    except Exception:
+        abort(404)

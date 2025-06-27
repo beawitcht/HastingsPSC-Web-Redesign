@@ -44,12 +44,12 @@ $bg-secondary: global-vars.$bg-secondary;
     background-attachment: fixed;
     background-size: cover;
     display: flex;
+    position: relative;
 }
 
 .banner-content {
     box-sizing: border-box;
     width: 100%;
-    float: left;
     min-height: 1px;
     color: rgb(255, 255, 255);
     line-height: 1.45;
@@ -57,9 +57,9 @@ $bg-secondary: global-vars.$bg-secondary;
     backdrop-filter: blur(3px);
 
     h1 {
-        color: black;
         text-shadow: 1px 1px 2px black;
         margin-bottom: 0;
+        padding-top: 110px;
     }
 
     img {
@@ -69,17 +69,43 @@ $bg-secondary: global-vars.$bg-secondary;
 }
 
 .arrow-to-content {
-    width: 128px;
-    height: 128px;
+    position: absolute;
+    left: 50%;
+    bottom: 96px;
+    transform: translateX(-50%);
+    z-index: 2;
+    text-decoration: none;
+    padding-left: 8px;
 
-    svg {
-        width: 128px;
-        height: 128px;
-        margin-top: 40vh;
-        fill: black;
-        filter: drop-shadow(1px 1px 1px black);
+    .arrow-circle {
+        position: relative;
+        display: inline-block;
+        padding-top: 60px;
+        width: 140px;
+        height: 140px;
+
+        &::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 140px;
+            height: 140px;
+            //background: rgba(255, 255, 255, 0.35);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            //box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        svg {
+            position: relative;
+            z-index: 1;
+            width: 128px;
+            height: 128px;
+            fill: black;
+        }
     }
-
 }
 
 
@@ -92,10 +118,8 @@ $bg-secondary: global-vars.$bg-secondary;
 }
 
 .content-section-heading {
-    width: 100%;
     text-align: left;
     margin-bottom: 24px;
-    background: black;
 
     p {
         width: 60%;
@@ -106,12 +130,6 @@ $bg-secondary: global-vars.$bg-secondary;
     }
 
 }
-
-.content-section-heading {
-    text-align: left;
-    width: 100%;
-}
-
 
 .content-section-primary {
     background: $bg-primary;
@@ -265,5 +283,5 @@ $bg-secondary: global-vars.$bg-secondary;
 .animate-slide-up.in-view {
     opacity: 1;
     transform: translateY(0);
-    animation: slideUpIn 0.8s cubic-bezier(.4, 0, .2, 1);
+    animation: slideUpIn 0.8s cubic-bezier(.4, 0, .2, 1) forwards;
 }
