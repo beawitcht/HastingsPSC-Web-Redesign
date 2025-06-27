@@ -1,4 +1,4 @@
-from app.blueprints import core_bp
+from app.blueprints.main_routes import core_bp
 from app.utilities import cache
 from flask import Flask, make_response, render_template, g
 from werkzeug.exceptions import HTTPException
