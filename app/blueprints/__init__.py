@@ -1,1 +1,0 @@
-from .main_routes import core_bp

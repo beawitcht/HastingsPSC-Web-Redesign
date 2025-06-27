@@ -15,10 +15,6 @@ Redesign of The HastingsPSC website and building of custom CMS
 
 ### Installation
 
-#### Navigate to app directory:
-```bash
-cd app/
-```
 #### Install with pip:
 
 ```bash
@@ -32,5 +28,5 @@ IS_DEV = 1 # set to 1 to disable caching
 
 ### Run with gunicorn
 ```bash
-gunicorn -w 4 -b 127.0.0.1:8000 main:app
+gunicorn -w 4 -b 127.0.0.1:8010 app.main:app
 ```

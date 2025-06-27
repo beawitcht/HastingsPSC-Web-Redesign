@@ -1,5 +1,5 @@
-from blueprints import core_bp
-from utilities import cache
+from app.blueprints.main_routes import core_bp
+from app.utilities import cache
 from flask import Flask, make_response, render_template, g
 from werkzeug.exceptions import HTTPException
 from pathlib import Path
@@ -16,8 +16,6 @@ is_dev = os.getenv('IS_DEV')
 app = Flask(__name__)
 
 # configure nonce
-
-
 @app.before_request
 def set_nonce():
     g.nonce = secrets.token_urlsafe(16)
