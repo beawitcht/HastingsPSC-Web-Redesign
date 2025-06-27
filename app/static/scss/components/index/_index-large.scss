@@ -2,18 +2,6 @@
 @use '../base/mixins';
 
 @media (min-width: 778px) {
-    .main-content {
-        display: flex;
-        padding-bottom: 12.15%;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        flex: 1 0 0;
-        align-self: stretch;
-        width: 100%;
-    }
-
     
 
     .title-desc {

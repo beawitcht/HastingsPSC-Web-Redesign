@@ -1,10 +1,18 @@
 <html>
-      <head>
-         <title>{{name}} {{code}}</title>
-      </head>
-      <body>
-         <h1>{{name}} {{code}}</h1>
-         <p>{{description}}</p>
-         <img src="https://http.cat/{{code}}.jpg"/>
-      </body>
-   </html>
+<style nonce="{{ nonce }}">
+   img {
+      height: 75vh;
+   }
+</style>
+
+<head>
+   <title>{{name}} {{code}}</title>
+</head>
+
+<body>
+   <h1>{{name}} {{code}}</h1>
+   <p>{{description}}</p>
+   <img src="https://http.cat/{{code}}.jpg" / style="width: 100%;">
+</body>
+
+</html>
