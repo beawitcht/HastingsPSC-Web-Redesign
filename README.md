@@ -1,6 +1,6 @@
 # HastingsPSC-Web-Redesign
 
-[![CodeQL](https://github.com/beawitcht/HastingsPSC-Web-Redesign/actions/workflows/codeql.yml/badge.svg)](https://github.com/beawitcht/HastingsPSC-Web-Redesign/actions/workflows/codeql.yml)![GitHub](https://img.shields.io/github/license/beawitcht/HastingsPSC-Web-Redesign) [![Twitter Follow](https://img.shields.io/twitter/follow/beawitcht?style=social)](https://www.twitter.com/beawitcht)
+[![CodeQL](https://github.com/beawitcht/HastingsPSC-Web-Redesign/actions/workflows/codeql.yml/badge.svg)](https://github.com/beawitcht/HastingsPSC-Web-Redesign/actions/workflows/codeql.yml) ![GitHub](https://img.shields.io/github/license/beawitcht/HastingsPSC-Web-Redesign) [![Twitter Follow](https://img.shields.io/twitter/follow/beawitcht?style=social)](https://www.twitter.com/beawitcht)
 ***
 
 <p align="center">
