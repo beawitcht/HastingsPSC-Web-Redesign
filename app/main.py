@@ -28,8 +28,8 @@ def set_nonce():
 app.config['WTF_CSRF_ENABLED'] = True
 
 # admin panel stuff
-app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
-app.config['SECURITY_PASSWORD_SALT'] = os.environ.get("SECURITY_PASSWORD_SALT")
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", 'pf9Wkove4IKEAXvy-cQkeDPhv9Cb3Ag-wyJILbq_dFw')
+app.config['SECURITY_PASSWORD_SALT'] = os.environ.get("SECURITY_PASSWORD_SALT", '146585145368132386173505678016728509634')
 
 app.config["REMEMBER_COOKIE_SAMESITE"] = "strict"
 app.config["SESSION_COOKIE_SAMESITE"] = "strict"
@@ -71,7 +71,6 @@ with app.app_context():
 # end of admin panel stuff
 
 # disable caching if in development mode
-is_dev = os.getenv('IS_DEV')
 if is_dev == '0':
     app.config['CACHE_TYPE'] = 'FileSystemCache'
     app.config['CACHE_DIR'] = Path(__file__).resolve().parent / 'tmp' / 'cache'
