@@ -17,70 +17,72 @@
 {% endblock %}
 
 
-    {% block header %}
-    {{ super() }}
-    {% endblock %}
+{% block header %}
+{{ super() }}
+{% endblock %}
 
-    {% block nav %}
-    <nav class="nav-bar">
-        <div class="header-link-container">
-            <div class="header-link"><a class="nav-link" href="/about">About Us</a></div>
-        </div>
-        <div class="header-link-container">
-            <div class="header-link"><a class="nav-link" href="/al-mawasi">Al-Mawasi</a></div>
-        </div>
-        <div class="header-link-container">
-            <div class="header-link"><a class="nav-link" href="/boycott">Boycott</a></div>
-        </div>
-        <div class="header-link-container">
-            <div class="header-link"><a class="nav-link" href="/shop">Shop</a></div>
-        </div>
-        <div class="header-link-container">
-            <div class="header-link-cta-p"><a class="nav-link-cta" href="/join">Join Us</a></div>
-        </div>
-        <div class="header-link-container">
-            <div class="header-link-cta-s"><a class="nav-link-cta" href="/donate">Donate</a></div>
-        </div>
-    </nav>
+{% block nav %}
+<nav class="nav-bar">
+    <div class="header-link-container">
+        <div class="header-link"><a class="nav-link" href="/about">About Us</a></div>
+    </div>
+    <div class="header-link-container">
+        <div class="header-link"><a class="nav-link" href="/al-mawasi">Al-Mawasi</a></div>
+    </div>
+    <div class="header-link-container">
+        <div class="header-link"><a class="nav-link" href="/boycott">Boycott</a></div>
+    </div>
+    <div class="header-link-container">
+        <div class="header-link"><a class="nav-link" href="/shop">Shop</a></div>
+    </div>
+    <div class="header-link-container">
+        <div class="header-link-cta-p"><a class="nav-link-cta" href="/join">Join Us</a></div>
+    </div>
+    <div class="header-link-container">
+        <div class="header-link-cta-s"><a class="nav-link-cta" href="/donate">Donate</a></div>
+    </div>
+</nav>
 
-    <nav class="nav-bar-mobile" id="mobile">
-        <span class="mobile-link"><a class="nav-link" href="/about">About Us</a></span>
-        <span class="mobile-link"><a class="nav-link" href="/resources">Al-Mawasi</a></span>
-        <span class="mobile-link"><a class="nav-link" href="/sources">Boycott</a></span>
-        <span class="mobile-link"><a class="nav-link" href="/shop">Shop</a></span>
-        <span class="mobile-link"><a class="nav-link" href="/join">Join Us</a></span>
-        <span class="mobile-link"><a class="nav-link" href="/donate">Donate</a></span>
-    </nav>
-    {% endblock %}
+<nav class="nav-bar-mobile" id="mobile">
+    <span class="mobile-link"><a class="nav-link" href="/about">About Us</a></span>
+    <span class="mobile-link"><a class="nav-link" href="/resources">Al-Mawasi</a></span>
+    <span class="mobile-link"><a class="nav-link" href="/sources">Boycott</a></span>
+    <span class="mobile-link"><a class="nav-link" href="/shop">Shop</a></span>
+    <span class="mobile-link"><a class="nav-link" href="/join">Join Us</a></span>
+    <span class="mobile-link"><a class="nav-link" href="/donate">Donate</a></span>
+</nav>
+{% endblock %}
 
 
 
 {% block body %}
-<div class="content-section-secondary">
-    <div class="banner">
-        <div class="banner-content">
-            <!-- Removed heading over banner image as it looks ugly and I cant make it look good UI is my passion -->
-            <!-- <h1>Hastings & District <br> Palestine Solidarity Campaign</h1>
+<div class="content-section-primary">
+    <div class="banner-bg">
+        <div class="banner">
+            <div class="banner-content">
+                <!-- Removed heading over banner image as it looks ugly and I cant make it look good UI is my passion -->
+                <!-- <h1>Hastings & District <br> Palestine Solidarity Campaign</h1>
             <img src="/static/images/logo.png" alt="Hastings and District"> -->
 
-            <br>
-            <a href="#main" class="arrow-to-content" tabindex="-1" id="toBodyArrow" aria-label="Go to main content">
+                <br>
+                <!-- For arrow down to main body, not needed at current banner height -->
+                <!-- <a href="#main" class="arrow-to-content" tabindex="-1" id="toBodyArrow" aria-label="Go to main content">
                 <span class="arrow-circle">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-96.7091 -55.1497 68 27">
                         <path
                             d="M-95.0146-48.6054-67.0655-29.973c1.0753.7234 2.5385 1.1297 4.0657 1.1297s2.9916-.4063 4.0669-1.1297l27.9486-18.6324c1.4526-.9684 2.0196-2.3801 1.4879-3.7031-.5317-1.3229-2.0813-2.356-4.0658-2.7104-1.9841-.3545-4.1018.0234-5.5544.9918L-63-38.1816-86.8822-54.0271c-1.0807-.7147-2.5438-1.1126-4.0667-1.1069-1.5219-.0058-2.9851.3922-4.0657 1.1069-1.084.7169-1.6945 1.6932-1.6945 2.7113s.6106 1.9936 1.6945 2.7104Z" />
                     </svg>
                 </span>
-            </a>
+            </a> -->
+            </div>
         </div>
-
     </div>
     <!-- Section 1: Newsletter -->
     <div class="section-content">
 
         <div class="card-section-outer-container">
 
-            <div class="content-section-heading content-section-secondary  animate-slide-up" id="main">
+            <div class="content-section-heading content-section-primary  animate-slide-up" id="main">
                 <h2>Updates</h2>
                 <hr>
                 <p>The latest news and updates from Hastings & District Palestine Solidarity Campaign, Subcribe to our
