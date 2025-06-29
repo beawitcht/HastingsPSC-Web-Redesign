@@ -16,6 +16,6 @@ def sources():
 @cache.cached(timeout=60 * 60 * 24 * 7)
 def article(title):
     try:
-        return render_template(f"articles/{title}.html", nonce=g.nonce)
+        return render_template(f"articles/{title}.html")
     except Exception:
         abort(404)

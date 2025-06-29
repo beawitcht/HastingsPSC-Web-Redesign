@@ -24,9 +24,10 @@ pip install -r requirements.txt
 #### The following environment variables are required:
 ```
 IS_DEV = 1 # set to 1 to disable caching
-```
+SECRET_KEY= # key for admin
+SECURITY_PASSWORD_SALT= # salt for admin
 
 ### Run with gunicorn
 ```bash
-gunicorn -w 4 -b 127.0.0.1:8010 app.main:app
+gunicorn -w 1 -b 127.0.0.1:8010 app.main:app
 ```

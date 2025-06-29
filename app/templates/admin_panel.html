@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{{ super() }}
+<title>HDPSC Admin Panel</title>
+<link rel="stylesheet" href="/static/css/article.css">
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block nav %}
+{% endblock %}
+
+
+{% block body %}
+    
+    <h1> {{ current_user.email }} </h1>
+
+    <a href="/wan-register"> Add passkey </a>
+    <a href="/HDPSC-admin-panel/add-user"> Add User </a>
+
+{% endblock %}
+
+
+{% block footer %}
+{% endblock %}
