@@ -128,7 +128,7 @@ def handle_error(error):
     if error.code == 429:
         error.description = 'Try again later.'
 
-    return render_template("error.html", name=error.name, code=error.code, description=error.description)
+    return render_template("error.html", name=error.name, code=error.code, description=error.description), error.code
 
 
 @security.context_processor
