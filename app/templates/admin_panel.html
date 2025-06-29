@@ -2,14 +2,7 @@
 
 {% block head %}
 {{ super() }}
-<title>Hastings & District Palestine Solidarity Campaign</title>
-<link rel="canonical" href="https://www.hastingspalestinecampaign.org/articles/test-article" />
-<meta name="description" content="DESCRIPTION HERE">
-<meta name="twitter:title" content="Articles - H&D PSC">
-<meta name="twitter:description" content="DESCRIPTION HERE">
-<meta name="og:title" content="Articles - H&D PSC">
-<meta name="og:description" content="DESCRIPTION HERE">
-<meta name="keywords" content="palestine,hastings,district,PSC,al-mawasi,solidarity,campaign,">
+<title>HDPSC Admin Panel</title>
 <link rel="stylesheet" href="/static/css/article.css">
 {% endblock %}
 
@@ -21,7 +14,12 @@
 
 
 {% block body %}
+    
     <h1> {{ current_user.email }} </h1>
+
+    <a href="/wan-register"> Add passkey </a>
+    <a href="/HDPSC-admin-panel/add-user"> Add User </a>
+
 {% endblock %}
 
 

@@ -1,12 +1,39 @@
 # import os
 # import tweepy
 from flask_caching import Cache
+from flask_sqlalchemy import SQLAlchemy
+from flask_security import Security, SQLAlchemyUserDatastore
+from flask_security.models import fsqla_v3 as fsqla
+
 from dotenv import load_dotenv
 
 cache = Cache()
 
 
 load_dotenv()
+
+#DB stuff
+db = SQLAlchemy()
+security = Security()
+
+
+# Define models
+fsqla.FsModels.set_db_info(db)
+
+class Role(db.Model, fsqla.FsRoleMixin):
+    pass
+
+
+class User(db.Model, fsqla.FsUserMixin):
+    pass
+
+
+class WebAuthn(db.Model, fsqla.FsWebAuthnMixin):
+    pass
+
+
+user_datastore = SQLAlchemyUserDatastore(db, User, Role, WebAuthn)
+
 
 # Get the latest tweets from using Twitter API v2
 # def get_latest_tweets(username, count=5):
