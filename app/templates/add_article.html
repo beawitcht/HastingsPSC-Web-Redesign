@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{{ super() }}
+<title>Add Article - HDPSC Admin Panel</title>
+<link rel="stylesheet" href="/static/css/article-admin.css">
+<script defer src="/static/js/article-admin.min.js"></script>
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block nav %}
+{% endblock %}
+
+
+{% block body %}
+{% include "security/_messages.html" %}
+<h1> {{ current_user.email }} </h1>
+<form method="post" id="article-form">
+    {{ form.hidden_tag() }}
+    {{ form.title.label }} {{ form.title() }}<br>
+    <div id="blocks-container">
+        {% for block in form.blocks %}
+        <div id="init-block" class="article-block" data-block-idx="{{ loop.index0 }}">
+            {{ block.block_type.label }} {{ block.block_type(class_="block-type") }}
+            <label class="content-label" for="{{ block.content.id }}">
+                {% if block.block_type.data == "image" %}
+                Alt Text
+                {% elif block.block_type.data == "figure" %}
+                Caption
+                {% else %}
+                Content
+                {% endif %}
+            </label>
+            {{ block.content(class_="block-content") }}
+            {% set label_class = "image-url-label" %}
+            {% set img_class = "block-image-url" %}
+            {% if block.block_type.data not in ['image', 'figure'] %}
+            {% set label_class = label_class + " no-display" %}
+            {% set img_class = img_class + " no-display" %}
+            {% endif %}
+            <label class="{{ label_class }}" for="{{ block.image_url.id }}">
+                Image URL
+            </label>
+            {{ block.image_url(class_=img_class) }}
+        </div>
+        {% endfor %}
+    </div>
+
+    <div id="block-template" class="article-block no-display">
+        <select name="article-blocks-__INDEX__-block_type" class="block-type">
+            <option value="heading">Heading</option>
+            <option value="paragraph">Paragraph</option>
+            <option value="image">Image</option>
+            <option value="figure">Figure</option>
+        </select>
+        <label class="content-label" for="article-blocks-__INDEX__-content">Content</label>
+        <input type="text" name="article-blocks-__INDEX__-content" class="block-content" />
+        <label class="image-url-label no-display" for="article-blocks-__INDEX__-image_url">Image URL</label>
+        <input type="text" name="article-blocks-__INDEX__-image_url" class="block-image-url no-display" />
+    </div>
+
+    <button id="add-block-btn" name="add_block" value="1" type="button">Add Another Field</button>
+    {{ form.post() }}
+</form>
+
+
+{% endblock %}
+
+
+{% block footer %}
+{% endblock %}

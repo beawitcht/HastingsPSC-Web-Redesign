@@ -4,6 +4,7 @@
 {{ super() }}
 <title>HDPSC Admin Panel</title>
 <link rel="stylesheet" href="/static/css/article.css">
+
 {% endblock %}
 
 {% block header %}
@@ -18,7 +19,13 @@
     <h1> {{ current_user.email }} </h1>
 
     <a href="/wan-register"> Add passkey </a>
-    <a href="/HDPSC-admin-panel/add-user"> Add User </a>
+    {% if current_user.roles|selectattr('name', 'in',['admin', 'superuser'])|list %}
+        <a href="/HDPSC-admin-panel/manage-users"> Manage Users </a>
+    {% elif current_user.roles|selectattr('name', 'in',['editor'])|list %}
+        <a href="/HDPSC-admin-panel/manage-users"> Manage Account </a>
+    {% endif %}
+    <a href="/HDPSC-admin-panel/post-article"> Post new Article </a>
+    <a href="/logout?next=/HDPSC-admin-panel"> Logout </a>
 
 {% endblock %}
 

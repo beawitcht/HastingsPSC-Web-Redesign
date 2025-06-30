@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{{ super() }}
+<title>HDPSC Admin Panel - Manage users</title>
+<link rel="stylesheet" href="/static/css/article.css">
+<script nonce="{{ nonce }}" defer src="/static/js/admin.min.js"></script>
+{% endblock %}
+
+{% block body %}
+{% include "security/_messages.html" %}
+<h1>Welcome, {{ current_user.email }} </h1>
+<h2>All Users</h2>
+<table>
+    <tr>
+        <th>Email</th>
+        <th>SuperUser</th>
+        <th>Admin</th>
+        <th>Editor</th>
+        <th>Update</th>
+        <th>Delete</th>
+    </tr>
+    {% for user, form in forms %}
+    {% if user.id == current_user.id %}
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <td>{{ form.email(size=32) }}</td>
+        <td>{{ form.superuser() }}</td>
+        <td>{{ form.admin() }}</td>
+        <td>{{ form.editor() }}</td>
+        <td>{{ form.update(class_="btn btn-primary update-user-btn") }}</td>
+        <td>{{ form.delete(disabled=True, label="Can't Delete Self", class_="btn btn-danger delete-user-btn") }}</td>
+    </form>
+    {% else %}
+    <tr>
+        <form method="post">
+            {{ form.hidden_tag() }}
+            <td>{{ form.email(size=32) }}</td>
+            <td>{{ form.superuser() }}</td>
+            <td>{{ form.admin() }}</td>
+            <td>{{ form.editor() }}</td>
+            <td>{{ form.update(class_="btn btn-primary update-user-btn") }}</td>
+            <td>{{ form.delete(class_="btn btn-danger delete-user-btn") }}</td>
+        </form>
+    </tr>
+    {% endif %}
+    {% endfor %}
+</table>
+
+{% if show_add_form %}
+    <h2>Add User</h2>
+    <form method="post">
+        {{ add_form.hidden_tag() }}
+        {{ add_form.email(size=32, placeholder="Email") }}
+        {{ add_form.password(size=32, placeholder="Password") }}
+        <br>
+        {{ add_form.superuser.label }} {{ add_form.superuser() }}
+        <br>
+        {{ add_form.admin.label }} {{ add_form.admin() }}
+        <br>
+        {{ add_form.editor.label }} {{ add_form.editor() }}
+        <br>
+        {{ add_form.submit(class_="btn btn-success") }}
+    </form>
+{% endif %}
+
+<a href="/HDPSC-admin-panel"> Back to admin panel </a>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
