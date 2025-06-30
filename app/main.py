@@ -72,12 +72,13 @@ if is_dev == '1':
     with app.app_context():
         # Create User to test with
         db.create_all()
-        if not Role.query.filter_by(name="admin").first():
-            db.session.add(Role(name="admin"))
+        for role_name in ["superuser", "admin", "editor"]:
+            if not Role.query.filter_by(name=role_name).first():
+                db.session.add(Role(name=role_name))
         if not security.datastore.find_user(email="test@me.com"):
             user = security.datastore.create_user(
                 email="test@me.com", password=hash_password("password"))
-        security.datastore.add_role_to_user(user, 'admin')
+        security.datastore.add_role_to_user(user, 'superuser')
         db.session.commit()
 
 # end of admin panel stuff
@@ -129,6 +130,10 @@ def handle_error(error):
         error.description = 'Try again later.'
 
     return render_template("error.html", name=error.name, code=error.code, description=error.description), error.code
+
+@app.context_processor
+def main_context_processor():
+    return dict(nonce=getattr(g, 'nonce', ''))
 
 
 @security.context_processor
