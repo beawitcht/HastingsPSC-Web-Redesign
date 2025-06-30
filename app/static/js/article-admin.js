@@ -1,4 +1,51 @@
-document.addEventListener("DOMContentLoaded", function() {
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    
+    const addBlockBtn = document.getElementById("add-block-btn");
+    const blockContainer = document.getElementById("blocks-container"); // where blocks are added
+    const blockTemplate = document.getElementById("block-template");
+    let currentIndex = 0;
+
+    // Attach change listener to dropdown
+        const initTypeSelect = blockContainer.querySelector(".block-type");
+        initTypeSelect.addEventListener("change", function () {
+            updateBlockFields(blockContainer);
+        });
+
+    // Try to initialize index from existing blocks
+    const existingBlocks = document.querySelectorAll(".article-block");
+    if (existingBlocks.length) {
+        currentIndex = existingBlocks.length;
+    }
+
+    addBlockBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        // Clone the hidden template
+        const newBlock = blockTemplate.cloneNode(true);
+        newBlock.classList.remove("no-display");
+
+        // Replace all instances of __INDEX__ with the current index
+        const html = newBlock.innerHTML.replace(/__INDEX__/g, currentIndex);
+        newBlock.innerHTML = html;
+
+        // Optional: give each block a unique ID
+        newBlock.id = `block-${currentIndex}`;
+
+        // Attach change listener to dropdown
+        const typeSelect = newBlock.querySelector(".block-type");
+        typeSelect.addEventListener("change", function () {
+            updateBlockFields(newBlock);
+        });
+
+
+        blockContainer.appendChild(newBlock);
+        
+        currentIndex++;
+    });
+
+
     // Dynamic field labeling and show/hide logic
     function updateBlockFields(blockDiv) {
         const typeSelect = blockDiv.querySelector('.block-type');
@@ -10,38 +57,16 @@ document.addEventListener("DOMContentLoaded", function() {
         const val = typeSelect.value;
         if (val === "image") {
             contentLabel.textContent = "Alt Text";
-            imageUrlLabel.style.display = "";
-            imageUrlInput.style.display = "";
+            if (imageUrlLabel) imageUrlLabel.classList.remove("no-display");
+            if (imageUrlInput) imageUrlInput.classList.remove("no-display");
         } else if (val === "figure") {
             contentLabel.textContent = "Caption";
-            imageUrlLabel.style.display = "";
-            imageUrlInput.style.display = "";
+            if (imageUrlLabel) imageUrlLabel.classList.remove("no-display");
+            if (imageUrlInput) imageUrlInput.classList.remove("no-display");
         } else {
             contentLabel.textContent = "Content";
-            imageUrlLabel.style.display = "none";
-            imageUrlInput.style.display = "none";
+            if (imageUrlLabel) imageUrlLabel.classList.add("no-display");
+            if (imageUrlInput) imageUrlInput.classList.add("no-display");
         }
     }
-
-    // Initial update for all blocks
-    document.querySelectorAll('.article-block').forEach(updateBlockFields);
-
-    // Listen for block type changes
-    document.querySelectorAll('.block-type').forEach(function(select) {
-        select.addEventListener('change', function() {
-            updateBlockFields(select.closest('.article-block'));
-        });
-    });
-
-    // Add new block dynamically (AJAX-less, just submits with extra entry)
-    document.getElementById('add-block-btn').addEventListener('click', function(e) {
-        // Add a hidden input to trigger WTForms to add a block
-        let form = document.getElementById('article-form');
-        let input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'add_block';
-        input.value = '1';
-        form.appendChild(input);
-        form.submit();
-    });
 });
