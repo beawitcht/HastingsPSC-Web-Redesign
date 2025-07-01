@@ -108,7 +108,7 @@ def add_headers(response):
     response.headers['Content-Security-Policy'] = (
         "default-src 'none';"
         f"script-src 'nonce-{nonce}' 'self';"
-        "img-src 'self' data: https://http.cat/;"
+        "img-src 'self' data: https://http.cat/  https://www.hastingspalestinecampaign.org/;"
         f"style-src 'self' 'nonce-{nonce}' https://fonts.gstatic.com/ https://fonts.googleapis.com/;"
         "font-src 'self' https://fonts.gstatic.com/ https://fonts.googleapis.com/;"
         "connect-src 'self';"
