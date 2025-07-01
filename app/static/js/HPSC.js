@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     window.onscroll = function () { scrollDetected() };
-    
+
     if (backToTop) {
         backToTop.addEventListener("click", () => {
             document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
@@ -23,17 +23,29 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    //to main body arrow functionality
-    toBodyArrow = document.getElementById("toBodyArrow");
-    if (toBodyArrow) {
-        $main = document.getElementById("main");
+    //to main body arrow functionality - not using anymore keeping for the time being
+    // toBodyArrow = document.getElementById("toBodyArrow");
+    // if (toBodyArrow) {
+    //     main = document.getElementById("main");
 
-        toBodyArrow.addEventListener("click", (e) => {
+    //     toBodyArrow.addEventListener("click", (e) => {
+    //         e.preventDefault();
+    //         main.scrollIntoView({ behavior: 'smooth' });
+    //         setTimeout(() => {
+    //             document.activeElement.blur();
+    //         }, 700); // after scroll finishes
+    //     });
+    // }
+    // to main accessibility functionality
+
+    const skipToMain = document.getElementById("skipToMain");
+    const main = document.getElementById("main");
+    if (skipToMain && main) {
+        skipToMain.addEventListener("click", function (e) {
             e.preventDefault();
-            $main.scrollIntoView({ behavior: 'smooth' });
-            setTimeout(() => {
-                document.activeElement.blur();
-            }, 700); // after scroll finishes
+            main.scrollIntoView({ behavior: "smooth" });
+            main.setAttribute("tabindex", "-1"); // for accessibility focus
+            main.focus({ preventScroll: true });
         });
     }
 
@@ -60,10 +72,79 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("scroll", function () {
         const banner = document.querySelector('.banner');
         if (!banner) return;
-        // Parallax: adjust the 0.5 for more/less effect
-        const scrolled = window.scrollY * 0.1;
-        banner.style.backgroundPosition = `45% calc(50% + ${scrolled}px)`;
+        const parallaxStart = 0;
+        const parallaxFactor = 0.03;
+        let scrolled = 0;
+        if (window.scrollY > parallaxStart) {
+            scrolled = (window.scrollY - parallaxStart) * parallaxFactor;
+        }
+        banner.style.backgroundPosition = `50% calc(120px + ${scrolled}px)`;
     });
+
+
+    // MOBILE NAV STUFF
+    button = document.getElementById("hamburger");
+    navMenu = document.getElementById("mobile");
+    mainContent = document.getElementById("mainContent");
+    banner = document.getElementById("banner");
+    first = document.getElementById("first");
+
+    button.addEventListener("click", () => {
+        const currentState = button.getAttribute("data-state");
+        if (!currentState || currentState === "closed") {
+            navMenu.setAttribute("class", "nav-bar-mobile-expanding");
+            setTimeout(() => {
+                navMenu.setAttribute("aria-expanded", "true");
+                navMenu.setAttribute("class", "nav-bar-mobile");
+                button.setAttribute("data-state", "opened");
+                button.setAttribute("aria-expanded", "true");
+                mainContent.setAttribute("aria-expanded", "true");
+                banner.setAttribute("aria-expanded", "true");
+                first.setAttribute("aria-expanded", "true");
+            }, 1); // 1ms delay to switch to transition animation
+
+
+        } else {
+            navMenu.setAttribute("aria-expanded", "false");
+            button.setAttribute("data-state", "closed");
+            button.setAttribute("aria-expanded", "false");
+            mainContent.setAttribute("aria-expanded", "false");
+            banner.setAttribute("aria-expanded", "false");
+            first.setAttribute("aria-expanded", "false");
+        }
+    });
+
+    // if scroll locked highlight the burger to prompt unlock
+//     function isScrollLocked() {
+//         return getComputedStyle(document.body).overflow === 'hidden';
+//     }
+
+//     function highlightHamburger() {
+//         const hamburger = document.getElementById('hamImg');
+//         if (hamburger) {
+//             hamburger.classList.add('highlight-hamburger');
+//             setTimeout(() => hamburger.classList.remove('highlight-hamburger'), 1000);
+//         }
+//     }
+
+//     function handleScrollAttempt(e) {
+//         if (isScrollLocked()) {
+//             e.preventDefault();
+//             highlightHamburger();
+//         }
+//     }
+
+//     // Listen for scroll attempts
+//     window.addEventListener('wheel', handleScrollAttempt, { passive: false });
+//     window.addEventListener('touchmove', handleScrollAttempt, { passive: false });
+//     window.addEventListener('keydown', (e) => {
+//         const keys = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' '];
+//         if (keys.includes(e.key) && isScrollLocked()) {
+//             e.preventDefault();
+//             highlightHamburger();
+//         }
+//     });
+
 
 
 });

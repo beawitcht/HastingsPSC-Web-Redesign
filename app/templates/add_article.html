@@ -3,52 +3,86 @@
 {% block head %}
 {{ super() }}
 <title>Add Article - HDPSC Admin Panel</title>
-<link rel="stylesheet" href="/static/css/article-admin.css">
+<link rel="stylesheet" href="/static/css/admin.css">
 <script defer src="/static/js/article-admin.min.js"></script>
 {% endblock %}
 
 {% block header %}
 {% endblock %}
 
-{% block nav %}
-{% endblock %}
+{% block admin_header %}
+{{ super() }}
+{% endblock admin_header %}
 
 
 {% block body %}
 {% include "security/_messages.html" %}
+{% for field, errors in form.errors.items() %}
+<div class="alert alert-error">
+    {% for error in errors %}
+    {{ errors }}
+    {% endfor %}
+</div>
+{% endfor %}
 <h1> {{ current_user.email }} </h1>
-<form method="post" id="article-form">
+<form method="post" id="article-form" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     {{ form.title.label }} {{ form.title() }}<br>
     <div id="blocks-container">
         {% for block in form.blocks %}
         <div id="init-block" class="article-block" data-block-idx="{{ loop.index0 }}">
             {{ block.block_type.label }} {{ block.block_type(class_="block-type") }}
-            <label class="content-label" for="{{ block.content.id }}">
-                {% if block.block_type.data == "image" %}
-                Alt Text
-                {% elif block.block_type.data == "figure" %}
-                Caption
-                {% else %}
-                Content
-                {% endif %}
-            </label>
-            {{ block.content(class_="block-content") }}
+            {% if block.block_type.data not in ['image'] %}
+                <label class="content-label" for="{{ block.content.id }}">
+                    {% if block.block_type.data == "figure" %}
+                        Caption
+                    {% else %}
+                        Content
+                    {% endif %}
+                </label>
+                {{ block.content(class_="block-content") }}
+            {% endif %}
+
+            {% set alt_text_label_class = "alt-text-label" %}
+            {% set alt_text_class = "block-alt-text" %}
+            
             {% set label_class = "image-url-label" %}
             {% set img_class = "block-image-url" %}
+
+            {% set disabled = "" %}
+
+            
+            
+           
             {% if block.block_type.data not in ['image', 'figure'] %}
-            {% set label_class = label_class + " no-display" %}
-            {% set img_class = img_class + " no-display" %}
+
+                {% set alt_text_label_class = alt_text_label_class + " no-display" %}
+                {% set alt_text_class = alt_text_class + " no-display" %}
+            
+                {% set label_class = label_class + " no-display" %}
+                {% set img_class = img_class + " no-display" %}
+
+                {% set disabled = "disabled" %}
+                
             {% endif %}
-            <label class="{{ label_class }}" for="{{ block.image_url.id }}">
-                Image URL
+
+            <label class="{{ alt_text_label_class }}" {{ disabled }} for="{{ block.alt_text.id }}">
+                Alt text
             </label>
-            {{ block.image_url(class_=img_class) }}
+            {{ block.alt_text(class_=alt_text_class, **({'disabled': 'disabled'} if disabled else {})) }}
+
+            <label class="{{ label_class }}" {{ disabled }} for="{{ block.image.id }}">
+                Image
+            </label>
+            {{ block.image(class_=img_class, **({'disabled': 'disabled'} if disabled else {})) }}
+
+
         </div>
+        <br>
         {% endfor %}
     </div>
 
-    <div id="block-template" class="article-block no-display">
+    <div id="block-template" class="article-block no-display" disabled="">
         <select name="article-blocks-__INDEX__-block_type" class="block-type">
             <option value="heading">Heading</option>
             <option value="paragraph">Paragraph</option>
@@ -57,8 +91,10 @@
         </select>
         <label class="content-label" for="article-blocks-__INDEX__-content">Content</label>
         <input type="text" name="article-blocks-__INDEX__-content" class="block-content" />
-        <label class="image-url-label no-display" for="article-blocks-__INDEX__-image_url">Image URL</label>
-        <input type="text" name="article-blocks-__INDEX__-image_url" class="block-image-url no-display" />
+        <label class="image-url-label no-display" disabled="" for="article-blocks-__INDEX__-image">Image</label>
+        <input type="file" name="article-blocks-__INDEX__-image" class="block-image-url no-display" disabled="" />
+        <label class="alt-text-label no-display" disabled="" for="article-blocks-__INDEX__-alt_text">Alt text</label>
+        <input type="text" name="article-blocks-__INDEX__-alt_text" class="block-alt-text no-display" disabled="" />
     </div>
 
     <button id="add-block-btn" name="add_block" value="1" type="button">Add Another Field</button>

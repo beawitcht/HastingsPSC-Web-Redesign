@@ -21,12 +21,14 @@
     <link
         href="https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@700&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
         rel="stylesheet">
-    <script defer src="/static/js/HPSC.min.js"></script>
     <link rel="stylesheet" href="/static/css/base.css">
+    <script defer src="/static/js/HPSC.min.js"></script>
+    <!-- FOUC fix -->
+    <script nonce="{{ nonce }}">(_ => { let a })()</script>
     {% endblock %}
 </head>
 
-<body>
+<body id="body">
     <a href="#main" id="skipToMain" class="skip-to-main">Skip to main content</a>
 
 
@@ -40,11 +42,69 @@
         <div class="logo-text">
             Hastings & District <br> Palestine <br> Solidarity <br> Campaign
         </div>
-        {% block nav %}{% endblock %}
+        {% block nav %}
+        <nav class="nav-bar">
+            <div class="header-link-container">
+                <div class="header-link"><a class="nav-link" href="/about">About Us</a></div>
+            </div>
+            <div class="header-link-container">
+                <div class="header-link"><a class="nav-link" href="/al-mawasi">Al-Mawasi</a></div>
+            </div>
+            <div class="header-link-container">
+                <div class="header-link"><a class="nav-link" href="/boycott">Boycott</a></div>
+            </div>
+            <div class="header-link-container">
+                <div class="header-link"><a class="nav-link" href="/shop">Shop</a></div>
+            </div>
+            <div class="header-link-container">
+                <div class="header-link-cta-p"><a class="nav-link-cta" href="/join">Join Us</a></div>
+            </div>
+            <div class="header-link-container">
+                <div class="header-link-cta-s"><a class="nav-link-cta" href="/donate">Donate</a></div>
+            </div>
+        </nav>
+
+        <div class="burger-container">
+            <button id="hamburger" class="hamburger-btn" aria-controls="mobile" aria-expanded="false"
+                aria-label="Hamburger navigation menu button">
+                <svg id="hamImg" fill="#038721" class="hamburger" viewBox="0 0 100 100" width="35" height="35"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <rect class="line top" width="80" height="10" x="10" y="25" rx="5">
+                    </rect>
+                    <rect class="line middle" width="80" height="10" x="10" y="45" rx="5">
+                    </rect>
+                    <rect class="line bottom" width="80" height="10" x="10" y="65" rx="5">
+                    </rect>
+                </svg>
+            </button>
+        </div>
+        {% endblock %}
     </div>
     {% endblock %}
 
-    <div class="main-content">
+    {% block admin_header %}
+    <div class="header" id="scrollTop">
+        <a class="no-style" href="/HDPSC-admin-panel" rel="home" id="homeLogo">
+            <div class="header-logo-container">
+                <img class="logo" src="/static/images/logo.png" alt="Logo home" />
+                <div class="logo-text">
+                    Hastings & District <br> Palestine <br> Solidarity <br> Campaign
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endblock admin_header %}
+
+    <nav class="nav-bar-mobile" id="mobile">
+        <span class="mobile-link"><a class="nav-link" href="/about">About Us</a></span>
+        <span class="mobile-link"><a class="nav-link" href="/resources">Al-Mawasi</a></span>
+        <span class="mobile-link"><a class="nav-link" href="/sources">Boycott</a></span>
+        <span class="mobile-link"><a class="nav-link" href="/shop">Shop</a></span>
+        <span class="mobile-link"><a class="nav-link" href="/join">Join Us</a></span>
+        <span class="mobile-link"><a class="nav-link" href="/donate">Donate</a></span>
+    </nav>
+
+    <div id="mainContent" class="main-content" aria-expanded="false">
         {% block body %}
         {% endblock %}
     </div>

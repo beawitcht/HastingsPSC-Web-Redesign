@@ -2,7 +2,7 @@
 
 {% block head %}
 {{ super() }}
-<title>Hastings & District Palestine Solidarity Campaign</title>
+<title>{{ title }}Hastings & District Palestine Solidarity Campaign</title>
 <link rel="canonical" href="https://www.hastingspalestinecampaign.org/articles/test-article" />
 <meta name="description" content="DESCRIPTION HERE">
 <meta name="twitter:title" content="Articles - H&D PSC">
@@ -16,6 +16,9 @@
 {% block header %}
 {{ super() }}
 {% endblock %}
+
+{% block admin_header %}
+{% endblock admin_header %}
 
 {% block nav %}
 <nav class="nav-bar">
@@ -59,12 +62,17 @@
             <h2>{{ block.content }}</h2>
         {% elif block.type == 'paragraph' %}
             <p>{{ block.content }}</p>
+
         {% elif block.type == 'image' %}
-            <img src="{{ block.image_url }}" alt="{{ block.content }}">
+            <div class="article-img-container">
+                <img class="article-img" src="{{ block.image }}" alt="{{ block.alt_text }}">
+            </div>
         {% elif block.type == 'figure' %}
             <figure>
-                <img src="{{ block.image_url }}" alt="{{ block.content }}">
-                <figcaption>{{ block.content }}</figcaption>
+                <div class="figure-wrapper">
+                    <img class="article-fig-img" src="{{ block.image }}" alt="{{ block.alt_text }}">
+                    <figcaption class="article-caption">{{ block.content }}</figcaption>
+                </div>
             </figure>
         {% endif %}
     {% endfor %}

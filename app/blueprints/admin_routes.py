@@ -1,13 +1,17 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request
-from app.utilities import security, db, User, Role, role_at_least, allowed_role_action
+from app.utilities import security, db, User, Role, role_at_least, allowed_role_action, process_image
 from app.forms.admin_forms import AddUserForm, ManageUserForm, UploadArticleForm, ArticleBlockForm
 from flask_security import auth_required, hash_password, current_user
 from sqlalchemy.exc import IntegrityError
+from werkzeug.utils import secure_filename
 from pathlib import Path
 
 admin_bp = Blueprint('admin', __name__)
 
-path = Path(__file__).resolve().parent.parent / 'templates' / 'articles'
+article_path = Path(__file__).resolve().parent.parent / \
+    'templates' / 'articles'
+image_path = Path(__file__).resolve().parent.parent / \
+    'static' / 'images' / 'uploaded'
 
 
 @admin_bp.route("/HDPSC-admin-panel")
@@ -191,11 +195,28 @@ def post_article():
 
         # Build the article content from blocks
         blocks = []
-        for block_form in form.blocks.entries:
+       
+        for i, block_form in enumerate(form.blocks.entries):
+            file_key = f'article-blocks-{i}-image'
+            uploaded_file = request.files.get(file_key)
+
+            if uploaded_file and uploaded_file.filename:
+                # resize and reduce file size
+                processed = process_image(uploaded_file)
+
+                filename = secure_filename(uploaded_file.filename)
+                with open(image_path / filename, "wb+") as f:
+                    f.write(processed)
+
+                image = "/static/images/uploaded/" + filename
+            else:
+                image = None
+
             block = {
                 "type": block_form.block_type.data,
                 "content": block_form.content.data,
-                "image_url": block_form.image_url.data
+                "image": image,
+                "alt_text": block_form.alt_text.data
             }
             blocks.append(block)
 
@@ -205,7 +226,7 @@ def post_article():
             blocks=blocks
         )
 
-        with open(path / f"{form.title.data}.html", "w+") as f:
+        with open(article_path / f"{form.title.data}.html", "w+") as f:
             f.write(new_article)
 
         return redirect(f'/articles/{form.title.data}')

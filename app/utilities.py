@@ -6,7 +6,8 @@ from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore, current_user
 from flask_security.models import fsqla_v3 as fsqla
-
+from PIL import Image
+import io
 from dotenv import load_dotenv
 
 cache = Cache()
@@ -169,3 +170,34 @@ def allowed_role_action(actor_roles, action, actor=None, target=None, target_rol
 #     except Exception as e:
 #         print(f"Error fetching tweets: {e}")
 #         return []
+
+
+def process_image(input):
+    # Open image
+    img = Image.open(input)
+    original_format = img.format
+
+    # Resize if the image is taller than wider and larger than acceptable
+    if img.height > img.width and img.height > 601:
+        new_height = 600
+        new_width = int((new_height / img.height) * img.width)
+        img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+
+    # Resize if wider than acceptable
+    elif img.width > 801:
+        new_width = 800
+        new_height = int((new_width / img.width) * img.height)
+        img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+
+    
+    # Compress if size > 200KB
+    quality = 95
+    while True:
+        buffer = io.BytesIO()
+        img.save(buffer, format=original_format, optimize=True, quality=quality)
+        size_kb = buffer.tell() / 1024
+
+        if size_kb <= 200 or quality <= 20:
+            break
+        quality -= 5
+    return buffer.getvalue()
