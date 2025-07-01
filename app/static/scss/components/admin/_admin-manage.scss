@@ -1,0 +1,35 @@
+.users-wrapper {
+    display: flexbox;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-card,
+.add-user-form {}
+
+.user-field {
+    display: inline-block;
+    max-width: 80%;
+
+
+}
+
+.user-field label {}
+
+.user-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+[disabled] {
+    opacity: 20%;
+}
+
+.double-lb {
+    background: url("/static/images/linebreakdouble.svg");
+    width: 95px;
+    height: 32px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

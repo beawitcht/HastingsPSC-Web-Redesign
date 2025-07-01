@@ -21,44 +21,23 @@
 {{ super() }}
 {% endblock %}
 
-{% block nav %}
-<nav class="nav-bar">
-    <div class="header-link-container">
-        <div class="header-link"><a class="nav-link" href="/about">About Us</a></div>
-    </div>
-    <div class="header-link-container">
-        <div class="header-link"><a class="nav-link" href="/al-mawasi">Al-Mawasi</a></div>
-    </div>
-    <div class="header-link-container">
-        <div class="header-link"><a class="nav-link" href="/boycott">Boycott</a></div>
-    </div>
-    <div class="header-link-container">
-        <div class="header-link"><a class="nav-link" href="/shop">Shop</a></div>
-    </div>
-    <div class="header-link-container">
-        <div class="header-link-cta-p"><a class="nav-link-cta" href="/join">Join Us</a></div>
-    </div>
-    <div class="header-link-container">
-        <div class="header-link-cta-s"><a class="nav-link-cta" href="/donate">Donate</a></div>
-    </div>
-</nav>
+{% block admin_header %}
+{% endblock admin_header %}
 
-<nav class="nav-bar-mobile" id="mobile">
-    <span class="mobile-link"><a class="nav-link" href="/about">About Us</a></span>
-    <span class="mobile-link"><a class="nav-link" href="/resources">Al-Mawasi</a></span>
-    <span class="mobile-link"><a class="nav-link" href="/sources">Boycott</a></span>
-    <span class="mobile-link"><a class="nav-link" href="/shop">Shop</a></span>
-    <span class="mobile-link"><a class="nav-link" href="/join">Join Us</a></span>
-    <span class="mobile-link"><a class="nav-link" href="/donate">Donate</a></span>
-</nav>
+{% block nav %}
+{{ super() }}
 {% endblock %}
 
 
 
+
+
+
 {% block body %}
-<div class="content-section-primary">
+
+<div id="first" class="content-section-primary">
     <div class="banner-bg">
-        <div class="banner">
+        <div id="banner" class="banner">
             <div class="banner-content">
                 <!-- Removed heading over banner image as it looks ugly and I cant make it look good UI is my passion -->
                 <!-- <h1>Hastings & District <br> Palestine Solidarity Campaign</h1>

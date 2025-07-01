@@ -10,17 +10,9 @@ $primary: global-vars.$primary;
 $bg-primary: global-vars.$bg-primary;
 $bg-secondary: global-vars.$bg-secondary;
 
-.main-content {
-    flex: 1 1 0;
-    align-self: stretch;
-    background: global-vars.$bg-primary;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    display: inline-flex;
-    padding-top: 120px;
+body{
+    overflow-x: unset;
 }
-
 
 .section-content {
     max-width: 1000px;
@@ -29,57 +21,6 @@ $bg-secondary: global-vars.$bg-secondary;
     width: 100%;
 }
 
-.banner {
-    @media not print {
-        .shrinkToFit {
-            cursor: zoom-in;
-        }
-    }
-
-    background-color: #70bcdb;
-    box-sizing: border-box;
-    margin: 0 auto;
-    width: 100%;
-    aspect-ratio: 842/291;
-    max-width: 2916px;
-    min-height: 176px;
-    max-height: fit-content;
-    background-image: url('/static/images/banner.jpg');
-    background-repeat: no-repeat;
-    background-position: 50% 120px;
-    background-attachment: fixed;
-    background-size: contain;
-    display: flex;
-    position: relative;
-
-    @media (min-width: 2916px) {
-        height: calc(2916px * 291 / 842); // Maintain aspect ratio at max width
-        min-height: unset;
-        max-height: unset;
-    }
-}
-
-.banner-content {
-    box-sizing: border-box;
-    width: 100%;
-    min-height: 1px;
-    color: rgb(255, 255, 255);
-    line-height: 1.45;
-    text-align: center;
-    // backdrop-filter: blur(2px); 
-
-}
-
-.banner-bg {
-    width: 100vw;
-    background: $bg-secondary;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    overflow-x: hidden;
-}
 
 
 // for text and image on banner if decide to use - goes inside banner content
@@ -157,19 +98,6 @@ $bg-secondary: global-vars.$bg-secondary;
     }
 
 }
-
-.content-section-primary {
-    background: $bg-primary;
-    width: 100%;
-    flex: 1 0 auto;
-}
-
-.content-section-secondary {
-    background: $bg-secondary;
-    width: 100%;
-    flex: 1 0 auto;
-}
-
 
 .layout-card-container {
     flex: 1 1 0;

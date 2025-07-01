@@ -2,69 +2,91 @@
 
 {% block head %}
 {{ super() }}
-<title>HDPSC Admin Panel - Manage users</title>
-<link rel="stylesheet" href="/static/css/article.css">
+<title>Manage users - HDPSC Admin Panel </title>
+<link rel="stylesheet" href="/static/css/admin.css">
 <script nonce="{{ nonce }}" defer src="/static/js/admin.min.js"></script>
 {% endblock %}
 
+{% block admin_header %}
+{{ super() }}
+{% endblock admin_header %}
+
+{% block header %}
+{% endblock header %}
+
 {% block body %}
 {% include "security/_messages.html" %}
-<h1>Welcome, {{ current_user.email }} </h1>
+<h1>Welcome, {{ current_user.email }}</h1>
 <h2>All Users</h2>
-<table>
-    <tr>
-        <th>Email</th>
-        <th>SuperUser</th>
-        <th>Admin</th>
-        <th>Editor</th>
-        <th>Update</th>
-        <th>Delete</th>
-    </tr>
+
+<div class="users-wrapper">
     {% for user, form in forms %}
-    {% if user.id == current_user.id %}
-    <form method="post">
+    <form method="post" class="user-card">
         {{ form.hidden_tag() }}
-        <td>{{ form.email(size=32) }}</td>
-        <td>{{ form.superuser() }}</td>
-        <td>{{ form.admin() }}</td>
-        <td>{{ form.editor() }}</td>
-        <td>{{ form.update(class_="btn btn-primary update-user-btn") }}</td>
-        <td>{{ form.delete(disabled=True, label="Can't Delete Self", class_="btn btn-danger delete-user-btn") }}</td>
+        <div class="user-field">
+            <label>Email</label>
+            {{ form.email(size=32) }}
+        
+            <div class="user-actions">
+            <label>SuperUser</label>
+                {{ form.superuser() }}
+            
+            
+                <label> | Admin</label>
+                {{ form.admin() }}
+            
+            
+                <label> | Editor</label>
+                {{ form.editor() }}
+            </div>
+            <div class="user-actions">
+                {{ form.update(class_="btn btn-primary update-user-btn") }}
+                {% if user.id == current_user.id %}
+                    {{ form.delete(disabled=True, label="Can't Delete Self", class_="btn btn-danger delete-user-btn") }}
+                {% else %}
+                    {{ form.delete(class_="btn btn-danger delete-user-btn") }}
+                {% endif %}
+            </div>
+        </div>
     </form>
-    {% else %}
-    <tr>
-        <form method="post">
-            {{ form.hidden_tag() }}
-            <td>{{ form.email(size=32) }}</td>
-            <td>{{ form.superuser() }}</td>
-            <td>{{ form.admin() }}</td>
-            <td>{{ form.editor() }}</td>
-            <td>{{ form.update(class_="btn btn-primary update-user-btn") }}</td>
-            <td>{{ form.delete(class_="btn btn-danger delete-user-btn") }}</td>
-        </form>
-    </tr>
-    {% endif %}
+    <hr>
     {% endfor %}
-</table>
+</div>
 
 {% if show_add_form %}
-    <h2>Add User</h2>
-    <form method="post">
-        {{ add_form.hidden_tag() }}
+<span class="double-lb"></span>
+<h2>Add New User</h2>
+<form method="post" class="add-user-form">
+    {{ add_form.hidden_tag() }}
+    <div class="user-field">
+        <label>{{ add_form.email.label }}</label>
         {{ add_form.email(size=32, placeholder="Email") }}
+    
+    
+        <label>{{ add_form.password.label }}</label>
         {{ add_form.password(size=32, placeholder="Password") }}
-        <br>
-        {{ add_form.superuser.label }} {{ add_form.superuser() }}
-        <br>
-        {{ add_form.admin.label }} {{ add_form.admin() }}
-        <br>
-        {{ add_form.editor.label }} {{ add_form.editor() }}
-        <br>
+   
+        <div class="user-actions">
+        <label>{{ add_form.superuser.label }}</label>
+        {{ add_form.superuser() }}
+   
+    
+        <label> | {{ add_form.admin.label }}</label>
+        {{ add_form.admin() }}
+   
+   
+        <label> | {{ add_form.editor.label }}</label>
+        {{ add_form.editor() }}
+        </div>
+    <div class="user-actions">
         {{ add_form.submit(class_="btn btn-success") }}
-    </form>
+    </div>
+
+    </div>
+</form>
 {% endif %}
 
-<a href="/HDPSC-admin-panel"> Back to admin panel </a>
+<a href="/HDPSC-admin-panel">Back to admin panel</a>
 {% endblock %}
 
 {% block footer %}

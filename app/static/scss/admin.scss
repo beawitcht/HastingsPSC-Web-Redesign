@@ -1,0 +1,121 @@
+@use 'components/admin/admin-article';
+@use 'components/admin/admin-manage';
+
+h1 {
+    color: black;
+    font-family: PT Sans;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 121.833%;
+    margin-bottom: 0;
+}
+
+h2 {
+    color: #038721;
+    font-family: PT Sans;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 121.833%;
+    margin-bottom: 0;
+}
+
+
+div, a, input, button {
+    color: #000;
+    font-family: PT Sans;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 121.833%;
+    gap: 8px;
+}
+
+button, [type="submit"] {
+    padding: 4px !important;
+}
+
+[type="email"],
+[type="password"],
+[type="submit"],
+[type="text"],
+[type="button"],
+[type="checkbox"],
+select
+{
+    display: inline-block;
+    max-width: 100%;
+    min-height: 34px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 6px;
+    border: 2px solid #000;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 0;
+}
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    align-self: stretch;
+    max-width: 100%;
+    margin: auto;
+    margin-top: 120px;
+
+}
+
+body {
+    width: 100%;
+    background: #f9f8f6;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    display: inline-flex;
+    text-align: center;
+    
+}
+
+li {
+    padding: 16px;
+}
+
+.header-logo-container {
+    min-width: 320px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    display: inline-flex;
+  }
+
+.header {
+    align-self: stretch;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    display: flex;
+  }
+
+.no-style{
+    text-decoration: none;
+}
+
+form{
+    display: flexbox;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.fs-center { text-align: center; }
+.fs-important { font-size: larger; font-weight: bold; }
+.fs-gap { margin-top: 20px; }
+.fs-div { margin: 4px; }
+.success { color: darkgreen !important;}
+.fs-error-msg { color: darkred; }
+
+

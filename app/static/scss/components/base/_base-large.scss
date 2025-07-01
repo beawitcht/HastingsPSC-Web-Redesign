@@ -3,11 +3,12 @@
 @use 'mixins';
 
 $primary: global-vars.$primary;
-@media screen and (min-device-width: 1000px) {
-    //tbd
-}
+// @media screen and (min-device-width: 1000px) {
+//     //tbd
+// }
 
 @media (min-width: 778px) {
+    
     .nav-bar-mobile {
         display: none;
     }
@@ -28,6 +29,8 @@ $primary: global-vars.$primary;
         display: none;
 
     }
+
+}
 
     h1 {
         font-family: 'PT Sans Narrow', sans-serif;
@@ -130,10 +133,8 @@ $primary: global-vars.$primary;
         width: auto;
         margin-right: 8px;
     }
-}
 
-
-.logo {
+    .logo {
     width: 110px;
     height: 110px;
 }
@@ -206,3 +207,6 @@ $primary: global-vars.$primary;
 .bluesky:hover {
     filter: drop-shadow(1px 1px 2px #000000);
 }
+//}
+
+

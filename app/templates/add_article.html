@@ -3,15 +3,16 @@
 {% block head %}
 {{ super() }}
 <title>Add Article - HDPSC Admin Panel</title>
-<link rel="stylesheet" href="/static/css/article-admin.css">
+<link rel="stylesheet" href="/static/css/admin.css">
 <script defer src="/static/js/article-admin.min.js"></script>
 {% endblock %}
 
 {% block header %}
 {% endblock %}
 
-{% block nav %}
-{% endblock %}
+{% block admin_header %}
+{{ super() }}
+{% endblock admin_header %}
 
 
 {% block body %}
@@ -77,6 +78,7 @@
 
 
         </div>
+        <br>
         {% endfor %}
     </div>
 

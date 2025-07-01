@@ -1,2 +1,11 @@
 @use '../../variables/global-vars';
 @use '../base/mixins';
+
+@media (min-width: 778px) {
+    .section-content {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px 16px;
+        width: 100%;
+    }
+}

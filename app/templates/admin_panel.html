@@ -3,29 +3,39 @@
 {% block head %}
 {{ super() }}
 <title>HDPSC Admin Panel</title>
-<link rel="stylesheet" href="/static/css/article.css">
+<link rel="stylesheet" href="/static/css/admin.css">
 
 {% endblock %}
+{% block admin_header %}
+{{ super() }}
+{% endblock admin_header %}
 
 {% block header %}
-{% endblock %}
-
-{% block nav %}
-{% endblock %}
+{% endblock header %}
 
 
 {% block body %}
+
     
     <h1> {{ current_user.email }} </h1>
+    <ul>
+        <li> <a href="/wan-register"> Add passkey </a> </li>
+        <li>
+            <a href="/HDPSC-admin-panel/manage-users">
+            {% if current_user.roles|selectattr('name', 'in',['admin', 'superuser'])|list %}
+                Manage Users 
+            {% elif current_user.roles|selectattr('name', 'in',['editor'])|list %}
+                Manage Account
+            {% endif %}
+            </a> 
+        </li>
+        <li> <a href="/HDPSC-admin-panel/post-article"> Post new Article </a></li>
+        <li>  <a href="/logout?next=/HDPSC-admin-panel"> Logout </a></li>
+        
 
-    <a href="/wan-register"> Add passkey </a>
-    {% if current_user.roles|selectattr('name', 'in',['admin', 'superuser'])|list %}
-        <a href="/HDPSC-admin-panel/manage-users"> Manage Users </a>
-    {% elif current_user.roles|selectattr('name', 'in',['editor'])|list %}
-        <a href="/HDPSC-admin-panel/manage-users"> Manage Account </a>
-    {% endif %}
-    <a href="/HDPSC-admin-panel/post-article"> Post new Article </a>
-    <a href="/logout?next=/HDPSC-admin-panel"> Logout </a>
+    
+    
+   
 
 {% endblock %}
 

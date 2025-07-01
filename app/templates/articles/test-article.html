@@ -17,41 +17,16 @@
 {{ super() }}
 {% endblock %}
 
-{% block nav %}
-<nav class="nav-bar">
-    <div class="header-link-container">
-        <div class="header-link"><a class="nav-link" href="/about">About Us</a></div>
-    </div>
-    <div class="header-link-container">
-        <div class="header-link"><a class="nav-link" href="/al-mawasi">Al-Mawasi</a></div>
-    </div>
-    <div class="header-link-container">
-        <div class="header-link"><a class="nav-link" href="/boycott">Boycott</a></div>
-    </div>
-    <div class="header-link-container">
-        <div class="header-link"><a class="nav-link" href="/shop">Shop</a></div>
-    </div>
-    <div class="header-link-container">
-        <div class="header-link-cta-p"><a class="nav-link-cta" href="/join">Join Us</a></div>
-    </div>
-    <div class="header-link-container">
-        <div class="header-link-cta-s"><a class="nav-link-cta" href="/donate">Donate</a></div>
-    </div>
-</nav>
+{% block admin_header %}
+{% endblock admin_header %}
 
-<nav class="nav-bar-mobile" id="mobile">
-    <span class="mobile-link"><a class="nav-link" href="/about">About Us</a></span>
-    <span class="mobile-link"><a class="nav-link" href="/resources">Al-Mawasi</a></span>
-    <span class="mobile-link"><a class="nav-link" href="/sources">Boycott</a></span>
-    <span class="mobile-link"><a class="nav-link" href="/shop">Shop</a></span>
-    <span class="mobile-link"><a class="nav-link" href="/join">Join Us</a></span>
-    <span class="mobile-link"><a class="nav-link" href="/donate">Donate</a></span>
-</nav>
+{% block nav %}
+{{ super() }}
 {% endblock %}
 
 
 {% block body %}
-<div class="section-content">
+<div id="first" class="section-content">
 
 
     <h1 id="main">COUNCIL LEADER SLAMS ISRAEL'S 'INHUMANE' ATTACK ON AL MAWASI</h1>
