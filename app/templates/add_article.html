@@ -4,7 +4,7 @@
 {{ super() }}
 <title>Add Article - HDPSC Admin Panel</title>
 <link rel="stylesheet" href="/static/css/admin.css">
-<script defer src="/static/js/article-admin.min.js"></script>
+<script  nonce="{{ nonce }}" src="/static/js/article-admin.min.js"></script>
 {% endblock %}
 
 {% block header %}
@@ -20,7 +20,7 @@
 {% for field, errors in form.errors.items() %}
 <div class="alert alert-error">
     {% for error in errors %}
-    {{ errors }}
+    {{ error }}
     {% endfor %}
 </div>
 {% endfor %}
@@ -33,37 +33,36 @@
         <div id="init-block" class="article-block" data-block-idx="{{ loop.index0 }}">
             {{ block.block_type.label }} {{ block.block_type(class_="block-type") }}
             {% if block.block_type.data not in ['image'] %}
-                <label class="content-label" for="{{ block.content.id }}">
-                    {% if block.block_type.data == "figure" %}
-                        Caption
-                    {% else %}
-                        Content
-                    {% endif %}
-                </label>
-                {{ block.content(class_="block-content") }}
+            <label class="content-label" for="{{ block.content.id }}">
+                {% if block.block_type.data == "figure" %}
+                Caption
+                {% else %}
+                Content
+                {% endif %}
+            </label>
+            {{ block.content(class_="block-content") }}
             {% endif %}
 
             {% set alt_text_label_class = "alt-text-label" %}
             {% set alt_text_class = "block-alt-text" %}
-            
+
             {% set label_class = "image-url-label" %}
             {% set img_class = "block-image-url" %}
 
             {% set disabled = "" %}
 
-            
-            
-           
+
+
             {% if block.block_type.data not in ['image', 'figure'] %}
 
-                {% set alt_text_label_class = alt_text_label_class + " no-display" %}
-                {% set alt_text_class = alt_text_class + " no-display" %}
-            
-                {% set label_class = label_class + " no-display" %}
-                {% set img_class = img_class + " no-display" %}
+            {% set alt_text_label_class = alt_text_label_class + " no-display" %}
+            {% set alt_text_class = alt_text_class + " no-display" %}
 
-                {% set disabled = "disabled" %}
-                
+            {% set label_class = label_class + " no-display" %}
+            {% set img_class = img_class + " no-display" %}
+
+            {% set disabled = "disabled" %}
+
             {% endif %}
 
             <label class="{{ alt_text_label_class }}" {{ disabled }} for="{{ block.alt_text.id }}">
@@ -95,11 +94,20 @@
         <input type="file" name="article-blocks-__INDEX__-image" class="block-image-url no-display" disabled="" />
         <label class="alt-text-label no-display" disabled="" for="article-blocks-__INDEX__-alt_text">Alt text</label>
         <input type="text" name="article-blocks-__INDEX__-alt_text" class="block-alt-text no-display" disabled="" />
+        <button id="rmv-block-btn-__INDEX__" name="rmv_block" type="button">Remove field</button> <br>
     </div>
 
-    <button id="add-block-btn" name="add_block" value="1" type="button">Add Another Field</button>
+    <button id="add-block-btn" name="add_block" value="1" type="button">Add Another Field</button> <br>
+
+    <button id="preview-button" type="button" name="preview">Preview Article</button>
+
+
     {{ form.post() }}
 </form>
+
+<div id="preview-shadow-host"></div>
+
+
 
 
 {% endblock %}

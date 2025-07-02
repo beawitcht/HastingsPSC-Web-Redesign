@@ -22,9 +22,21 @@
         href="https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@700&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="/static/css/base.css">
+    {% if "HDPSC-admin-panel" not in request.path %}
     <script defer src="/static/js/HPSC.min.js"></script>
+    {% endif %}
+
+    {% if "/articles" in request.path %}
+        <!-- FOUC fix -->
+    <script nonce="{{ '{{ nonce }}' }}">(_ => { let a })()</script>
+    {% endif %}
+    {% if "/articles" in request.path or request.path == "/" %}
+    <script src="/static/js/mobile-nav.min.js"></script>
+    {% endif %}
+    {% if "/articles" not in request.path %}
     <!-- FOUC fix -->
     <script nonce="{{ nonce }}">(_ => { let a })()</script>
+    {% endif %}
     {% endblock %}
 </head>
 

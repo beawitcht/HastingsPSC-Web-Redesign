@@ -195,7 +195,7 @@ def post_article():
 
         # Build the article content from blocks
         blocks = []
-       
+
         for i, block_form in enumerate(form.blocks.entries):
             file_key = f'article-blocks-{i}-image'
             uploaded_file = request.files.get(file_key)
@@ -232,3 +232,52 @@ def post_article():
         return redirect(f'/articles/{form.title.data}')
 
     return render_template("add_article.html", form=form, block_template=block_template)
+
+
+@admin_bp.route("/HDPSC-admin-panel/preview-article", methods=["POST"])
+@role_at_least('editor')
+def preview_article():
+    current_roles = [r.name for r in current_user.roles]
+    form = UploadArticleForm(prefix="article")
+    block_template = ArticleBlockForm(prefix="article-blocks-__INDEX__")
+
+    if request.method == "POST" and form.validate_on_submit():
+        allowed, message = allowed_role_action(
+            actor_roles=current_roles,
+            action='add-article'
+        )
+        if not allowed:
+            flash(message, "error")
+            return redirect(url_for("admin.post_article"))
+
+        # Build the article content from blocks
+        blocks = []
+
+        for i, block_form in enumerate(form.blocks.entries):
+            file_key = f'article-blocks-{i}-image'
+            uploaded_file = request.files.get(file_key)
+
+            if uploaded_file and uploaded_file.filename:
+                # resize and reduce file size
+                processed = process_image(uploaded_file)
+
+                filename = secure_filename(uploaded_file.filename)
+                with open(image_path / "tmp" / filename, "wb+") as f:
+                    f.write(processed)
+
+                image = "/static/images/uploaded/tmp/" + filename
+            else:
+                image = None
+
+            block = {
+                "type": block_form.block_type.data,
+                "content": block_form.content.data,
+                "image": image,
+                "alt_text": block_form.alt_text.data
+            }
+            blocks.append(block)
+
+        return render_template("article_frame.html", title=form.title.data, blocks=blocks)
+
+    flash("Preview failed. Please check your input.", "error")
+    return redirect(url_for("admin.post_article"))

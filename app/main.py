@@ -112,11 +112,12 @@ def add_headers(response):
         f"style-src 'self' 'nonce-{nonce}' https://fonts.gstatic.com/ https://fonts.googleapis.com/;"
         "font-src 'self' https://fonts.gstatic.com/ https://fonts.googleapis.com/;"
         "connect-src 'self';"
-        "frame-src 'self';"
+        "frame-src 'self' blob:;"
+        "object-src 'self';"
     )
 
     response.headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
-    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-XSS-Protection'] = '1; mode=block'
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
