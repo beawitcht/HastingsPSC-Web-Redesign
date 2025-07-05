@@ -4,7 +4,7 @@
 {{ super() }}
 <title>Add Article - HDPSC Admin Panel</title>
 <link rel="stylesheet" href="/static/css/admin.css">
-<script  nonce="{{ nonce }}" src="/static/js/article-admin.min.js"></script>
+<script nonce="{{ nonce }}" src="/static/js/article-admin.min.js"></script>
 {% endblock %}
 
 {% block header %}
@@ -43,6 +43,22 @@
             {{ block.content(class_="block-content") }}
             {% endif %}
 
+            <!-- {% if block.block_type.data == 'paragraph' %}
+            <label>
+                {{ block.add_inline_link() }} {{ block.add_inline_link.label }}
+            </label>
+
+            {% if block.add_inline_link.data %}
+            <label for="{{ block.inline_link_text.id }}">Link text</label>
+            {{ block.inline_link_text() }}
+            <label for="{{ block.inline_link_url.id }}">Link URL</label>
+            {{ block.inline_link_url() }}
+            {% else %}
+            {{ block.inline_link_text(class_="no-display", disabled=True) }}
+            {{ block.inline_link_url(class_="no-display", disabled=True) }}
+            {% endif %}
+            {% endif %} -->
+
             {% set alt_text_label_class = "alt-text-label" %}
             {% set alt_text_class = "block-alt-text" %}
 
@@ -75,6 +91,13 @@
             </label>
             {{ block.image(class_=img_class, **({'disabled': 'disabled'} if disabled else {})) }}
 
+            {% if block.block_type.data == 'link' %}
+            <label class="url-text-label" for="{{ block.url_text.id }}">Link text</label>
+            {{ block.url_text(class_="block-url-text") }}
+            {% else %}
+            <label class="url-text-label no-display" for="{{ block.url_text.id }}">Link text</label>
+            {{ block.url_text(class_="block-url-text no-display", disabled=True) }}
+            {% endif %}
 
         </div>
         <br>
@@ -87,23 +110,45 @@
             <option value="paragraph">Paragraph</option>
             <option value="image">Image</option>
             <option value="figure">Figure</option>
+            <option value="link">Link</option>
         </select>
         <label class="content-label" for="article-blocks-__INDEX__-content">Content</label>
         <input type="text" name="article-blocks-__INDEX__-content" class="block-content" />
         <label class="image-url-label no-display" disabled="" for="article-blocks-__INDEX__-image">Image</label>
         <input type="file" name="article-blocks-__INDEX__-image" class="block-image-url no-display" disabled="" />
+        <label class="url-text-label no-display" for="article-blocks-__INDEX__-url_text">Link text</label>
+        <input type="text" name="article-blocks-__INDEX__-url_text" class="block-url-text no-display" disabled />
         <label class="alt-text-label no-display" disabled="" for="article-blocks-__INDEX__-alt_text">Alt text</label>
         <input type="text" name="article-blocks-__INDEX__-alt_text" class="block-alt-text no-display" disabled="" />
+        <!-- <label class="inline-toggle-label no-display">
+            <input type="checkbox" name="article-blocks-__INDEX__-add_inline_link" class="inline-link-toggle" />
+            Add inline link?
+        </label>
+        <label class="inline-link-label no-display">Link text</label>
+        <input type="text" name="article-blocks-__INDEX__-inline_link_text" class="block-inline-link-text no-display"
+            disabled />
+        <label class="inline-url-label no-display">Link URL</label>
+        <input type="text" name="article-blocks-__INDEX__-inline_link_url" class="block-inline-link-url no-display"
+            disabled /> -->
+
         <button id="rmv-block-btn-__INDEX__" name="rmv_block" type="button">Remove field</button> <br>
+
     </div>
 
     <button id="add-block-btn" name="add_block" value="1" type="button">Add Another Field</button> <br>
 
     <button id="preview-button" type="button" name="preview">Preview Article</button>
 
-
     {{ form.post() }}
 </form>
+
+<div id="preview-error"></div>
+
+<div id="preview-spinner" class="dot-spinner hidden">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+</div>
 
 <div id="preview-shadow-host"></div>
 

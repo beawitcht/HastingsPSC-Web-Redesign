@@ -10,20 +10,18 @@
 <meta name="og:title" content="Articles - H&D PSC">
 <meta name="og:description" content="DESCRIPTION HERE">
 <meta name="keywords" content="palestine,hastings,district,PSC,al-mawasi,solidarity,campaign,">
-<link rel="stylesheet" href="/static/css/article.css">
+<link rel="stylesheet" href="/static/css/preview-article.css">
 <script  nonce="{{ nonce }}" defer src="/static/js/HPSC.min.js"></script>
 <script nonce="{{ nonce }}" defer src="/static/js/mobile-nav.min.js"></script>
 {% endblock %}
 
 {% block header %}
-{{ super() }}
 {% endblock %}
 
 {% block admin_header %}
 {% endblock admin_header %}
 
 {% block nav %}
-{{ super() }}
 {% endblock %}
 
 {% block body %}
@@ -34,7 +32,12 @@
         {% if block.type == 'heading' %}
             <h2>{{ block.content }}</h2>
         {% elif block.type == 'paragraph' %}
-            <p>{{ block.content }}</p>
+            {% if block.add_inline_link and block.link_text and block.link_url %}
+                {% set linked = block.content.replace(block.link_text, "<a href='" ~ block.link_url ~ "'>" ~ block.link_text ~ "</a>", 1) %}
+                <p>{{ linked | safe }}</p>
+            {% else %}
+                <p>{{ block.content }}</p>
+            {% endif %}
 
         {% elif block.type == 'image' %}
             <div class="article-img-container">
@@ -47,6 +50,8 @@
                     <figcaption class="article-caption">{{ block.content }}</figcaption>
                 </div>
             </figure>
+        {% elif block.type == 'link' %}
+            <a href="{{ block.content }}" target="_blank">{{ block.url_text }}</a>
         {% endif %}
     {% endfor %}
 
@@ -55,5 +60,4 @@
 
 
 {% block footer %}
-{{ super() }}
 {% endblock %}

@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, request
-from app.utilities import security, db, User, Role, role_at_least, allowed_role_action, process_image
+from flask import Blueprint, render_template, flash, redirect, url_for, request, jsonify
+from app.utilities import security, db, User, Role, role_at_least, allowed_role_action, process_image, flatten_errors
 from app.forms.admin_forms import AddUserForm, ManageUserForm, UploadArticleForm, ArticleBlockForm
 from flask_security import auth_required, hash_password, current_user
 from sqlalchemy.exc import IntegrityError
@@ -216,7 +216,8 @@ def post_article():
                 "type": block_form.block_type.data,
                 "content": block_form.content.data,
                 "image": image,
-                "alt_text": block_form.alt_text.data
+                "alt_text": block_form.alt_text.data,
+                "url_text": block_form.url_text.data
             }
             blocks.append(block)
 
@@ -241,43 +242,50 @@ def preview_article():
     form = UploadArticleForm(prefix="article")
     block_template = ArticleBlockForm(prefix="article-blocks-__INDEX__")
 
+    if not form.validate_on_submit():
+        return jsonify({'errors': flatten_errors(form.errors)}), 400
+
     if request.method == "POST" and form.validate_on_submit():
         allowed, message = allowed_role_action(
             actor_roles=current_roles,
             action='add-article'
         )
         if not allowed:
-            flash(message, "error")
-            return redirect(url_for("admin.post_article"))
+            return jsonify({'error': 'You do not have permission to perform this action'}), 403
 
-        # Build the article content from blocks
-        blocks = []
+        try:
+            # Build the article content from blocks
+            blocks = []
 
-        for i, block_form in enumerate(form.blocks.entries):
-            file_key = f'article-blocks-{i}-image'
-            uploaded_file = request.files.get(file_key)
+            for i, block_form in enumerate(form.blocks.entries):
+                file_key = f'article-blocks-{i}-image'
+                uploaded_file = request.files.get(file_key)
 
-            if uploaded_file and uploaded_file.filename:
-                # resize and reduce file size
-                processed = process_image(uploaded_file)
+                if uploaded_file and uploaded_file.filename:
+                    # resize and reduce file size
+                    processed = process_image(uploaded_file)
 
-                filename = secure_filename(uploaded_file.filename)
-                with open(image_path / "tmp" / filename, "wb+") as f:
-                    f.write(processed)
+                    filename = secure_filename(uploaded_file.filename)
+                    with open(image_path / "tmp" / filename, "wb+") as f:
+                        f.write(processed)
 
-                image = "/static/images/uploaded/tmp/" + filename
-            else:
-                image = None
+                    image = "/static/images/uploaded/tmp/" + filename
+                else:
+                    image = None
 
-            block = {
-                "type": block_form.block_type.data,
-                "content": block_form.content.data,
-                "image": image,
-                "alt_text": block_form.alt_text.data
-            }
-            blocks.append(block)
+                block = {
+                    "type": block_form.block_type.data,
+                    "content": block_form.content.data,
+                    "image": image,
+                    "alt_text": block_form.alt_text.data,
+                    "url_text": block_form.url_text.data
+                }
+                blocks.append(block)
 
-        return render_template("article_frame.html", title=form.title.data, blocks=blocks)
+            return render_template("article_preview.html", title=form.title.data, blocks=blocks)
+
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
 
     flash("Preview failed. Please check your input.", "error")
-    return redirect(url_for("admin.post_article"))
+    return "An error has occured, please check that article fields are valid."

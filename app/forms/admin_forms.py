@@ -34,12 +34,17 @@ class ArticleBlockForm(FlaskForm):
         ('heading', 'Heading'),
         ('paragraph', 'Paragraph'),
         ('image', 'Image'),
-        ('figure', 'Figure')
+        ('figure', 'Figure'),
+        ('link', 'Link')
     ])
     content = StringField('Content')  # For heading/paragraph/figure caption
     image = FileField('Upload image', validators=[FileAllowed(
-        ['jpg', 'png', 'jpeg'], 'Ensure you are uploading an image')])
+        ['jpg', 'png', 'jpeg'], 'Ensure you are uploading an image, supported formats: jpg, jpeg, png')])
     alt_text = StringField('Alt text',  validators=[])  # for images
+    url_text = StringField('Link text')  # for images
+    # add_inline_link = BooleanField('Add inline link')
+    # inline_link_text = StringField('Link text')
+    # inline_link_url = StringField('URL')
 
 
 class UploadArticleForm(FlaskForm):

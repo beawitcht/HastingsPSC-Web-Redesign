@@ -34,12 +34,18 @@
         {% if block.type == 'heading' %}
             <h2>{{ block.content }}</h2>
         {% elif block.type == 'paragraph' %}
-            <p>{{ block.content }}</p>
+            {% if block.add_inline_link and block.link_text and block.link_url %}
+                {% set linked = block.content.replace(block.link_text, "<a href='" ~ block.link_url ~ "'>" ~ block.link_text ~ "</a>", 1) %}
+                <p>{{ linked | safe }}</p>
+            {% else %}
+                <p>{{ block.content }}</p>
+            {% endif %}
 
         {% elif block.type == 'image' %}
             <div class="article-img-container">
                 <img class="article-img" src="{{ block.image }}" alt="{{ block.alt_text }}">
             </div>
+            
         {% elif block.type == 'figure' %}
             <figure>
                 <div class="figure-wrapper">
@@ -47,6 +53,8 @@
                     <figcaption class="article-caption">{{ block.content }}</figcaption>
                 </div>
             </figure>
+        {% elif block.type == 'link' %}
+            <a href="{{ block.content }}" target="_blank">{{ block.url_text }}</a>
         {% endif %}
     {% endfor %}
 
