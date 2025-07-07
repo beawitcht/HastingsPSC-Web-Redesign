@@ -99,6 +99,20 @@ body{
 
 }
 
+ .content-section-primary {
+        background: $bg-primary;
+        width: 100%;
+        flex: 1 0 auto;
+        top: 0;
+    }
+
+    .content-section-secondary {
+        background: $bg-secondary;
+        width: 100%;
+        flex: 1 0 auto;
+    }
+
+
 .layout-card-container {
     flex: 1 1 0;
     width: 100%;

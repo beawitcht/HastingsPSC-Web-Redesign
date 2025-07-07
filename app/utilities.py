@@ -8,6 +8,8 @@ from flask_security import Security, SQLAlchemyUserDatastore, current_user
 from flask_security.models import fsqla_v3 as fsqla
 from PIL import Image
 import io
+import re
+from markupsafe import Markup, escape
 from dotenv import load_dotenv
 
 cache = Cache()
@@ -189,15 +191,44 @@ def process_image(input):
         new_height = int((new_width / img.width) * img.height)
         img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
-    
     # Compress if size > 200KB
     quality = 95
     while True:
         buffer = io.BytesIO()
-        img.save(buffer, format=original_format, optimize=True, quality=quality)
+        img.save(buffer, format=original_format,
+                 optimize=True, quality=quality)
         size_kb = buffer.tell() / 1024
 
         if size_kb <= 200 or quality <= 20:
             break
         quality -= 5
     return buffer.getvalue()
+
+# get nested errors out for easier handling
+
+
+def flatten_errors(errors):
+    flat = {}
+    for key, val in errors.items():
+        if isinstance(val, list) and all(isinstance(i, dict) for i in val):
+            # Nested FormField or FieldList
+            for index, subfield_errors in enumerate(val):
+                for subkey, submessages in subfield_errors.items():
+                    flat_key = f"{key}-{index}-{subkey}"
+                    flat[flat_key] = submessages
+        else:
+            flat[key] = val
+    return flat
+
+
+# inline url stuff
+
+def parse_inline_links(text):
+    def replacer(match):
+        text = escape(match.group(1))  # escape HTML in link text
+        url = escape(match.group(2))
+        return f'<a href="{url}" target="_blank" rel="noopener">{text}</a>'
+
+    pattern = r'\[([^\]]+)\]\((https?://[^\s]+)\)'
+    parsed = re.sub(pattern, replacer, escape(text))
+    return Markup(parsed)

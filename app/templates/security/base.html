@@ -5,7 +5,28 @@
   {%- block html %}
   <head>
     {%- block head %}
-    {{ super() }}
+
+    <meta name="developer" content="Bea 💜">
+    <meta name="developer-contact" content="http://beawitcht.com">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://www.hastingspalestinecampaign.org/images/og-homepage.jpg">
+    <meta property="og:image:alt" content="Arial shot of Hastings Pier flying four Palestinian flags.">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@HRyepsc">
+    <meta name="twitter:image" content="https://www.hastingspalestinecampaign.org/images/og-homepage.jpg">
+    <meta property="twitter:image:alt" content="Arial shot of Hastings Pier flying four Palestinian flags.">
+    <link rel="icon" href="/static/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@700&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/base.css">
+
+
     <title>{% block title %}{{ title|default }}{% endblock title %}</title>
 
       {%- block metas %}
@@ -19,10 +40,12 @@
       <link
           href="https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@700&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
           rel="stylesheet">
+
+      <!-- FOUC fix - at some point I'll seperate out the first paint css for efficiency-->
+      <script nonce="{{ nonce }}">(_ => { let a })()</script>
       {%- endblock head_scripts %}
 
       {%- block styles %}
-        <link rel="stylesheet" href="/static/css/base.css">
         <link rel="stylesheet" href="/static/css/admin.css">
       {%- endblock styles %}
     {%- endblock head %}

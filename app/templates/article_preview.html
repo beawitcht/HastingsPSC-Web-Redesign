@@ -10,20 +10,18 @@
 <meta name="og:title" content="Articles - H&D PSC">
 <meta name="og:description" content="DESCRIPTION HERE">
 <meta name="keywords" content="palestine,hastings,district,PSC,al-mawasi,solidarity,campaign,">
-<link rel="stylesheet" href="/static/css/article.css">
+<link rel="stylesheet" href="/static/css/preview-article.css">
 <script  nonce="{{ nonce }}" defer src="/static/js/HPSC.min.js"></script>
 <script nonce="{{ nonce }}" defer src="/static/js/mobile-nav.min.js"></script>
 {% endblock %}
 
 {% block header %}
-{{ super() }}
 {% endblock %}
 
 {% block admin_header %}
 {% endblock admin_header %}
 
 {% block nav %}
-{{ super() }}
 {% endblock %}
 
 {% block body %}
@@ -45,7 +43,6 @@
             <div class="article-img-container">
                 <img class="article-img" src="{{ block.image }}" alt="{{ block.alt_text }}">
             </div>
-            
         {% elif block.type == 'figure' %}
             <figure>
                 <div class="figure-wrapper">
@@ -63,5 +60,4 @@
 
 
 {% block footer %}
-{{ super() }}
 {% endblock %}

@@ -22,7 +22,10 @@ h2 {
 }
 
 
-div, a, input, button {
+div,
+a,
+input,
+button {
     color: #000;
     font-family: PT Sans;
     font-size: 18px;
@@ -32,7 +35,8 @@ div, a, input, button {
     gap: 8px;
 }
 
-button, [type="submit"] {
+button,
+[type="submit"] {
     padding: 4px !important;
 }
 
@@ -42,8 +46,7 @@ button, [type="submit"] {
 [type="text"],
 [type="button"],
 [type="checkbox"],
-select
-{
+select {
     display: inline-block;
     max-width: 100%;
     min-height: 34px;
@@ -56,6 +59,7 @@ select
     margin-bottom: 10px;
     padding: 0;
 }
+
 .main-content {
     display: flex;
     flex-direction: column;
@@ -77,11 +81,15 @@ body {
     align-items: flex-start;
     display: inline-flex;
     text-align: center;
-    
+
 }
 
 li {
     padding: 16px;
+}
+
+textarea {
+    vertical-align: middle;
 }
 
 .header-logo-container {
@@ -90,7 +98,7 @@ li {
     align-items: center;
     gap: 8px;
     display: inline-flex;
-  }
+}
 
 .header {
     align-self: stretch;
@@ -99,23 +107,101 @@ li {
     align-items: center;
     gap: 10px;
     display: flex;
-  }
+}
 
-.no-style{
+.no-style {
     text-decoration: none;
 }
 
-form{
+form {
     display: flexbox;
     justify-content: flex-start;
     align-items: center;
 }
 
-.fs-center { text-align: center; }
-.fs-important { font-size: larger; font-weight: bold; }
-.fs-gap { margin-top: 20px; }
-.fs-div { margin: 4px; }
-.success { color: darkgreen !important;}
-.fs-error-msg { color: darkred; }
+.fs-center {
+    text-align: center;
+}
 
+.fs-important {
+    font-size: larger;
+    font-weight: bold;
+}
 
+.fs-gap {
+    margin-top: 20px;
+}
+
+.fs-div {
+    margin: 4px;
+}
+
+.success {
+    color: darkgreen !important;
+}
+
+.fs-error-msg {
+    color: darkred;
+}
+
+#preview-shadow-host {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    box-sizing: border-box;
+    transform: scale(1);
+}
+
+.hidden {
+    display: none;
+}
+
+.hidden-rendered {
+    opacity: 0;
+}
+
+.dot-spinner {
+    display: none;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 6px !important;
+    height: 30px !important;
+}
+
+.dot {
+    width: 8px !important;
+    height: 8px !important;
+    background-color: #038721 !important;
+    border-radius: 50% !important;
+    animation: bounce 1s infinite ease-in-out;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+@keyframes bounce {
+
+    0%,
+    80%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.6;
+    }
+
+    40% {
+        transform: translateY(-8px);
+        opacity: 1;
+    }
+}
