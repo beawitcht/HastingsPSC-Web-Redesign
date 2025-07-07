@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileRequired
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, HiddenField, FileField, SelectField, FieldList, FormField, HiddenField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, HiddenField, FileField, SelectField, FieldList, FormField, HiddenField, TextAreaField
 from wtforms.validators import DataRequired, Email
 
 # Manage user classes
@@ -37,15 +37,11 @@ class ArticleBlockForm(FlaskForm):
         ('figure', 'Figure'),
         ('link', 'Link')
     ])
-    content = StringField('Content')  # For heading/paragraph/figure caption
+    content = TextAreaField('Content')  # For heading/paragraph/figure caption
     image = FileField('Upload image', validators=[FileAllowed(
         ['jpg', 'png', 'jpeg'], 'Ensure you are uploading an image, supported formats: jpg, jpeg, png')])
     alt_text = StringField('Alt text',  validators=[])  # for images
     url_text = StringField('Link text')  # for images
-    # add_inline_link = BooleanField('Add inline link')
-    # inline_link_text = StringField('Link text')
-    # inline_link_url = StringField('URL')
-
 
 class UploadArticleForm(FlaskForm):
     user_id = HiddenField("User ID", validators=[DataRequired()])

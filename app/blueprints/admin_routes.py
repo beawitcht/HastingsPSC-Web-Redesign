@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request, jsonify
-from app.utilities import security, db, User, Role, role_at_least, allowed_role_action, process_image, flatten_errors
+from app.utilities import security, db, User, Role, role_at_least, allowed_role_action, process_image, flatten_errors, parse_inline_links
 from app.forms.admin_forms import AddUserForm, ManageUserForm, UploadArticleForm, ArticleBlockForm
 from flask_security import auth_required, hash_password, current_user
 from sqlalchemy.exc import IntegrityError
@@ -221,6 +221,10 @@ def post_article():
             }
             blocks.append(block)
 
+            for block in blocks:
+                if block["type"] == "paragraph":
+                    block["content"] = parse_inline_links(block["content"])
+
         new_article = render_template(
             "article_frame.html",
             title=form.title.data,
@@ -281,6 +285,10 @@ def preview_article():
                     "url_text": block_form.url_text.data
                 }
                 blocks.append(block)
+
+                for block in blocks:
+                    if block["type"] == "paragraph":
+                        block["content"] = parse_inline_links(block["content"])
 
             return render_template("article_preview.html", title=form.title.data, blocks=blocks)
 

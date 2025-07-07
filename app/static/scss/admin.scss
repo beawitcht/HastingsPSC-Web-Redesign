@@ -88,6 +88,10 @@ li {
     padding: 16px;
 }
 
+textarea {
+    vertical-align: middle;
+}
+
 .header-logo-container {
     min-width: 320px;
     justify-content: center;
@@ -157,6 +161,10 @@ form {
 
 .hidden {
     display: none;
+}
+
+.hidden-rendered {
+    opacity: 0;
 }
 
 .dot-spinner {

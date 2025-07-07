@@ -8,6 +8,8 @@ from flask_security import Security, SQLAlchemyUserDatastore, current_user
 from flask_security.models import fsqla_v3 as fsqla
 from PIL import Image
 import io
+import re
+from markupsafe import Markup, escape
 from dotenv import load_dotenv
 
 cache = Cache()
@@ -217,3 +219,16 @@ def flatten_errors(errors):
         else:
             flat[key] = val
     return flat
+
+
+# inline url stuff
+
+def parse_inline_links(text):
+    def replacer(match):
+        text = escape(match.group(1))  # escape HTML in link text
+        url = escape(match.group(2))
+        return f'<a href="{url}" target="_blank" rel="noopener">{text}</a>'
+
+    pattern = r'\[([^\]]+)\]\((https?://[^\s]+)\)'
+    parsed = re.sub(pattern, replacer, escape(text))
+    return Markup(parsed)
