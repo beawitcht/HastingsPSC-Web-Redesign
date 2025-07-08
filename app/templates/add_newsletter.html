@@ -28,6 +28,7 @@
 <form method="post" id="article-form" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     {{ form.date.label }} {{ form.date() }}<br>
+    {{ form.thumbnail.label }}  {{ form.thumbnail() }} {{ form.thumb_alt.label }} {{ form.thumb_alt() }}
     <div id="blocks-container">
 
     </div>

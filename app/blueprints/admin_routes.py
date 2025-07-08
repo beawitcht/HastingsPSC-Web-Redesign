@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request, jsonify
-from app.utilities import security, db, User, Role, role_at_least, allowed_role_action, flatten_errors, build_blocks, mjml_convert
+from app.utilities import security, db, User, Role, role_at_least, allowed_role_action, flatten_errors, build_blocks, mjml_convert, process_thumbnail
 from app.forms.admin_forms import AddUserForm, ManageUserForm, UploadArticleForm, ArticleBlockForm, NewsBlockForm, UploadNewsForm
 from flask_security import auth_required, hash_password, current_user
 from sqlalchemy.exc import IntegrityError
 from pathlib import Path
 import os
+import json
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -16,6 +17,9 @@ newsletter_path = Path(__file__).resolve().parent.parent / \
 
 image_path = Path(__file__).resolve().parent.parent / \
     'static' / 'images' / 'uploaded'
+
+data_path = Path(__file__).resolve().parent.parent / \
+    'static' / 'data'
 
 
 @admin_bp.route("/HDPSC-admin-panel")
@@ -254,11 +258,6 @@ def post_newsletter():
     form.user_id.data = current_user.id
     url_base = os.getenv('URL_BASE')
 
-    # # Handle dynamic add block
-    # if request.method == "POST" and "add_block" in request.form:
-    #     form.blocks.append_entry()
-    #     return render_template("add_newsletter.html", form=form, block_template=block_template)
-
     if request.method == "POST" and form.validate_on_submit():
         allowed, message = allowed_role_action(
             actor_roles=current_roles,
@@ -271,16 +270,46 @@ def post_newsletter():
         blocks = build_blocks(request, form.blocks.entries, news=True)
 
         date = form.date.data.strftime('%-d %B %Y')
-
+        path_date = date.replace(' ', '-')
         new_newsletter = render_template(
             "newsletter_frame.html",
             blocks=blocks,
             url_base=url_base,
             book_recs=form.book_recs.data,
-            date=date
+            date=date,
+            path_date=path_date
         )
 
         new_newsletter = mjml_convert(new_newsletter)
+        date = path_date
+        alt_text = form.thumb_alt.data
+        id = date
+
+        with open(data_path / "newsletters.json", 'r') as f:
+            json_data = json.load(f)
+
+        new_entry = {
+            "id": id,
+            "alt": alt_text
+        }
+        for entry in json_data:
+            if entry["id"] == id:
+                flash(
+                    "Newsletter already exists, please delete the existing letter before continuing", "error")
+                return redirect(url_for("admin.post_newsletter"))
+
+        thumbnail = process_thumbnail(request.files.get(
+            "article-thumbnail"), image_path / "thumbs", date)
+
+        if not thumbnail:
+            flash(
+                "You must include a thumbnail, it must be wider than it is tall", "error")
+            return redirect(url_for("admin.post_newsletter"))
+
+        json_data.append(new_entry)
+
+        with open(data_path / "newsletters.json", 'w+') as f:
+            json.dump(json_data, f, indent=2)
 
         with open(newsletter_path / f"{date}.html", "w+") as f:
             f.write(new_newsletter)

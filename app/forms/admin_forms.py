@@ -80,3 +80,6 @@ class UploadNewsForm(FlaskForm):
     preview = SubmitField('Download Newsletter')
     book_recs = BooleanField(
         'Include Reading recommendations?', default="checked")
+    thumbnail = FileField('Upload thumbnail', validators=[FileAllowed(
+        ['jpg', 'png', 'jpeg'], 'Ensure you are uploading an image, supported formats: jpg, jpeg, png'), DataRequired()])
+    thumb_alt = StringField('Thumbnail alt text', validators=[DataRequired()])

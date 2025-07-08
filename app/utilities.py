@@ -210,6 +210,40 @@ def process_image(input, max_size=800):
         quality -= 5
     return buffer.getvalue()
 
+# process thumbnail
+
+
+def process_thumbnail(input, image_path, file_name, max_size=260):
+    # Open image
+    img = Image.open(input)
+    original_format = img.format
+
+    # Only accept images wider than tall
+    if img.height > img.width:
+        return None
+    # Resize if wider than acceptable
+    elif img.width >= max_size:
+        new_width = max_size
+        new_height = int((new_width / img.width) * img.height)
+        img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+    # Compress if size > 200KB
+    quality = 95
+    while True:
+        buffer = io.BytesIO()
+        img.save(buffer, format=original_format,
+                 optimize=True, quality=quality)
+        size_kb = buffer.tell() / 1024
+
+        if size_kb <= 200 or quality <= 20:
+            break
+        quality -= 5
+    try:
+        img.save(image_path / f"{file_name}.jpg")
+        return "Successful"
+    except OSError:
+        return None
+
+
 # get nested errors out for easier handling
 
 
@@ -239,6 +273,7 @@ class LinkTargetProcessor(Treeprocessor):
             element.set('rel', 'noopener')
 
 # Custom Extension to register the processor
+
 
 class LinkTargetExtension(Extension):
     def extendMarkdown(self, md):
