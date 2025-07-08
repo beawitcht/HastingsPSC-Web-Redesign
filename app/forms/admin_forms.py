@@ -51,6 +51,12 @@ class UploadArticleForm(FlaskForm):
     blocks = FieldList(FormField(ArticleBlockForm), min_entries=1)
     post = SubmitField('Post Article')
     preview = SubmitField('Preview Article')
+    thumbnail = FileField('Upload thumbnail', validators=[FileAllowed(
+        ['jpg', 'png', 'jpeg'], 'Ensure you are uploading an image, supported formats: jpg, jpeg, png'), DataRequired()])
+    thumb_alt = StringField('Thumbnail alt text', validators=[DataRequired()])
+    descriptor = StringField('Article Description',
+                             validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()])
 
 
 # Newsletters

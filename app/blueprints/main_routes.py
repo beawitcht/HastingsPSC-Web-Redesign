@@ -14,21 +14,27 @@ data_path = Path(__file__).resolve().parent.parent / \
 @core_bp.route("/", methods=['GET'])
 @cache.cached(timeout=60 * 60 * 24 * 7)
 def index():
-    newsletters = []
     # tweets = get_latest_tweets("HRyepsc", count=5) uncomment and add  tweets=tweets to render template
+
     with open(data_path / "newsletters.json", 'r') as f:
         newsletter_data = json.load(f)
 
-    for entry in newsletter_data:
-        newsletters.append(entry["id"])
-
     sorted_letters = sorted(
-        newsletters,
-        key=lambda d: datetime.strptime(d, "%d-%B-%Y"),
+        newsletter_data,
+        key=lambda d: datetime.strptime(d["id"], "%d-%B-%Y"),
         reverse=True  # most recent first
     )
 
-    return render_template("index.html", newsletters=sorted_letters)
+    with open(data_path / "articles.json", 'r') as f:
+        article_data = json.load(f)
+
+    sorted_articles = sorted(
+        article_data,
+        key=lambda d: datetime.strptime(d["date"], "%d-%B-%Y"),
+        reverse=True  # most recent first
+    )
+
+    return render_template("index.html", newsletters=sorted_letters, articles=sorted_articles)
 
 
 @core_bp.route("/articles/<string:title>", methods=['GET'])

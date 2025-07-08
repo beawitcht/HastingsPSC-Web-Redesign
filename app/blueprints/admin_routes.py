@@ -4,6 +4,7 @@ from app.forms.admin_forms import AddUserForm, ManageUserForm, UploadArticleForm
 from flask_security import auth_required, hash_password, current_user
 from sqlalchemy.exc import IntegrityError
 from pathlib import Path
+from werkzeug.utils import secure_filename
 import os
 import json
 
@@ -203,6 +204,7 @@ def post_article():
 
         # Build the article content from blocks
         blocks = build_blocks(request, form.blocks.entries)
+        title = secure_filename(form.title.data)
 
         new_article = render_template(
             "article_frame.html",
@@ -210,10 +212,44 @@ def post_article():
             blocks=blocks
         )
 
-        with open(article_path / f"{form.title.data}.html", "w+") as f:
+        id = form.title.data
+        alt_text = form.thumb_alt.data
+        descriptor = form.descriptor.data
+        date = form.date.data.strftime('%-d %B %Y')
+        date = date.replace(' ', '-')
+
+        with open(data_path / "articles.json", 'r') as f:
+            json_data = json.load(f)
+
+        new_entry = {
+            "id": title,
+            "alt": alt_text,
+            "descriptor": descriptor,
+            "date": date
+        }
+        for entry in json_data:
+            if entry["id"] == id:
+                flash(
+                    "Newsletter already exists, please delete the existing letter before continuing", "error")
+                return redirect(url_for("admin.post_newsletter"))
+
+        thumbnail = process_thumbnail(request.files.get(
+            "article-thumbnail"), image_path / "thumbs", title)
+
+        if not thumbnail:
+            flash(
+                "You must include a thumbnail, it must be wider than it is tall", "error")
+            return redirect(url_for("admin.post_article"))
+
+        json_data.append(new_entry)
+
+        with open(data_path / "articles.json", 'w+') as f:
+            json.dump(json_data, f, indent=2)
+
+        with open(article_path / f"{title}.html", "w+") as f:
             f.write(new_article)
 
-        return redirect(f'/articles/{form.title.data}')
+        return redirect(f'/articles/{title}')
 
     return render_template("add_article.html", form=form, block_template=block_template)
 
