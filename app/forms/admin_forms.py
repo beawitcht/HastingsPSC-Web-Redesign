@@ -71,7 +71,7 @@ class NewsBlockForm(FlaskForm):
     url_text = StringField('Link text')  # for images
     colour = StringField('Colour', validators=[HexColour()])
 
-
+ 
 class UploadNewsForm(FlaskForm):
     user_id = HiddenField("User ID", validators=[DataRequired()])
     date = DateField('Date', validators=[DataRequired()])
