@@ -80,4 +80,4 @@ class UploadNewsForm(FlaskForm):
     blocks = FieldList(FormField(NewsBlockForm), min_entries=1)
     post = SubmitField('Post newsletter')
     preview = SubmitField('Download Newsletter')
-    book_recs = BooleanField('Include Reading recommendations?')
+    book_recs = BooleanField('Include Reading recommendations?', default="checked")

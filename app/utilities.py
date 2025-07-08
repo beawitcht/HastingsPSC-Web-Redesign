@@ -1,6 +1,10 @@
 # import os
 # import tweepy
 
+from xml.etree import ElementTree as ET
+from markdown.extensions import Extension
+from markdown.treeprocessors import Treeprocessor
+from markupsafe import Markup
 import requests
 import os
 from werkzeug.utils import secure_filename
@@ -14,6 +18,7 @@ from flask_security.models import fsqla_v3 as fsqla
 from PIL import Image
 import io
 import re
+import markdown
 from markupsafe import Markup, escape
 from dotenv import load_dotenv
 
@@ -179,7 +184,7 @@ def allowed_role_action(actor_roles, action, actor=None, target=None, target_rol
 #         return []
 
 
-def process_image(input):
+def process_image(input, max_size=800):
     # Open image
     img = Image.open(input)
     original_format = img.format
@@ -191,8 +196,8 @@ def process_image(input):
         img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
     # Resize if wider than acceptable
-    elif img.width > 801:
-        new_width = 800
+    elif img.width > max_size + 1:
+        new_width = max_size
         new_height = int((new_width / img.width) * img.height)
         img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
@@ -226,17 +231,31 @@ def flatten_errors(errors):
     return flat
 
 
-# inline url stuff
+# markdown stuff
+
+
+# Custom Treeprocessor to add target and rel attributes to links
+
+class LinkTargetProcessor(Treeprocessor):
+    def run(self, root):
+        for element in root.iter('a'):
+            element.set('target', '_blank')
+            element.set('rel', 'noopener')
+
+# Custom Extension to register the processor
+
+class LinkTargetExtension(Extension):
+    def extendMarkdown(self, md):
+        md.treeprocessors.register(LinkTargetProcessor(md), 'link_target', 15)
+
 
 def parse_inline_links(text):
-    def replacer(match):
-        text = escape(match.group(1))  # escape HTML in link text
-        url = escape(match.group(2))
-        return f'<a href="{url}" target="_blank" rel="noopener">{text}</a>'
-
-    pattern = r'\[([^\]]+)\]\((https?://[^\s]+)\)'
-    parsed = re.sub(pattern, replacer, escape(text))
-    return Markup(parsed)
+    html = markdown.markdown(
+        text,
+        extensions=[LinkTargetExtension()],
+        output_format='html5'
+    )
+    return Markup(html)
 
 
 # build blocks for articles
@@ -254,8 +273,11 @@ def build_blocks(request, entries, news=False):
 
         if uploaded_file and uploaded_file.filename:
             # resize and reduce file size
-            processed = process_image(uploaded_file)
-
+            if news:
+                processed = process_image(uploaded_file, max_size=600)
+            else:
+                processed = process_image(uploaded_file)
+                
             filename = secure_filename(uploaded_file.filename)
             with open(image_path / filename, "wb+") as f:
                 f.write(processed)
