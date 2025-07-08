@@ -1,7 +1,5 @@
-import re
-from wtforms import ValidationError
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileAllowed, FileRequired
+from flask_wtf.file import FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, HiddenField, FileField, SelectField, FieldList, FormField, HiddenField, TextAreaField, DateField
 from wtforms.validators import DataRequired, Email
 from app.forms.validators import HexColour
@@ -80,4 +78,5 @@ class UploadNewsForm(FlaskForm):
     blocks = FieldList(FormField(NewsBlockForm), min_entries=1)
     post = SubmitField('Post newsletter')
     preview = SubmitField('Download Newsletter')
-    book_recs = BooleanField('Include Reading recommendations?', default="checked")
+    book_recs = BooleanField(
+        'Include Reading recommendations?', default="checked")

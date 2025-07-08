@@ -1,7 +1,5 @@
 # import os
 # import tweepy
-
-from xml.etree import ElementTree as ET
 from markdown.extensions import Extension
 from markdown.treeprocessors import Treeprocessor
 from markupsafe import Markup
@@ -17,9 +15,7 @@ from flask_security import Security, SQLAlchemyUserDatastore, current_user
 from flask_security.models import fsqla_v3 as fsqla
 from PIL import Image
 import io
-import re
 import markdown
-from markupsafe import Markup, escape
 from dotenv import load_dotenv
 
 cache = Cache()
@@ -277,7 +273,7 @@ def build_blocks(request, entries, news=False):
                 processed = process_image(uploaded_file, max_size=600)
             else:
                 processed = process_image(uploaded_file)
-                
+
             filename = secure_filename(uploaded_file.filename)
             with open(image_path / filename, "wb+") as f:
                 f.write(processed)
