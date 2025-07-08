@@ -44,8 +44,10 @@ button,
 [type="password"],
 [type="submit"],
 [type="text"],
+[type="date"],
 [type="button"],
 [type="checkbox"],
+textarea,
 select {
     display: inline-block;
     max-width: 100%;
@@ -58,6 +60,7 @@ select {
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 0;
+    vertical-align: middle;
 }
 
 .main-content {
@@ -205,3 +208,4 @@ form {
         opacity: 1;
     }
 }
+

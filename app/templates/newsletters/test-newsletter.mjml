@@ -22,7 +22,7 @@
       </mj-column>
     </mj-section>
 
-    <!-- You would repeat this section for each item. Example below: -->
+ 
     <mj-section background-color="#078144">
       <mj-column width="98%">
         <mj-text align="center" font-size="18px" color="#ffffff" padding="0">
@@ -47,37 +47,37 @@
 
      <mj-section background-color="#078144">
       <mj-column>
-        <mj-text align="center" font-size="18px" color="#ffffff">
+        <mj-text align="center" font-size="18px" color="#ffffff" padding="0">
           <strong>BOOKS AVAILABLE AT OUR STALLS AND MEETINGS</strong>
         </mj-text>
       </mj-column>
     </mj-section>
 
     <mj-section background-color="white">
-      <mj-column width="50%">
+      <mj-column width="48%">
         <mj-image src="https://www.hastingspalestinecampaign.org/images/news-ilan-pappe-a-very-short-history-of-the-israel-palestine-conflict.jpg" padding="5px" />
       </mj-column>
-      <mj-column width="50%">
+      <mj-column width="48%">
         <mj-image src="https://www.hastingspalestinecampaign.org/images/news-ghada-karmi-one-state_.jpg" padding="5px" />
       </mj-column>
     </mj-section>
 
     <!-- Second row -->
     <mj-section background-color="white">
-      <mj-column width="50%">
+      <mj-column width="48%">
         <mj-image src="https://www.hastingspalestinecampaign.org/images/news-marilyn-garson-jewish-not-zionist.jpg" padding="5px" />
       </mj-column>
-      <mj-column width="50%">
+      <mj-column width="48%">
         <mj-image src="https://www.hastingspalestinecampaign.org/images/news-ghada-karmi-in-search-of-fatima.jpg" padding="5px" />
       </mj-column>
     </mj-section>
 
     <!-- Third row -->
     <mj-section background-color="white">
-      <mj-column width="50%">
+      <mj-column width="48%">
         <mj-image src="https://www.hastingspalestinecampaign.org/images/news-the-ethnic-cleansing-of-palestine-by-iIlan-pappe.jpg" padding="5px" />
       </mj-column>
-      <mj-column width="50%">
+      <mj-column width="48%">
         <mj-image src="https://www.hastingspalestinecampaign.org/images/news-rashid-khalidi-the-hundred-years-war-on-palestine.jpg" padding="5px" />
       </mj-column>
     </mj-section>
@@ -96,7 +96,7 @@
 
     <mj-section background-color="#078144">
       <mj-column>
-        <mj-text align="center" font-size="18px" color="#ffffff">
+        <mj-text align="center" font-size="18px" color="#ffffff" padding="0">
           <strong>PALESTINE - ISRAEL: FROM A DIFFERENT PERSPECTIVE</strong>
         </mj-text>
       </mj-column>
@@ -146,8 +146,6 @@
       </mj-column>
     </mj-section>
 
-
-    <!-- Repeat similar structure for other topics -->
 
     <mj-section background-color="white">
       <mj-column>

@@ -4,7 +4,7 @@ from app.utilities import cache, db, Role, User, WebAuthn, security, user_datast
 from flask import Flask, make_response, render_template, g
 from flask_security import hash_password
 from flask_wtf.csrf import CSRFProtect
-#from authlib.integrations.flask_client import OAuth
+# from authlib.integrations.flask_client import OAuth
 from werkzeug.exceptions import HTTPException
 from pathlib import Path
 import os
@@ -21,7 +21,6 @@ app = Flask(__name__)
 
 
 app.config['WTF_CSRF_ENABLED'] = True
-
 
 
 # admin panel stuff
@@ -59,12 +58,11 @@ app.config['SECURITY_WAN_ID'] = "localhost"
 # app.config['GITHUB_CLIENT_SECRET'] = os.getenv('GITHUB_CLIENT_SECRET')
 
 csrf = CSRFProtect(app)
-#oauth = OAuth(app)
+# oauth = OAuth(app)
 
 
 db.init_app(app)
 security.init_app(app, user_datastore)
-
 
 
 if is_dev == '1':
@@ -96,6 +94,7 @@ cache.init_app(app)
 app.register_blueprint(core_bp)
 app.register_blueprint(admin_bp)
 
+
 @app.before_request
 def gen_nonce():
     g.nonce = secrets.token_urlsafe(16)
@@ -105,16 +104,31 @@ def gen_nonce():
 @app.after_request
 def add_headers(response):
     nonce = getattr(g, 'nonce', '')
-    response.headers['Content-Security-Policy'] = (
-        "default-src 'none';"
-        f"script-src 'nonce-{nonce}' 'self';"
-        "img-src 'self' data: https://http.cat/  https://www.hastingspalestinecampaign.org/;"
-        f"style-src 'self' 'nonce-{nonce}' https://fonts.gstatic.com/ https://fonts.googleapis.com/;"
-        "font-src 'self' https://fonts.gstatic.com/ https://fonts.googleapis.com/;"
-        "connect-src 'self';"
-        "frame-src 'self' blob:;"
+    allow_inline_attr_styles = getattr(g, 'allow_inline_attr_styles', False)
+    allow_inline_elem_styles = getattr(g, 'allow_inline_elem_styles', False)
+
+    # Start building CSP parts
+    csp_parts = [
+        "default-src 'none';",
+        f"script-src 'nonce-{nonce}' 'self';",
+        "img-src 'self' data: https://http.cat/ https://www.hastingspalestinecampaign.org/;",
+        f"style-src 'self' 'nonce-{nonce}' https://fonts.gstatic.com/ https://fonts.googleapis.com/;",
+        f"font-src 'self' https://fonts.gstatic.com/ https://fonts.googleapis.com/;",
+        "connect-src 'self';",
+        "frame-src 'self' blob:;",
         "object-src 'self';"
-    )
+    ]
+
+    if allow_inline_attr_styles:
+        csp_parts.append("style-src-attr 'unsafe-inline';")
+
+    if allow_inline_elem_styles:
+        csp_parts.append("style-src-elem https://fonts.gstatic.com/ https://fonts.googleapis.com/ 'unsafe-inline';")
+
+    # Join and set the header
+    response.headers['Content-Security-Policy'] = ' '.join(csp_parts)
+
+    
 
     response.headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
@@ -131,6 +145,7 @@ def handle_error(error):
         error.description = 'Try again later.'
 
     return render_template("error.html", name=error.name, code=error.code, description=error.description), error.code
+
 
 @app.context_processor
 def main_context_processor():

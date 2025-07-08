@@ -19,3 +19,14 @@ def article(title):
         return render_template(f"articles/{title}.html")
     except Exception:
         abort(404)
+
+
+@core_bp.route("/newsletters/<string:title>", methods=['GET'])
+@cache.cached(timeout=60 * 60 * 24 * 7)
+def newsletter(title):
+    g.allow_inline_attr_styles = True
+    g.allow_inline_elem_styles = True
+    try:
+        return render_template(f"newsletters/{title}.html")
+    except Exception:
+        abort(404)

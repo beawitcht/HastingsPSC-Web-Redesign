@@ -1,5 +1,10 @@
 # import os
 # import tweepy
+
+import requests
+import os
+from werkzeug.utils import secure_filename
+from pathlib import Path
 from flask import abort
 from functools import wraps
 from flask_caching import Cache
@@ -232,3 +237,71 @@ def parse_inline_links(text):
     pattern = r'\[([^\]]+)\]\((https?://[^\s]+)\)'
     parsed = re.sub(pattern, replacer, escape(text))
     return Markup(parsed)
+
+
+# build blocks for articles
+
+
+def build_blocks(request, entries, news=False):
+    # Build the article content from blocks
+    blocks = []
+    image_path = Path(__file__).resolve().parent / \
+        'static' / 'images' / 'uploaded'
+
+    for i, block_form in enumerate(entries):
+        file_key = f'article-blocks-{i}-image'
+        uploaded_file = request.files.get(file_key)
+
+        if uploaded_file and uploaded_file.filename:
+            # resize and reduce file size
+            processed = process_image(uploaded_file)
+
+            filename = secure_filename(uploaded_file.filename)
+            with open(image_path / filename, "wb+") as f:
+                f.write(processed)
+
+            image = "/static/images/uploaded/" + filename
+        else:
+            image = None
+
+        if not news:
+            block = {
+                "type": block_form.block_type.data,
+                "content": block_form.content.data,
+                "image": image,
+                "alt_text": block_form.alt_text.data,
+                "url_text": block_form.url_text.data
+            }
+        else:
+            block = {
+                "type": block_form.block_type.data,
+                "content": block_form.content.data,
+                "image": image,
+                "alt_text": block_form.alt_text.data,
+                "url_text": block_form.url_text.data,
+                "colour": block_form.colour.data
+            }
+
+        blocks.append(block)
+
+        for block in blocks:
+            if block["type"] == "paragraph":
+                block["content"] = parse_inline_links(block["content"])
+
+    return blocks
+
+
+# mjml api parse
+
+
+def mjml_convert(mjml):
+    url = "https://api.mjml.io/v1/render"
+    id = os.getenv("MJML_ID")
+    sec = os.getenv("MJML_SEC")
+
+    response = requests.post(
+        url,
+        auth=(id, sec),
+        json={"mjml": str(mjml)}
+    )
+    return response.json()["html"]

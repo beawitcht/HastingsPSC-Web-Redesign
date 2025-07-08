@@ -1,15 +1,19 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request, jsonify
-from app.utilities import security, db, User, Role, role_at_least, allowed_role_action, process_image, flatten_errors, parse_inline_links
-from app.forms.admin_forms import AddUserForm, ManageUserForm, UploadArticleForm, ArticleBlockForm
+from app.utilities import security, db, User, Role, role_at_least, allowed_role_action, flatten_errors, build_blocks, mjml_convert
+from app.forms.admin_forms import AddUserForm, ManageUserForm, UploadArticleForm, ArticleBlockForm, NewsBlockForm, UploadNewsForm
 from flask_security import auth_required, hash_password, current_user
 from sqlalchemy.exc import IntegrityError
-from werkzeug.utils import secure_filename
 from pathlib import Path
+import os
 
 admin_bp = Blueprint('admin', __name__)
 
 article_path = Path(__file__).resolve().parent.parent / \
     'templates' / 'articles'
+
+newsletter_path = Path(__file__).resolve().parent.parent / \
+    'templates' / 'newsletters'
+
 image_path = Path(__file__).resolve().parent.parent / \
     'static' / 'images' / 'uploaded'
 
@@ -194,36 +198,7 @@ def post_article():
             return redirect(url_for("admin.post_article"))
 
         # Build the article content from blocks
-        blocks = []
-
-        for i, block_form in enumerate(form.blocks.entries):
-            file_key = f'article-blocks-{i}-image'
-            uploaded_file = request.files.get(file_key)
-
-            if uploaded_file and uploaded_file.filename:
-                # resize and reduce file size
-                processed = process_image(uploaded_file)
-
-                filename = secure_filename(uploaded_file.filename)
-                with open(image_path / filename, "wb+") as f:
-                    f.write(processed)
-
-                image = "/static/images/uploaded/" + filename
-            else:
-                image = None
-
-            block = {
-                "type": block_form.block_type.data,
-                "content": block_form.content.data,
-                "image": image,
-                "alt_text": block_form.alt_text.data,
-                "url_text": block_form.url_text.data
-            }
-            blocks.append(block)
-
-            for block in blocks:
-                if block["type"] == "paragraph":
-                    block["content"] = parse_inline_links(block["content"])
+        blocks = build_blocks(request, form.blocks.entries)
 
         new_article = render_template(
             "article_frame.html",
@@ -244,7 +219,6 @@ def post_article():
 def preview_article():
     current_roles = [r.name for r in current_user.roles]
     form = UploadArticleForm(prefix="article")
-    block_template = ArticleBlockForm(prefix="article-blocks-__INDEX__")
 
     if not form.validate_on_submit():
         return jsonify({'errors': flatten_errors(form.errors)}), 400
@@ -258,38 +232,7 @@ def preview_article():
             return jsonify({'error': 'You do not have permission to perform this action'}), 403
 
         try:
-            # Build the article content from blocks
-            blocks = []
-
-            for i, block_form in enumerate(form.blocks.entries):
-                file_key = f'article-blocks-{i}-image'
-                uploaded_file = request.files.get(file_key)
-
-                if uploaded_file and uploaded_file.filename:
-                    # resize and reduce file size
-                    processed = process_image(uploaded_file)
-
-                    filename = secure_filename(uploaded_file.filename)
-                    with open(image_path / "tmp" / filename, "wb+") as f:
-                        f.write(processed)
-
-                    image = "/static/images/uploaded/tmp/" + filename
-                else:
-                    image = None
-
-                block = {
-                    "type": block_form.block_type.data,
-                    "content": block_form.content.data,
-                    "image": image,
-                    "alt_text": block_form.alt_text.data,
-                    "url_text": block_form.url_text.data
-                }
-                blocks.append(block)
-
-                for block in blocks:
-                    if block["type"] == "paragraph":
-                        block["content"] = parse_inline_links(block["content"])
-
+            blocks = build_blocks(request, form.blocks.entries)
             return render_template("article_preview.html", title=form.title.data, blocks=blocks)
 
         except Exception as e:
@@ -297,3 +240,51 @@ def preview_article():
 
     flash("Preview failed. Please check your input.", "error")
     return "An error has occured, please check that article fields are valid."
+
+# newsletter route
+
+
+@admin_bp.route("/HDPSC-admin-panel/post-newsletter", methods=["GET", "POST"])
+@role_at_least('editor')
+def post_newsletter():
+    # Determine current user's roles
+    current_roles = [r.name for r in current_user.roles]
+    form = UploadNewsForm(prefix="article")
+    block_template = NewsBlockForm(prefix="article-blocks-__INDEX__")
+    form.user_id.data = current_user.id
+    url_base = os.getenv('URL_BASE')
+
+    # # Handle dynamic add block
+    # if request.method == "POST" and "add_block" in request.form:
+    #     form.blocks.append_entry()
+    #     return render_template("add_newsletter.html", form=form, block_template=block_template)
+
+    if request.method == "POST" and form.validate_on_submit():
+        allowed, message = allowed_role_action(
+            actor_roles=current_roles,
+            action='add-article'
+        )
+        if not allowed:
+            flash(message, "error")
+            return redirect(url_for("admin.post_newsletter"))
+
+        blocks = build_blocks(request, form.blocks.entries, news=True)
+
+        date = form.date.data.strftime('%-d %B %Y')
+
+        new_newsletter = render_template(
+            "newsletter_frame.html",
+            blocks=blocks,
+            url_base=url_base,
+            book_recs=form.book_recs.data,
+            date=date
+        )
+
+        new_newsletter = mjml_convert(new_newsletter)
+
+        with open(newsletter_path / f"{date}.html", "w+") as f:
+            f.write(new_newsletter)
+
+        return redirect(f'/newsletters/{date}')
+
+    return render_template("add_newsletter.html", form=form, block_template=block_template)
