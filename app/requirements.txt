@@ -666,6 +666,10 @@ pycparser==2.22 \
     --hash=sha256:491c8be9c040f5390f5bf44a5b07752bd07f56edf992381b05c701439eec10f6 \
     --hash=sha256:c3702b6d3dd8c7abc1afa565d7e63d53a1d0bd86cdc24edd75470f4de499cfcc
     # via cffi
+pymysql==1.1.1 \
+    --hash=sha256:4de15da4c61dc132f4fb9ab763063e693d521a80fd0e87943b9a453dd4c19d6c \
+    --hash=sha256:e127611aaf2b417403c60bf4dc570124aeb4a57f5f37b8e95ae399a42f904cd0
+    # via -r requirements.in
 pyopenssl==25.1.0 \
     --hash=sha256:2b11f239acc47ac2e5aca04fd7fa829800aeee22a2eb30d744572a157bd8a1ab \
     --hash=sha256:8d031884482e0c67ee92bf9a4d8cceb08d92aba7136432ffb0703c5280fc205b
@@ -778,6 +782,10 @@ wtforms==3.2.1 \
     # via
     #   flask-security
     #   flask-wtf
+zxcvbn==4.5.0 \
+    --hash=sha256:2b6eed621612ce6d65e6e4c7455b966acee87d0280e257956b1f06ccc66bd5ff \
+    --hash=sha256:70392c0fff39459d7f55d0211151401e79e76fcc6e2c22b61add62900359c7c1
+    # via -r requirements.in
 
 # The following packages are considered to be unsafe in a requirements file:
 setuptools==80.9.0 \

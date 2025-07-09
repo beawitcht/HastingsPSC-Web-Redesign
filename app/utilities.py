@@ -180,7 +180,9 @@ def allowed_role_action(actor_roles, action, actor=None, target=None, target_rol
 #         return []
 
 
-def process_image(input, max_size=800):
+def process_image(input, image_path, file_name, max_size=800, news=False):
+    print(input, image_path, file_name, news)
+
     # Open image
     img = Image.open(input)
     original_format = img.format
@@ -208,12 +210,20 @@ def process_image(input, max_size=800):
         if size_kb <= 200 or quality <= 20:
             break
         quality -= 5
-    return buffer.getvalue()
+
+    if not news:
+        file_name = file_name.replace(".jpg", "")
+        file_name = file_name.replace(".png", "")
+        file_name = file_name.replace(".jpeg", "")
+        img.save(image_path / f"{file_name}.webp")
+    else:
+        img.save(image_path / file_name)
+
 
 # process thumbnail
 
 
-def process_thumbnail(input, image_path, file_name, max_size=260):
+def process_thumbnail(input, image_path, file_name, max_size=600):
     # Open image
     img = Image.open(input)
     original_format = img.format
@@ -226,7 +236,7 @@ def process_thumbnail(input, image_path, file_name, max_size=260):
         new_width = max_size
         new_height = int((new_width / img.width) * img.height)
         img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
-    # Compress if size > 200KB
+    # Compress if size > 100KB
     quality = 95
     while True:
         buffer = io.BytesIO()
@@ -234,11 +244,11 @@ def process_thumbnail(input, image_path, file_name, max_size=260):
                  optimize=True, quality=quality)
         size_kb = buffer.tell() / 1024
 
-        if size_kb <= 200 or quality <= 20:
+        if size_kb <= 100 or quality <= 20:
             break
         quality -= 5
     try:
-        img.save(image_path / f"{file_name}.jpg")
+        img.save(image_path / f"{file_name}.webp")
         return "Successful"
     except OSError:
         return None
@@ -292,28 +302,35 @@ def parse_inline_links(text):
 # build blocks for articles
 
 
-def build_blocks(request, entries, news=False):
+def build_blocks(request, entries, news=False, tmp=False):
     # Build the article content from blocks
     blocks = []
-    image_path = Path(__file__).resolve().parent / \
-        'static' / 'images' / 'uploaded'
+
+    if tmp and not news:
+        image_path = Path(__file__).resolve().parent / \
+            'static' / 'images' / 'uploaded' / 'tmp'
+
+    else:
+        image_path = Path(__file__).resolve().parent / \
+            'static' / 'images' / 'uploaded'
+
+    rel_path = Path(__file__).resolve().parent
 
     for i, block_form in enumerate(entries):
         file_key = f'article-blocks-{i}-image'
         uploaded_file = request.files.get(file_key)
 
         if uploaded_file and uploaded_file.filename:
+            filename = secure_filename(uploaded_file.filename)
             # resize and reduce file size
             if news:
-                processed = process_image(uploaded_file, max_size=600)
+                process_image(
+                    uploaded_file, image_path, filename, max_size=600, news=news)
             else:
-                processed = process_image(uploaded_file)
+                process_image(uploaded_file, image_path, filename)
 
-            filename = secure_filename(uploaded_file.filename)
-            with open(image_path / filename, "wb+") as f:
-                f.write(processed)
-
-            image = "/static/images/uploaded/" + filename
+            image = "/" + str((image_path / filename).relative_to(rel_path)
+                              )
         else:
             image = None
 

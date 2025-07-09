@@ -1,7 +1,7 @@
 from app.blueprints.main_routes import core_bp
 from app.blueprints.admin_routes import admin_bp
 from app.utilities import cache, db, Role, User, WebAuthn, security, user_datastore
-from flask import Flask, make_response, render_template, g
+from flask import Flask, make_response, render_template, g, request
 from flask_security import hash_password
 from flask_wtf.csrf import CSRFProtect
 # from authlib.integrations.flask_client import OAuth
@@ -22,17 +22,16 @@ app = Flask(__name__)
 
 app.config['WTF_CSRF_ENABLED'] = True
 
-
 # admin panel stuff
 app.config['SECRET_KEY'] = os.environ.get(
-    "SECRET_KEY", 'pf9Wkove4IKEAXvy-cQkeDPhv9Cb3Ag-wyJILbq_dFw')
+    "SECRET_KEY")
 app.config['SECURITY_PASSWORD_SALT'] = os.environ.get(
-    "SECURITY_PASSWORD_SALT", '146585145368132386173505678016728509634')
+    "SECURITY_PASSWORD_SALT")
 
 app.config["REMEMBER_COOKIE_SAMESITE"] = "strict"
 app.config["SESSION_COOKIE_SAMESITE"] = "strict"
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQL_URI')
 
 # This option makes sure that DB connections from the
 # pool are still valid. Important for entire application since
@@ -43,15 +42,26 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
 }
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+# password settings
+app.config['SECURITY_PASSWORD_CHECK_BREACHED'] = True
+app.config['SECURITY_PASSWORD_COMPLEXITY_CHECKER'] = "zxcvbn"
 # WebAuthn settings
 app.config['SECURITY_WEBAUTHN'] = True
 app.config['SECURITY_WAN_FACTOR_ENABLED'] = True
-app.config['SECURITY_WAN_FACTOR_REQUIRED'] = True
+app.config['SECURITY_WAN_FACTOR_REQUIRED'] = False
 app.config['SECURITY_WAN_FACTOR_ENABLED_METHODS'] = [
-    'webauthn', 'authenticator', 'email']
+    'webauthn', 'authenticator']
 app.config['SECURITY_WAN_RP_NAME'] = "Hastings District PSC"
 app.config['SECURITY_WAN_ID'] = "localhost"
 
+# 2fa settings
+# app.config['SECURITY_TWO_FACTOR'] = True
+# app.config['SECURITY_TWO_FACTOR_REQUIRED'] = True
+# app.config['SECURITY_TWO_FACTOR_ALWAYS_VALIDATE'] = False
+# app.config['SECURITY_TWO_FACTOR_ENABLED_METHODS'] = [
+#     'authenticator']
+# app.config['SECURITY_TOTP_SECRETS'] = {1: os.getenv('SECURITY_TOTP_SECRETS')}
+# app.config['SECURITY_TOTP_ISSUER'] = os.getenv('SECURITY_TOTP_ISSUER')
 # # OAuth settings
 # app.config['SECURITY_OAUTH_ENABLE'] = True
 # app.config['GITHUB_CLIENT_ID'] = os.getenv('GITHUB_CLIENT_ID')
@@ -62,8 +72,9 @@ csrf = CSRFProtect(app)
 
 
 db.init_app(app)
-security.init_app(app, user_datastore)
 
+
+security.init_app(app, user_datastore)
 
 if is_dev == '1':
     # one time setup
@@ -123,12 +134,15 @@ def add_headers(response):
         csp_parts.append("style-src-attr 'unsafe-inline';")
 
     if allow_inline_elem_styles:
-        csp_parts.append("style-src-elem https://fonts.gstatic.com/ https://fonts.googleapis.com/ 'unsafe-inline';")
+        csp_parts.append(
+            "style-src-elem https://fonts.gstatic.com/ https://fonts.googleapis.com/ 'unsafe-inline';")
 
     # Join and set the header
     response.headers['Content-Security-Policy'] = ' '.join(csp_parts)
 
-    
+    # allow all images
+    if request.path.endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.ico')):
+        response.headers['Access-Control-Allow-Origin'] = '*'
 
     response.headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'

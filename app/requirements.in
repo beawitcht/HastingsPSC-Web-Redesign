@@ -7,4 +7,6 @@ setuptools<81
 pillow==11.3.0
 markdown==3.8.2
 requests==2.32.4
+zxcvbn==4.5.0
+pymysql==1.1.1
 #tweepy==4.16.0

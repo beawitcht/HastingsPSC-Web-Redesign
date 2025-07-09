@@ -27,6 +27,9 @@ class ManageUserForm(FlaskForm):
     superuser = BooleanField("SuperUser")
 
 
+class ManageFilesForm(FlaskForm):
+    delete = SubmitField("Delete")
+
 # add articles
 
 

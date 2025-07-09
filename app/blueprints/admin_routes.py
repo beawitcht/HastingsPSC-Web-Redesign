@@ -1,12 +1,15 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request, jsonify
 from app.utilities import security, db, User, Role, role_at_least, allowed_role_action, flatten_errors, build_blocks, mjml_convert, process_thumbnail
-from app.forms.admin_forms import AddUserForm, ManageUserForm, UploadArticleForm, ArticleBlockForm, NewsBlockForm, UploadNewsForm
+from app.forms.admin_forms import AddUserForm, ManageUserForm, UploadArticleForm, ArticleBlockForm, NewsBlockForm, UploadNewsForm, ManageFilesForm
 from flask_security import auth_required, hash_password, current_user
+from flask_security.utils import password_complexity_validator, password_length_validator, password_breached_validator
 from sqlalchemy.exc import IntegrityError
 from pathlib import Path
 from werkzeug.utils import secure_filename
+from datetime import datetime
 import os
 import json
+
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -84,6 +87,21 @@ def manage_users():
 
             email = add_form.email.data
             password = add_form.password.data
+
+            complexity = password_complexity_validator(password, True)
+            length = password_length_validator(password)
+            breached = password_breached_validator(password)
+
+            if complexity:
+                flash(str(complexity), "error")
+                return redirect(url_for("admin.manage_users"))
+            if length:
+                flash(str(length), "error")
+                return redirect(url_for("admin.manage_users"))
+            if breached:
+                flash(str(breached), "error")
+                return redirect(url_for("admin.manage_users"))
+
             if not email or not password:
                 flash("Email and password required.", "error")
             elif User.query.filter_by(email=email).first():
@@ -272,7 +290,7 @@ def preview_article():
             return jsonify({'error': 'You do not have permission to perform this action'}), 403
 
         try:
-            blocks = build_blocks(request, form.blocks.entries)
+            blocks = build_blocks(request, form.blocks.entries, tmp=True)
             return render_template("article_preview.html", title=form.title.data, blocks=blocks)
 
         except Exception as e:
@@ -353,3 +371,121 @@ def post_newsletter():
         return redirect(f'/newsletters/{date}')
 
     return render_template("add_newsletter.html", form=form, block_template=block_template)
+
+
+@admin_bp.route("/HDPSC-admin-panel/download-newsletter", methods=["POST"])
+@role_at_least('editor')
+def donwload_newsletter():
+    # Determine current user's roles
+    current_roles = [r.name for r in current_user.roles]
+    form = UploadNewsForm(prefix="article")
+    block_template = NewsBlockForm(prefix="article-blocks-__INDEX__")
+    form.user_id.data = current_user.id
+    url_base = os.getenv('URL_BASE')
+
+    if request.method == "POST" and form.validate_on_submit():
+        allowed, message = allowed_role_action(
+            actor_roles=current_roles,
+            action='add-article'
+        )
+        if not allowed:
+            flash(message, "error")
+            return redirect(url_for("admin.download_newsletter"))
+
+        blocks = build_blocks(
+            request, form.blocks.entries, news=True, tmp=True)
+
+        date = form.date.data.strftime('%-d %B %Y')
+        path_date = date.replace(' ', '-')
+        new_newsletter = render_template(
+            "newsletter_frame.html",
+            blocks=blocks,
+            url_base=url_base,
+            book_recs=form.book_recs.data,
+            date=date,
+            path_date=path_date
+        )
+
+        new_newsletter = mjml_convert(new_newsletter)
+        date = path_date
+        thumbnail = process_thumbnail(request.files.get(
+            "article-thumbnail"), image_path / "thumbs", date)
+        if not thumbnail:
+            return "Error thumbnail must exist and be wider than it is tall"
+
+        return new_newsletter
+
+    return "Error occurred"
+
+
+def delete_entry_by_id(data, target_id):
+    # Filter out any entry whose id matches target_id
+    new_data = [entry for entry in data if entry['id'] != target_id]
+    return new_data
+
+
+@admin_bp.route("/HDPSC-admin-panel/manage-files", methods=["GET", "POST"])
+@role_at_least('editor')
+def manage_files():
+    current_roles = [r.name for r in current_user.roles]
+    form = ManageFilesForm()
+    with open(data_path / "newsletters.json", 'r') as f:
+        newsletter_data = json.load(f)
+
+    sorted_letters = sorted(
+        newsletter_data,
+        key=lambda d: datetime.strptime(d["id"], "%d-%B-%Y"),
+        reverse=True  # most recent first
+    )
+
+    with open(data_path / "articles.json", 'r') as f:
+        article_data = json.load(f)
+
+    sorted_articles = sorted(
+        article_data,
+        key=lambda d: datetime.strptime(d["date"], "%d-%B-%Y"),
+        reverse=True  # most recent first
+    )
+
+    if request.method == "POST" and form.validate_on_submit():
+        letter_id = None
+        article_id = None
+        allowed, message = allowed_role_action(
+            actor_roles=current_roles,
+            action='add-article'
+        )
+        if not allowed:
+            flash(message, "error")
+            return redirect(url_for("admin.manage_files"))
+
+        if "delete-article" in request.form:
+            article_id = request.form["delete-article"]
+
+        if "delete-newsletter" in request.form:
+            letter_id = request.form["delete-newsletter"]
+
+        if letter_id:
+
+            output = delete_entry_by_id(newsletter_data, letter_id)
+
+            with open(data_path / "newsletters.json", 'w+') as f:
+                json.dump(output, f, indent=2)
+
+            os.remove(newsletter_path / f"{letter_id}.html")
+
+            return render_template('manage_files.html', newsletters=output,
+                                   articles=sorted_articles, form=form)
+
+        elif article_id:
+
+            output = delete_entry_by_id(article_data, article_id)
+
+            with open(data_path / "articles.json", 'w+') as f:
+                json.dump(output, f, indent=2)
+
+            os.remove(article_path / f"{article_id}.html")
+
+            return render_template('manage_files.html', newsletters=sorted_letters,
+                                   articles=output, form=form)
+
+    return render_template('manage_files.html', newsletters=sorted_letters, articles=sorted_articles, form=form)

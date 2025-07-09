@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{{ super() }}
+<title>Manage Content - HDPSC Admin Panel</title>
+<link rel="stylesheet" href="/static/css/admin.css">
+<script nonce="{{ nonce }}" defer src="/static/js/admin.min.js"></script>
+
+{% endblock %}
+{% block admin_header %}
+{{ super() }}
+{% endblock admin_header %}
+
+{% block header %}
+{% endblock header %}
+
+
+{% block body %}
+
+
+<h1>{{ current_user.email }}</h1>
+{% include "security/_messages.html" %}
+
+<h2>Articles</h2>
+<div class="table">
+    <div class="table-row table-row-header">
+        <div class="cell">ID</div>
+        <div class="cell">Alt Text</div>
+        <div class="cell">Description</div>
+        <div class="cell">Date</div>
+        <div class="cell">Delete?</div>
+    </div>
+    {% for article in articles %}
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <div class="table-row">
+            <div class="cell">{{ article.id }}</div>
+            <div class="cell">{{ article.alt }}</div>
+            <div class="cell">{{ article.descriptor }}</div>
+            <div class="cell">{{ article.date }}</div>
+
+            <div class="cell">
+                <button class="btn btn-danger delete-user-btn" type="submit" name="delete-article"  value="{{ article.id }}">Delete Article</input>
+            </div>
+        </div>
+    </form>
+    {% endfor %}
+</div>
+
+<h2>Newsletters</h2>
+<div class="table">
+    <div class="table-row  table-row-header">
+        <div class="cell">Date</div>
+        <div class="cell">Alt Text</div>
+        <div class="cell">Delete?</div>
+    </div>
+    {% for letter in newsletters %}
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <div class="table-row">
+            <div class="cell">{{ letter.id }}</div>
+            <div class="cell">{{ letter.alt }}</div>
+
+            
+            <div class="cell">
+                <button class="btn btn-danger delete-user-btn" type="submit" name="delete-newsletter" value="{{ letter.id }}">Delete Newsletter</input>
+            </div>
+        </div>
+    </form>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+
+{% block footer %}
+{% endblock %}
