@@ -465,7 +465,7 @@ def manage_files():
             letter_id = request.form["delete-newsletter"]
 
         if letter_id:
-
+            letter_id = secure_filename(letter_id)
             output = delete_entry_by_id(newsletter_data, letter_id)
 
             with open(data_path / "newsletters.json", 'w+') as f:
@@ -477,7 +477,7 @@ def manage_files():
                                    articles=sorted_articles, form=form)
 
         elif article_id:
-
+            article_id = secure_filename(article_id)
             output = delete_entry_by_id(article_data, article_id)
 
             with open(data_path / "articles.json", 'w+') as f:
