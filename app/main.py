@@ -1,10 +1,9 @@
 from app.blueprints.main_routes import core_bp
 from app.blueprints.admin_routes import admin_bp
-from app.utilities import cache, db, Role, User, WebAuthn, security, user_datastore
-from flask import Flask, make_response, render_template, g, request
+from app.utilities import cache, db, Role, security, user_datastore
+from flask import Flask, render_template, g, request
 from flask_security import hash_password
 from flask_wtf.csrf import CSRFProtect
-# from authlib.integrations.flask_client import OAuth
 from werkzeug.exceptions import HTTPException
 from pathlib import Path
 import os
@@ -42,15 +41,13 @@ if is_dev == '0':
     app.config['SECURITY_TOTP_SECRETS'] = {
         1: os.getenv('SECURITY_TOTP_SECRETS')}
     app.config['SECURITY_TOTP_ISSUER'] = os.getenv('SECURITY_TOTP_ISSUER')
-    # # OAuth settings
-    # app.config['SECURITY_OAUTH_ENABLE'] = True
-    # app.config['GITHUB_CLIENT_ID'] = os.getenv('GITHUB_CLIENT_ID')
-    # app.config['GITHUB_CLIENT_SECRET'] = os.getenv('GITHUB_CLIENT_SECRET')
+
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
 # This option makes sure that DB connections from the
 # pool are still valid. Important for entire application since
 # many DBaaS options automatically close idle connections.
+
 
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_pre_ping": True,
@@ -60,6 +57,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # password settings
 app.config['SECURITY_PASSWORD_CHECK_BREACHED'] = True
 app.config['SECURITY_PASSWORD_COMPLEXITY_CHECKER'] = "zxcvbn"
+app.config['SECURITY_CHANGEABLE'] = True
 # WebAuthn settings
 app.config['SECURITY_WEBAUTHN'] = True
 app.config['SECURITY_WAN_FACTOR_ENABLED'] = True
@@ -69,14 +67,10 @@ app.config['SECURITY_WAN_FACTOR_ENABLED_METHODS'] = [
 app.config['SECURITY_WAN_RP_NAME'] = "Hastings District PSC"
 app.config['SECURITY_WAN_ID'] = "localhost"
 
-
 csrf = CSRFProtect(app)
-# oauth = OAuth(app)
 
 
 db.init_app(app)
-
-
 security.init_app(app, user_datastore)
 
 if is_dev == '1':

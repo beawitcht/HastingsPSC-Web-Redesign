@@ -92,6 +92,10 @@ def manage_users():
             length = password_length_validator(password)
             breached = password_breached_validator(password)
 
+            if email == password:
+                flash("Password cannot be your email", "error")
+                return redirect(url_for("admin.manage_users"))
+
             if complexity:
                 flash(str(complexity), "error")
                 return redirect(url_for("admin.manage_users"))
