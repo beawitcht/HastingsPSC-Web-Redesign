@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{{ super() }}
+<title>Add Newsletter - HDPSC Admin Panel</title>
+<link rel="stylesheet" href="/static/css/admin.css">
+<script nonce="{{ nonce }}" src="/static/js/newsletter-admin.min.js"></script>
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block admin_header %}
+{{ super() }}
+{% endblock admin_header %}
+
+
+{% block body %}
+{% include "security/_messages.html" %}
+{% for field, errors in form.errors.items() %}
+<div class="alert alert-error">
+    {% for error in errors %}
+    {{ error }}
+    {% endfor %}
+</div>
+{% endfor %}
+<h1>Add Newsletter <br> {{ current_user.email }} </h1>
+<form method="post" id="article-form" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    {{ form.date.label }} {{ form.date() }}<br>
+    {{ form.thumbnail.label }}  {{ form.thumbnail() }} {{ form.thumb_alt.label }} {{ form.thumb_alt() }}<br>
+    <div id="blocks-container">
+
+    </div>
+
+    <div id="block-template" class="article-block no-display" disabled="">
+        <select name="article-blocks-__INDEX__-block_type" class="block-type">
+            <option value="heading">Heading</option>
+            <option value="subheading">Subheading</option>
+            <option value="paragraph">Paragraph</option>
+            <option value="image">Image</option>
+            <option value="button">Button</option>
+        </select>
+        <label class="content-label" for="article-blocks-__INDEX__-content">Content</label>
+        <textarea type="text" name="article-blocks-__INDEX__-content" class="block-content"> </textarea>
+
+        <label class="image-url-label no-display" disabled="" for="article-blocks-__INDEX__-image">Image</label>
+        <input type="file" name="article-blocks-__INDEX__-image" class="block-image-url no-display" disabled="" />
+
+        <label class="url-text-label no-display" for="article-blocks-__INDEX__-url_text">Link text</label>
+        <input type="text" name="article-blocks-__INDEX__-url_text" class="block-url-text no-display" disabled />
+
+        <label class="alt-text-label no-display" disabled="" for="article-blocks-__INDEX__-alt_text">Alt text</label>
+        <input type="text" name="article-blocks-__INDEX__-alt_text" class="block-alt-text no-display" disabled="" />
+
+        <label class="colour-label no-display" disabled="" for="article-blocks-__INDEX__-colour">Colour</label>
+        <input type="text" name="article-blocks-__INDEX__-colour" class="block-colour no-display" placeholder="#038721"
+           value="#038721" disabled="" />
+
+
+        <button id="rmv-block-btn-__INDEX__" name="rmv_block" type="button">Remove field</button> <br>
+
+    </div>
+
+    <button id="add-block-btn" name="add_block" value="1" type="button">Add Another Field</button> <br>
+
+    {{ form.book_recs.label }} {{ form.book_recs() }}
+    <br>
+
+    <button id="preview-button" type="button" name="preview">Download Newsletter as HTML</button>
+
+    {{ form.post() }}
+</form>
+
+<div id="preview-error"></div>
+
+<div id="preview-spinner" class="dot-spinner hidden">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+</div>
+
+<div id="preview-shadow-host" class="hidden-rendered"></div>
+
+
+
+
+{% endblock %}
+
+
+{% block footer %}
+{% endblock %}

@@ -19,7 +19,9 @@
     
     <h1> {{ current_user.email }} </h1>
     <ul>
-        <li> <a href="/wan-register"> Add passkey </a> </li>
+        <li> <a href="/HDPSC-admin-panel/post-article"> Post new article </a></li>
+        <li> <a href="/HDPSC-admin-panel/post-newsletter"> Post new newsletter </a></li>
+        <li> <a href="/HDPSC-admin-panel/manage-files"> Manage Articles and Newsletters </a></li>
         <li>
             <a href="/HDPSC-admin-panel/manage-users">
             {% if current_user.roles|selectattr('name', 'in',['admin', 'superuser'])|list %}
@@ -29,9 +31,9 @@
             {% endif %}
             </a> 
         </li>
-        <li> <a href="/HDPSC-admin-panel/post-article"> Post new Article </a></li>
+        <li> <a href="/wan-register"> Add hardware key </a> </li>
         <li>  <a href="/logout?next=/HDPSC-admin-panel"> Logout </a></li>
-        
+    </ul>  
 
     
     

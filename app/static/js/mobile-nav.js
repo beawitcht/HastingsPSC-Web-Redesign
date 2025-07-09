@@ -1,3 +1,4 @@
+document.addEventListener("DOMContentLoaded", function () {
 // MOBILE NAV STUFF
     button = document.getElementById("hamburger");
     navMenu = document.getElementById("mobile");
@@ -64,3 +65,5 @@
 //             highlightHamburger();
 //         }
 //     });
+
+});

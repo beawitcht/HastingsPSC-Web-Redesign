@@ -44,8 +44,10 @@ button,
 [type="password"],
 [type="submit"],
 [type="text"],
+[type="date"],
 [type="button"],
 [type="checkbox"],
+textarea,
 select {
     display: inline-block;
     max-width: 100%;
@@ -58,6 +60,7 @@ select {
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 0;
+    vertical-align: middle;
 }
 
 .main-content {
@@ -204,4 +207,39 @@ form {
         transform: translateY(-8px);
         opacity: 1;
     }
+}
+
+.table {
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    max-width: 95%;
+    overflow-x: auto;
+    border: 1px solid #ccc;
+    font-family: Arial, sans-serif;
+    margin: 0 auto 8px;
+}
+
+.table-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #ccc;
+}
+
+.table-row-header {
+    font-weight: bold;
+    background-color: #f4f4f4;
+}
+
+.cell {
+    flex: 1;
+    border-right: 1px solid #ccc;
+    word-break: break-word;  
+    white-space: normal;    
+    text-align: center;
+}
+
+.cell:last-child {
+    border-right: none;
 }

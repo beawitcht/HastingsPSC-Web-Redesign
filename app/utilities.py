@@ -1,5 +1,12 @@
 # import os
 # import tweepy
+from markdown.extensions import Extension
+from markdown.treeprocessors import Treeprocessor
+from markupsafe import Markup
+import requests
+import os
+from werkzeug.utils import secure_filename
+from pathlib import Path
 from flask import abort
 from functools import wraps
 from flask_caching import Cache
@@ -8,8 +15,7 @@ from flask_security import Security, SQLAlchemyUserDatastore, current_user
 from flask_security.models import fsqla_v3 as fsqla
 from PIL import Image
 import io
-import re
-from markupsafe import Markup, escape
+import markdown
 from dotenv import load_dotenv
 
 cache = Cache()
@@ -174,7 +180,9 @@ def allowed_role_action(actor_roles, action, actor=None, target=None, target_rol
 #         return []
 
 
-def process_image(input):
+def process_image(input, image_path, file_name, max_size=800, news=False):
+    print(input, image_path, file_name, news)
+
     # Open image
     img = Image.open(input)
     original_format = img.format
@@ -186,8 +194,8 @@ def process_image(input):
         img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
     # Resize if wider than acceptable
-    elif img.width > 801:
-        new_width = 800
+    elif img.width > max_size + 1:
+        new_width = max_size
         new_height = int((new_width / img.width) * img.height)
         img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
@@ -202,7 +210,49 @@ def process_image(input):
         if size_kb <= 200 or quality <= 20:
             break
         quality -= 5
-    return buffer.getvalue()
+
+    if not news:
+        file_name = file_name.replace(".jpg", "")
+        file_name = file_name.replace(".png", "")
+        file_name = file_name.replace(".jpeg", "")
+        img.save(image_path / f"{file_name}.webp")
+    else:
+        img.save(image_path / file_name)
+
+
+# process thumbnail
+
+
+def process_thumbnail(input, image_path, file_name, max_size=600):
+    # Open image
+    img = Image.open(input)
+    original_format = img.format
+
+    # Only accept images wider than tall
+    if img.height > img.width:
+        return None
+    # Resize if wider than acceptable
+    elif img.width >= max_size:
+        new_width = max_size
+        new_height = int((new_width / img.width) * img.height)
+        img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+    # Compress if size > 100KB
+    quality = 95
+    while True:
+        buffer = io.BytesIO()
+        img.save(buffer, format=original_format,
+                 optimize=True, quality=quality)
+        size_kb = buffer.tell() / 1024
+
+        if size_kb <= 100 or quality <= 20:
+            break
+        quality -= 5
+    try:
+        img.save(image_path / f"{file_name}.webp")
+        return "Successful"
+    except OSError:
+        return None
+
 
 # get nested errors out for easier handling
 
@@ -221,14 +271,107 @@ def flatten_errors(errors):
     return flat
 
 
-# inline url stuff
+# markdown stuff
+
+
+# Custom Treeprocessor to add target and rel attributes to links
+
+class LinkTargetProcessor(Treeprocessor):
+    def run(self, root):
+        for element in root.iter('a'):
+            element.set('target', '_blank')
+            element.set('rel', 'noopener')
+
+# Custom Extension to register the processor
+
+
+class LinkTargetExtension(Extension):
+    def extendMarkdown(self, md):
+        md.treeprocessors.register(LinkTargetProcessor(md), 'link_target', 15)
+
 
 def parse_inline_links(text):
-    def replacer(match):
-        text = escape(match.group(1))  # escape HTML in link text
-        url = escape(match.group(2))
-        return f'<a href="{url}" target="_blank" rel="noopener">{text}</a>'
+    html = markdown.markdown(
+        text,
+        extensions=[LinkTargetExtension()],
+        output_format='html5'
+    )
+    return Markup(html)
 
-    pattern = r'\[([^\]]+)\]\((https?://[^\s]+)\)'
-    parsed = re.sub(pattern, replacer, escape(text))
-    return Markup(parsed)
+
+# build blocks for articles
+
+
+def build_blocks(request, entries, news=False, tmp=False):
+    # Build the article content from blocks
+    blocks = []
+
+    if tmp and not news:
+        image_path = Path(__file__).resolve().parent / \
+            'static' / 'images' / 'uploaded' / 'tmp'
+
+    else:
+        image_path = Path(__file__).resolve().parent / \
+            'static' / 'images' / 'uploaded'
+
+    rel_path = Path(__file__).resolve().parent
+
+    for i, block_form in enumerate(entries):
+        file_key = f'article-blocks-{i}-image'
+        uploaded_file = request.files.get(file_key)
+
+        if uploaded_file and uploaded_file.filename:
+            filename = secure_filename(uploaded_file.filename)
+            # resize and reduce file size
+            if news:
+                process_image(
+                    uploaded_file, image_path, filename, max_size=600, news=news)
+            else:
+                process_image(uploaded_file, image_path, filename)
+
+            image = "/" + str((image_path / filename).relative_to(rel_path)
+                              )
+        else:
+            image = None
+
+        if not news:
+            block = {
+                "type": block_form.block_type.data,
+                "content": block_form.content.data,
+                "image": image,
+                "alt_text": block_form.alt_text.data,
+                "url_text": block_form.url_text.data
+            }
+        else:
+            block = {
+                "type": block_form.block_type.data,
+                "content": block_form.content.data,
+                "image": image,
+                "alt_text": block_form.alt_text.data,
+                "url_text": block_form.url_text.data,
+                "colour": block_form.colour.data
+            }
+
+        blocks.append(block)
+
+        for block in blocks:
+            if block["type"] == "paragraph":
+                block["content"] = parse_inline_links(block["content"])
+
+    return blocks
+
+
+# mjml api parse
+
+
+def mjml_convert(mjml):
+    url = "https://api.mjml.io/v1/render"
+    id = os.getenv("MJML_ID")
+    sec = os.getenv("MJML_SEC")
+
+    response = requests.post(
+        url,
+        auth=(id, sec),
+        json={"mjml": str(mjml)}
+    )
+    return response.json()["html"]

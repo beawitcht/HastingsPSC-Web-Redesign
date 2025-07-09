@@ -28,65 +28,10 @@
 <form method="post" id="article-form" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     {{ form.title.label }} {{ form.title() }}<br>
+    {{ form.date.label }} {{ form.date() }}<br>
+    {{ form.thumbnail.label }}  {{ form.thumbnail() }} {{ form.thumb_alt.label }} {{ form.thumb_alt() }} {{ form.descriptor.label }} {{ form.descriptor() }}<br>
     <div id="blocks-container">
-        {% for block in form.blocks %}
-        <div id="init-block" class="article-block" data-block-idx="{{ loop.index0 }}">
-            {{ block.block_type.label }} {{ block.block_type(class_="block-type") }}
-            {% if block.block_type.data not in ['image'] %}
-            <label class="content-label" for="{{ block.content.id }}">
-                {% if block.block_type.data == "figure" %}
-                Caption
-                {% else %}
-                Content
-                {% endif %}
-            </label>
-            {{ block.content(class_="block-content") }}
-            {% endif %}
-
-
-            {% set alt_text_label_class = "alt-text-label" %}
-            {% set alt_text_class = "block-alt-text" %}
-
-            {% set label_class = "image-url-label" %}
-            {% set img_class = "block-image-url" %}
-
-            {% set disabled = "" %}
-
-
-
-            {% if block.block_type.data not in ['image', 'figure'] %}
-
-            {% set alt_text_label_class = alt_text_label_class + " no-display" %}
-            {% set alt_text_class = alt_text_class + " no-display" %}
-
-            {% set label_class = label_class + " no-display" %}
-            {% set img_class = img_class + " no-display" %}
-
-            {% set disabled = "disabled" %}
-
-            {% endif %}
-
-            <label class="{{ alt_text_label_class }}" {{ disabled }} for="{{ block.alt_text.id }}">
-                Alt text
-            </label>
-            {{ block.alt_text(class_=alt_text_class, **({'disabled': 'disabled'} if disabled else {})) }}
-
-            <label class="{{ label_class }}" {{ disabled }} for="{{ block.image.id }}">
-                Image
-            </label>
-            {{ block.image(class_=img_class, **({'disabled': 'disabled'} if disabled else {})) }}
-
-            {% if block.block_type.data == 'link' %}
-            <label class="url-text-label" for="{{ block.url_text.id }}">Link text</label>
-            {{ block.url_text(class_="block-url-text") }}
-            {% else %}
-            <label class="url-text-label no-display" for="{{ block.url_text.id }}">Link text</label>
-            {{ block.url_text(class_="block-url-text no-display", disabled=True) }}
-            {% endif %}
-
-        </div>
-        <br>
-        {% endfor %}
+        
     </div>
 
     <div id="block-template" class="article-block no-display" disabled="">

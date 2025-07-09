@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileAllowed, FileRequired
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, HiddenField, FileField, SelectField, FieldList, FormField, HiddenField, TextAreaField
+from flask_wtf.file import FileAllowed
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, HiddenField, FileField, SelectField, FieldList, FormField, HiddenField, TextAreaField, DateField
 from wtforms.validators import DataRequired, Email
+from app.forms.validators import HexColour
 
 # Manage user classes
 
@@ -26,6 +27,9 @@ class ManageUserForm(FlaskForm):
     superuser = BooleanField("SuperUser")
 
 
+class ManageFilesForm(FlaskForm):
+    delete = SubmitField("Delete")
+
 # add articles
 
 
@@ -43,9 +47,48 @@ class ArticleBlockForm(FlaskForm):
     alt_text = StringField('Alt text',  validators=[])  # for images
     url_text = StringField('Link text')  # for images
 
+
 class UploadArticleForm(FlaskForm):
     user_id = HiddenField("User ID", validators=[DataRequired()])
     title = StringField('Title', validators=[DataRequired()])
     blocks = FieldList(FormField(ArticleBlockForm), min_entries=1)
     post = SubmitField('Post Article')
     preview = SubmitField('Preview Article')
+    thumbnail = FileField('Upload thumbnail', validators=[FileAllowed(
+        ['jpg', 'png', 'jpeg'], 'Ensure you are uploading an image, supported formats: jpg, jpeg, png'), DataRequired()])
+    thumb_alt = StringField('Thumbnail alt text', validators=[DataRequired()])
+    descriptor = StringField('Article Description',
+                             validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()])
+
+
+# Newsletters
+
+class NewsBlockForm(FlaskForm):
+    block_type = SelectField('Type', choices=[
+        ('heading', 'Heading'),
+        ('subheading', 'Subheading'),
+        ('paragraph', 'Paragraph'),
+        ('image', 'Image'),
+        ('button', 'Button')
+
+    ])
+    content = TextAreaField('Content')  # For heading/paragraph/figure caption
+    image = FileField('Upload image', validators=[FileAllowed(
+        ['jpg', 'png', 'jpeg'], 'Ensure you are uploading an image, supported formats: jpg, jpeg, png')])
+    alt_text = StringField('Alt text',  validators=[])  # for images
+    url_text = StringField('Link text')  # for images
+    colour = StringField('Colour', validators=[HexColour()])
+
+
+class UploadNewsForm(FlaskForm):
+    user_id = HiddenField("User ID", validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()])
+    blocks = FieldList(FormField(NewsBlockForm), min_entries=1)
+    post = SubmitField('Post newsletter')
+    preview = SubmitField('Download Newsletter')
+    book_recs = BooleanField(
+        'Include Reading recommendations?', default="checked")
+    thumbnail = FileField('Upload thumbnail', validators=[FileAllowed(
+        ['jpg', 'png', 'jpeg'], 'Ensure you are uploading an image, supported formats: jpg, jpeg, png'), DataRequired()])
+    thumb_alt = StringField('Thumbnail alt text', validators=[DataRequired()])

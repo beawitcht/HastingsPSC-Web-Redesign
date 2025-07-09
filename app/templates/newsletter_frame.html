@@ -1,0 +1,249 @@
+<mjml>
+    <mj-head>
+        <mj-title>Hastings and District Palestine Solidarity Campaign</mj-title>
+        <mj-preview>Newsletter {{ date }}</mj-preview>
+    </mj-head>
+    <mj-body background-color="#f4f4f4">
+        <mj-section background-color="white">
+            <mj-column width="100%">
+                <mj-text align="center" font-size="17px">
+                    <a href="{{ url_base + path_date}}"
+                        style="color:#0073e6; text-decoration:none;">View online version</a>
+                </mj-text>
+                <mj-image src="{{ url_base }}/static/images/banner.jpg"
+                    alt="An arial shot of Hastings pier flying Palestinian flags" padding="0" />
+                <mj-text align="center" font-size="22px"><em>Hastings and District Palestine Solidarity
+                        Campaign</em></mj-text>
+                <mj-text align="center" font-size="16px" color="#555555"><em>Newsletter {{ date }}</em></mj-text>
+                <mj-text font-size="16px">
+                    <strong>In this newsletter:</strong><br />
+                    {% for block in blocks %}
+                    {% if block.type == 'heading' and block.content %}
+                    &bull; {{ block.content }}<br />
+                    {% endif %}
+                    {% endfor %}
+                </mj-text>
+            </mj-column>
+        </mj-section>
+
+        {% for block in blocks %}
+        {% set type = block.get("type") %}
+        {% set content = block.get("content") %}
+        {% set image = block.get("image") %}
+        {% set url_text = block.get("url_text") %}
+        {% set link_text = block.get("link_text") %}
+        {% set link_url = block.get("link_url") %}
+        {% set colour = block.get("colour", "#0073e6") %}
+        {% set alt_text = block.get("alt_text", "") %}
+        {% set add_inline_link = block.get("add_inline_link", False) %}
+
+        {% if type == "heading" and content %}
+        <mj-section background-color="#078144">
+            <mj-column width="98%">
+                <mj-text align="center" font-size="18px" color="#ffffff" padding="0">
+                    <strong>{{ content| upper }}</strong>
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        {% endif %}
+
+        {% if type == "image" and image %}
+        <mj-section background-color="white">
+            <mj-column>
+                <mj-image src="{{ url_base + image }}" width="540px" alt="{{ alt_text }}" />
+            </mj-column>
+        </mj-section>
+        {% endif %}
+
+        {% if type == "subheading" and content %}
+        <mj-section background-color="white" padding-bottom="0">
+            <mj-column>
+                <mj-text font-size="16px" line-height="1.5" >
+                    <b>{{ content }}</b>
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        {% endif %}
+
+        {% if type == "paragraph" and content %}
+        <mj-section background-color="white" padding-top="0" padding-bottom="0">
+            <mj-column>
+                <mj-text font-size="16px" line-height="1.5" >
+                    {% if add_inline_link and link_text and link_url %}
+                    {% set linked = content.replace(link_text, "<a href='" ~ link_url ~ "'>" ~ link_text ~ "</a>", 1) %}
+                    <p>{{ linked | safe }}</p>
+                    {% else %}
+                    <p>{{ content }}</p>
+                    {% endif %}
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        {% endif %}
+
+        {% if type == "button" and content and url_text %}
+        <mj-section background-color="white">
+            <mj-column>
+                <mj-button background-color="{{ colour }}" color="#ffffff" font-size="15px"
+                    font-family="Arial, Helvetica, sans-serif" font-weight="bold" href="{{ url_text }}">
+                    {{ content }}
+                </mj-button>
+            </mj-column>
+        </mj-section>
+        {% endif %}
+        {% endfor %}
+
+
+        {% if book_recs %}
+
+        <mj-section background-color="#078144">
+            <mj-column>
+                <mj-text align="center" font-size="18px" color="#ffffff" padding="0">
+                    <strong>BOOKS AVAILABLE AT OUR STALLS AND MEETINGS</strong>
+                </mj-text>
+            </mj-column>
+        </mj-section>
+
+        <mj-section background-color="white">
+            <mj-column width="48%">
+                <mj-image
+                    src="https://www.hastingspalestinecampaign.org/images/news-ilan-pappe-a-very-short-history-of-the-israel-palestine-conflict.jpg"
+                    padding="5px" />
+            </mj-column>
+            <mj-column width="48%">
+                <mj-image src="https://www.hastingspalestinecampaign.org/images/news-ghada-karmi-one-state_.jpg"
+                    padding="5px" />
+            </mj-column>
+        </mj-section>
+
+        <!-- Second row -->
+        <mj-section background-color="white">
+            <mj-column width="48%">
+                <mj-image
+                    src="https://www.hastingspalestinecampaign.org/images/news-marilyn-garson-jewish-not-zionist.jpg"
+                    padding="5px" />
+            </mj-column>
+            <mj-column width="48%">
+                <mj-image
+                    src="https://www.hastingspalestinecampaign.org/images/news-ghada-karmi-in-search-of-fatima.jpg"
+                    padding="5px" />
+            </mj-column>
+        </mj-section>
+
+        <!-- Third row -->
+        <mj-section background-color="white">
+            <mj-column width="48%">
+                <mj-image
+                    src="https://www.hastingspalestinecampaign.org/images/news-the-ethnic-cleansing-of-palestine-by-iIlan-pappe.jpg"
+                    padding="5px" />
+            </mj-column>
+            <mj-column width="48%">
+                <mj-image
+                    src="https://www.hastingspalestinecampaign.org/images/news-rashid-khalidi-the-hundred-years-war-on-palestine.jpg"
+                    padding="5px" />
+            </mj-column>
+        </mj-section>
+
+        <mj-section background-color="white">
+            <mj-column>
+                <mj-text font-size="16px" line-height="1.5">
+                    Now available at our stall, a number of great books to deepen our knowledge of the history of
+                    Palestine and Israel. We're grateful to Lee at
+                    <a href="https://www.facebook.com/people/Printed-Matter-Book-Record-Shop/100064932810435"
+                        target="_blank">Printed Matter</a> in Hastings,
+                    for generously discounting the price for us in support of the work of PSC. Thanks to
+                    <a href="https://kaygreen.blog/2024/12/05/a-wonderful-opportunity" target="_blank">Kay Green</a> for
+                    providing us with Marilyn Garson's <em>Jewish not Zionist</em>.
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        {% endif %}
+
+
+        <mj-section background-color="#078144">
+            <mj-column>
+                <mj-text align="center" font-size="18px" color="#ffffff" padding="0">
+                    <strong>PALESTINE - ISRAEL: FROM A DIFFERENT PERSPECTIVE</strong>
+                </mj-text>
+            </mj-column>
+        </mj-section>
+
+        <mj-section background-color="white">
+            <mj-column>
+                <mj-text font-size="16px" line-height="1.5">
+                    Much of the 'information' in the corporate media is misleading. Here are some useful
+                    sources:<br /><br />
+                    <a href="https://www.middleeasteye.net" target="_blank">Middle East Eye</a> |
+                    <a href="https://electronicintifada.net" target="_blank">Electronic Intifada</a> |
+                    <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a> |
+                    <a href="https://www.middleeastmonitor.com" target="_blank">Middle East Monitor</a> |
+                    <a href="https://mondoweiss.net" target="_blank">Mondoweiss</a> |
+                    <a href="https://www.palestinechronicle.com" target="_blank">Palestine Chronicle</a> |
+                    <a href="https://english.almayadeen.net" target="_blank">Al Mayadeen</a> |
+                    <a href="https://www.mintpressnews.com" target="_blank">Mintpress</a> |
+                    <a href="https://euromedmonitor.org/en" target="_blank">Euro-Med Human Rights Monitor</a> |
+                    <a href="https://www.jonathan-cook.net" target="_blank">Jonathan Cook</a> |
+                    <a href="https://new.thecradle.co" target="_blank">The Cradle</a> |
+                    <a href="https://www.medialens.org" target="_blank">MediaLens</a> |
+                    <a href="https://www.declassifieduk.org" target="_blank">Declassified UK</a> |
+                    <a href="https://thegrayzone.com" target="_blank">The Grayzone</a> |
+                    <a href="https://www.hindrajabfoundation.org" target="_blank">Hind Rajab Foundation</a> |
+                    <a href="https://raniakhalek.com" target="_blank">Rania Khalek</a>
+                </mj-text>
+                <mj-divider border-width="1px" border-style="dotted" border-color="#888888" padding="20px 80px" />
+            </mj-column>
+        </mj-section>
+
+
+        <!-- Donations Section -->
+        <mj-section background-color="white">
+            <mj-column>
+                <mj-text font-size="16px" line-height="1.5">
+                    <strong>Hastings and District PSC online membership and donations</strong><br /><br />
+                    Becoming a member of Hastings and District PSC is an important way of supporting our work. The
+                    annual subscription is £10 waged, £5 unwaged. We now have an
+                    <a href="https://www.hastingspalestinecampaign.org/membership.html" target="_blank">online
+                        membership</a> payment form. It can also be used to renew membership.<br /><br />
+                    If you would rather not use Paypal, you can pay directly to our bank: please
+                    <a href="mailto:info@hastingspalestinecampaign.org">contact us</a> for the details. Or alternatively
+                    pay at one of our events.<br /><br />
+                    The work of Hastings and District PSC could not continue without the donations from members of the
+                    public. If you would like to support our work without becoming a member please visit our shop page
+                    here and see the right-hand column:
+                </mj-text>
+                <mj-button background-color="#FF0100" color="#ffffff" font-size="15px"
+                    font-family="Arial, Helvetica, sans-serif" font-weight="bold"
+                    href="https://www.hastingspalestinecampaign.org/membership.html">
+                    Donate to Hastings and District PSC
+                </mj-button>
+                <mj-divider border-width="1px" border-style="dotted" border-color="#888888" padding="20px 80px" />
+            </mj-column>
+        </mj-section>
+
+
+        <mj-section background-color="white">
+            <mj-column>
+                <mj-text font-size="16px" line-height="1.5" color="#000000">
+                    <strong>Recent Hastings and District PSC newsletters:</strong><br />
+                    <a href="https://www.hastingspalestinecampaign.org/news-278.html">18 April 2025</a><br />
+                    <a href="https://www.hastingspalestinecampaign.org/news-277.html">11 April 2025</a><br />
+                    <a href="https://www.hastingspalestinecampaign.org/news-276.html">4 April 2025</a><br />
+                </mj-text>
+            </mj-column>
+        </mj-section>
+
+        <mj-section background-color="white">
+            <mj-column>
+                <mj-text font-size="14px" color="#888888" align="center">
+                    Keep up to date with our website and social media:<br /><br />
+                    <a href="https://www.hastingspalestinecampaign.org">Website</a> |
+                    <a href="https://www.facebook.com/HastingsRyePalestineSolidarityCampaign">Facebook</a> |
+                    <a href="https://twitter.com/HRyepsc/with_replies">X/Twitter</a><br /><br />
+                    <a href="https://www.instagram.com/hastingsryepsc">Instagram</a> |
+                    <a href="https://www.youtube.com/channel/UCgQiTRiKUgtfzMqV_V3yB_Q">YouTube</a> |
+                    <a href="https://www.tiktok.com/@hastings.pal.sol">TikTok</a><br /><br />
+                    <a href="https://bsky.app/profile/hastingspsc.bsky.social">Bluesky</a>
+                </mj-text>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

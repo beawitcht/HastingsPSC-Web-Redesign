@@ -68,140 +68,84 @@
                     newsletter to stay up to date </p>
 
             </div>
-            <div class="layout-card-container">
-                <!-- card start -->
-                <a href="#">
-                    <div class="card-container animate-slide-up">
-                        <div class="card-image-container">
-                            <img class="card-image" alt="placeholder" src="static/images/test1.jpg">
-                        </div>
-                        <div class="card-text-container">
-                            <div class="card-heading-container">
-                                <div class="card-heading">Byello i am a title</div>
-                            </div>
-                            <div class="card-description-container">
-                                <div class="card-description">wfduhfaufhawifhu</div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-                <!-- card end -->
 
-                <!-- card start -->
-                <a href="#">
-                    <div class="card-container animate-slide-up">
+            <div class="layout-card-container" id="newsletter-cards">
+                {% for letter in newsletters %}
+                <a href="/newsletters/{{ letter.id }}">
+                    <div
+                        class="card-container animate-slide-up newsletter-card {% if loop.index > 3 %}hidden{% endif %}">
                         <div class="card-image-container">
-                            <img class="card-image" alt="placeholder" src="static/images/test2.jpg">
+                            <img class="card-image" alt="{{ letter.alt }}" {% if loop.index <=3 %}
+                                src="/static/images/uploaded/thumbs/{{ letter.id }}.webp" {% else %}
+                                data-src="/static/images/uploaded/thumbs/{{ letter.id }}.webp" {% endif %}>
                         </div>
                         <div class="card-text-container">
                             <div class="card-heading-container">
-                                <div class="card-heading">me too</div>
+                                <div class="card-heading">{{ letter.id|replace("-", " ") }}</div>
                             </div>
                             <div class="card-description-container">
-                                <div class="card-description">wfduhfaufhawifhu</div>
+                                <div class="card-description"></div>
                             </div>
                         </div>
                     </div>
                 </a>
-                <!-- card end -->
-
-                <!-- card start -->
-                <a href="#">
-                    <div class="card-container animate-slide-up">
-                        <div class="card-image-container">
-                            <img class="card-image" alt="placeholder" src="static/images/test3.jpg">
-                        </div>
-                        <div class="card-text-container">
-                            <div class="card-heading-container">
-                                <div class="card-heading">nah not me</div>
-                            </div>
-                            <div class="card-description-container">
-                                <div class="card-description">wfduhfaufhawifhu</div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-                <!-- card end -->
+                {% endfor %}
             </div>
+            <button id="load-more-btn" class="load-more-button nav-link-cta header-link-cta-p">Load More</button>
         </div>
-    </div>
-    <!-- End section 1 -->
-</div>
 
-<!-- Section 2: Articles -->
-<div class="content-section-primary">
-    <div class="section-content">
-        <div class="card-section-outer-container">
-            <div class="content-section-heading content-section-primary  animate-slide-up">
-                <h2>Articles</h2>
-                <hr>
-                <p>Writings from H&D PSC</p>
-            </div>
-            <div class="layout-card-container">
-                <!-- card start -->
-                <a href="/articles/test-article">
-                    <div class="card-container animate-slide-up">
-                        <div class="card-image-container">
-                            <img class="card-image" alt="placeholder" src="static/images/test1.jpg">
-                        </div>
-                        <div class="card-text-container">
-                            <div class="card-heading-container">
-                                <div class="card-heading">Hastings Three Found Not Guilty In Case Against General
-                                    Dynamics</div>
-                            </div>
-                            <div class="card-description-container">
-                                <div class="card-description">
-                                    'There was a genocide going on, the ultimate crime against humanity, and General
-                                    Dynamics was playing a major role in that crime.'</div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-                <!-- card end -->
 
-                <!-- card start -->
-                <a href="#">
-                    <div class="card-container animate-slide-up">
-                        <div class="card-image-container">
-                            <img class="card-image" alt="placeholder" src="static/images/test2.jpg">
-                        </div>
-                        <div class="card-text-container">
-                            <div class="card-heading-container">
-                                <div class="card-heading">Hastings Rally Condemns Israeli Massacre at Al-Mawasi</div>
-                            </div>
-                            <div class="card-description-container">
-                                <div class="card-description">Council leader slams Israel's 'inhumane' attack on
-                                    Al-Mawasi</div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-                <!-- card end -->
+        <!-- End section 1 -->
 
-                <!-- card start -->
-                <a href="#">
-                    <div class="card-container animate-slide-up">
-                        <div class="card-image-container">
-                            <img class="card-image" alt="placeholder" src="static/images/test3.jpg">
-                        </div>
-                        <div class="card-text-container">
-                            <div class="card-heading-container">
-                                <div class="card-heading">Delay of 'Hastings3' trial to 2025 described by campaigners
-                                    as...</div>
-                            </div>
-                            <div class="card-description-container">
-                                <div class="card-description">"The pursuit of the Hastings3 was part of a pattern of
-                                    legal harassment locally."</div>
-                            </div>
-                        </div>
+        <!-- Section 2: Articles -->
+        <div class="content-section-primary">
+            <div class="section-content">
+                <div class="card-section-outer-container">
+                    <div class="content-section-heading content-section-primary  animate-slide-up">
+                        <h2>Articles</h2>
+                        <hr>
+                        <p>Writings from H&D PSC</p>
                     </div>
-                </a>
-                <!-- card end -->
+                    <div class="layout-card-container">
+                        <div class="layout-card-container" id="article-cards">
+                            {% for article in articles %}
+                            <a href="/articles/{{ article.id}}">
+                                <div
+                                    class="card-container animate-slide-up article-card {% if loop.index > 3 %}hidden{% endif %}">
+                                    <div class="card-image-container">
+                                        <img class="card-image" alt="{{ article.alt }}" {% if loop.index <=3 %}
+                                            src="/static/images/uploaded/thumbs/{{ article.id }}.webp" {% else %}
+                                            data-src="/static/images/uploaded/thumbs/{{ article.id }}.webp">
+                                        {% endif %}
+                                        >
+                                    </div>
+                                    <div class="card-text-container">
+                                        <div class="card-heading-container">
+                                            <div class="card-heading">{{ article.id|replace("_", " ") }}</div>
+                                        </div>
+                                        <div class="card-description-container">
+                                            <div class="card-description">
+                                                {{ article.descriptor }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            {% endfor %}
+                        </div>
+
+
+
+                    </div>
+                    <button id="load-more-btn-article" class="load-more-button nav-link-cta header-link-cta-p">Load
+                        More</button>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
-
+</div>
 {% endblock %}
 {% block footer %}
 {{ super() }}
