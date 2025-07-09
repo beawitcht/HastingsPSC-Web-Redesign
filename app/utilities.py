@@ -43,7 +43,7 @@ class User(db.Model, fsqla.FsUserMixin):
 
 
 class WebAuthn(db.Model, fsqla.FsWebAuthnMixin):
-    pass
+    credential_id = db.Column(db.LargeBinary(255), nullable=False, unique=True)
 
 
 user_datastore = SQLAlchemyUserDatastore(db, User, Role, WebAuthn)

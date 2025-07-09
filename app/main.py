@@ -31,8 +31,23 @@ app.config['SECURITY_PASSWORD_SALT'] = os.environ.get(
 app.config["REMEMBER_COOKIE_SAMESITE"] = "strict"
 app.config["SESSION_COOKIE_SAMESITE"] = "strict"
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQL_URI')
-
+if is_dev == '0':
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQL_URI')
+    # 2fa settings
+    app.config['SECURITY_TWO_FACTOR'] = True
+    app.config['SECURITY_TWO_FACTOR_REQUIRED'] = True
+    app.config['SECURITY_TWO_FACTOR_ALWAYS_VALIDATE'] = False
+    app.config['SECURITY_TWO_FACTOR_ENABLED_METHODS'] = [
+        'authenticator']
+    app.config['SECURITY_TOTP_SECRETS'] = {
+        1: os.getenv('SECURITY_TOTP_SECRETS')}
+    app.config['SECURITY_TOTP_ISSUER'] = os.getenv('SECURITY_TOTP_ISSUER')
+    # # OAuth settings
+    # app.config['SECURITY_OAUTH_ENABLE'] = True
+    # app.config['GITHUB_CLIENT_ID'] = os.getenv('GITHUB_CLIENT_ID')
+    # app.config['GITHUB_CLIENT_SECRET'] = os.getenv('GITHUB_CLIENT_SECRET')
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
 # This option makes sure that DB connections from the
 # pool are still valid. Important for entire application since
 # many DBaaS options automatically close idle connections.
@@ -54,18 +69,6 @@ app.config['SECURITY_WAN_FACTOR_ENABLED_METHODS'] = [
 app.config['SECURITY_WAN_RP_NAME'] = "Hastings District PSC"
 app.config['SECURITY_WAN_ID'] = "localhost"
 
-# 2fa settings
-# app.config['SECURITY_TWO_FACTOR'] = True
-# app.config['SECURITY_TWO_FACTOR_REQUIRED'] = True
-# app.config['SECURITY_TWO_FACTOR_ALWAYS_VALIDATE'] = False
-# app.config['SECURITY_TWO_FACTOR_ENABLED_METHODS'] = [
-#     'authenticator']
-# app.config['SECURITY_TOTP_SECRETS'] = {1: os.getenv('SECURITY_TOTP_SECRETS')}
-# app.config['SECURITY_TOTP_ISSUER'] = os.getenv('SECURITY_TOTP_ISSUER')
-# # OAuth settings
-# app.config['SECURITY_OAUTH_ENABLE'] = True
-# app.config['GITHUB_CLIENT_ID'] = os.getenv('GITHUB_CLIENT_ID')
-# app.config['GITHUB_CLIENT_SECRET'] = os.getenv('GITHUB_CLIENT_SECRET')
 
 csrf = CSRFProtect(app)
 # oauth = OAuth(app)
