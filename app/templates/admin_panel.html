@@ -16,28 +16,31 @@
 
 {% block body %}
 
-    
-    <h1> {{ current_user.email }} </h1>
-    <ul>
-        <li> <a href="/HDPSC-admin-panel/post-article"> Post new article </a></li>
-        <li> <a href="/HDPSC-admin-panel/post-newsletter"> Post new newsletter </a></li>
-        <li> <a href="/HDPSC-admin-panel/manage-files"> Manage Articles and Newsletters </a></li>
-        <li>
-            <a href="/HDPSC-admin-panel/manage-users">
-            {% if current_user.roles|selectattr('name', 'in',['admin', 'superuser'])|list %}
-                Manage Users 
-            {% elif current_user.roles|selectattr('name', 'in',['editor'])|list %}
-                Manage Account
-            {% endif %}
-            </a> 
-        </li>
-        <li> <a href="/wan-register"> Add hardware key </a> </li>
-        <li>  <a href="/logout?next=/HDPSC-admin-panel"> Logout </a></li>
-    </ul>  
 
-    
-    
-   
+<h1> {{ current_user.email }} </h1>
+<ul>
+    <li> <a href="/HDPSC-admin-panel/post-article"> Post new article </a></li>
+    <li> <a href="/HDPSC-admin-panel/post-newsletter"> Post new newsletter </a></li>
+    <li> <a href="/HDPSC-admin-panel/manage-files"> Manage Articles and Newsletters </a></li>
+</ul>
+<hr>
+<ul>
+    {% if current_user.roles|selectattr('name', 'in',['admin', 'superuser'])|list %}
+    <li>
+        <a href="/HDPSC-admin-panel/manage-users">
+            Manage Users
+        </a>
+    </li>
+    {% endif %}
+
+    <li> <a href="/change"> Change password </a> </li>
+    <li> <a href="/wan-register"> Manage hardware keys </a> </li>
+    <li> <a href="/logout?next=/HDPSC-admin-panel"> Logout </a></li>
+</ul>
+
+
+
+
 
 {% endblock %}
 

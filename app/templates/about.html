@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{{ super() }}
+<title>About Us - Hastings & District Palestine Solidarity Campaign</title>
+<link rel="canonical" href="https://www.hastingspalestinecampaign.org/articles/test-article" />
+<meta name="description" content="DESCRIPTION HERE">
+<meta name="twitter:title" content="About Us - H&D PSC">
+<meta name="twitter:description" content="DESCRIPTION HERE">
+<meta name="og:title" content="About Us - H&D PSC">
+<meta name="og:description" content="DESCRIPTION HERE">
+<meta name="keywords" content="palestine,hastings,district,PSC,al-mawasi,solidarity,campaign,">
+<link rel="stylesheet" href="/static/css/article.css">
+<script  nonce="{{ nonce }}" defer src="/static/js/HPSC.min.js"></script>
+<script nonce="{{ nonce }}" defer src="/static/js/mobile-nav.min.js"></script>
+{% endblock %}
+
+{% block header %}
+{{ super() }}
+{% endblock %}
+
+{% block admin_header %}
+{% endblock admin_header %}
+
+{% block nav %}
+{{ super() }}
+{% endblock %}
+
+{% block body %}
+<div class="section-content">
+    <h1> About Us </h1>
+    <p>After our first meeting in January 2014, we affiliated to the <a target="_blank" href="http://www.palestinecampaign.org/"> Palestine Solidarity Campaign </a> in February that year.</p>
+
+    <h2> Contact us </h2>
+
+         <p>To contact the Hastings PSC: <a href="mailto:info@hastingspalestinecampaign.org">email</a>  or 07854 486794. </p>
+
+    <h2> PSC </h2>
+        <p>The national PSC's website is <a href="https://www.palestinecampaign.org/"> here.</a> </p>
+
+
+
+</div>
+{% endblock %}
+
+
+{% block footer %}
+{{ super() }}
+{% endblock %}

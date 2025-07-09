@@ -55,3 +55,17 @@ def newsletter(title):
         return render_template(f"newsletters/{title}.html")
     except Exception:
         abort(404)
+
+
+@core_bp.route("/about", methods=['GET'])
+@cache.cached(timeout=60 * 60 * 24 * 7)
+def about():
+
+    return render_template("about.html")
+
+
+@core_bp.route("/al-mawasi", methods=['GET'])
+@cache.cached(timeout=60 * 60 * 24 * 7)
+def al_mawasi():
+
+    return render_template("al_mawasi.html")

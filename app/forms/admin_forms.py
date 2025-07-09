@@ -39,7 +39,8 @@ class ArticleBlockForm(FlaskForm):
         ('paragraph', 'Paragraph'),
         ('image', 'Image'),
         ('figure', 'Figure'),
-        ('link', 'Link')
+        ('link', 'Link'),
+        ('break', 'Section Break')
     ])
     content = TextAreaField('Content')  # For heading/paragraph/figure caption
     image = FileField('Upload image', validators=[FileAllowed(
@@ -71,7 +72,6 @@ class NewsBlockForm(FlaskForm):
         ('paragraph', 'Paragraph'),
         ('image', 'Image'),
         ('button', 'Button')
-
     ])
     content = TextAreaField('Content')  # For heading/paragraph/figure caption
     image = FileField('Upload image', validators=[FileAllowed(
