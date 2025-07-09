@@ -55,7 +55,10 @@
             </figure>
         {% elif block.type == 'link' %}
             <a href="{{ block.content }}" target="_blank">{{ block.url_text }}</a>
+        {% elif block.type == 'break' %}
+            <hr>
         {% endif %}
+
     {% endfor %}
 
 </div>

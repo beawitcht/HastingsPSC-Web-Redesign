@@ -23,6 +23,59 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    let newsletterShown = 3;
+    let articleShown = 3;
+    const BATCH_SIZE = 3;
+
+    // load more newsletters
+    const cards = document.querySelectorAll('.newsletter-card');
+    const loadMoreBtn = document.getElementById('load-more-btn');
+
+    loadMoreBtn.addEventListener('click', () => {
+        const nextBatch = Array.from(cards).slice(newsletterShown, newsletterShown + BATCH_SIZE);
+
+        nextBatch.forEach(card => {
+            card.classList.remove('hidden');
+
+            const img = card.querySelector('img[data-src]');
+            if (img) {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+            }
+        });
+
+        newsletterShown += nextBatch.length;
+
+        if (newsletterShown >= cards.length) {
+            loadMoreBtn.style.display = 'none';
+        }
+    });
+
+    // load more articles
+    const articleCards = document.querySelectorAll('.article-card');
+    const loadMoreBtnArticle = document.getElementById('load-more-btn-article');
+
+
+    loadMoreBtnArticle.addEventListener('click', () => {
+        const nextBatch = Array.from(articleCards).slice(articleShown, articleShown + BATCH_SIZE);
+
+        nextBatch.forEach(card => {
+            card.classList.remove('hidden');
+
+            const img = card.querySelector('img[data-src]');
+            if (img) {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+            }
+        });
+
+        articleShown += nextBatch.length;
+
+        if (articleShown >= articleCards.length) {
+            loadMoreBtnArticle.style.display = 'none';
+        }
+    });
+
     //to main body arrow functionality - not using anymore keeping for the time being
     // toBodyArrow = document.getElementById("toBodyArrow");
     // if (toBodyArrow) {
@@ -72,6 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("scroll", function () {
         const banner = document.querySelector('.banner');
         if (!banner) return;
+        if (window.innerWidth < 778) return;
         const parallaxStart = 0;
         const parallaxFactor = 0.03;
         let scrolled = 0;
@@ -80,72 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         banner.style.backgroundPosition = `50% calc(120px + ${scrolled}px)`;
     });
-
-
-    // MOBILE NAV STUFF
-    button = document.getElementById("hamburger");
-    navMenu = document.getElementById("mobile");
-    mainContent = document.getElementById("mainContent");
-    banner = document.getElementById("banner");
-    first = document.getElementById("first");
-
-    button.addEventListener("click", () => {
-        const currentState = button.getAttribute("data-state");
-        if (!currentState || currentState === "closed") {
-            navMenu.setAttribute("class", "nav-bar-mobile-expanding");
-            setTimeout(() => {
-                navMenu.setAttribute("aria-expanded", "true");
-                navMenu.setAttribute("class", "nav-bar-mobile");
-                button.setAttribute("data-state", "opened");
-                button.setAttribute("aria-expanded", "true");
-                mainContent.setAttribute("aria-expanded", "true");
-                banner.setAttribute("aria-expanded", "true");
-                first.setAttribute("aria-expanded", "true");
-            }, 1); // 1ms delay to switch to transition animation
-
-
-        } else {
-            navMenu.setAttribute("aria-expanded", "false");
-            button.setAttribute("data-state", "closed");
-            button.setAttribute("aria-expanded", "false");
-            mainContent.setAttribute("aria-expanded", "false");
-            banner.setAttribute("aria-expanded", "false");
-            first.setAttribute("aria-expanded", "false");
-        }
-    });
-
-    // if scroll locked highlight the burger to prompt unlock
-//     function isScrollLocked() {
-//         return getComputedStyle(document.body).overflow === 'hidden';
-//     }
-
-//     function highlightHamburger() {
-//         const hamburger = document.getElementById('hamImg');
-//         if (hamburger) {
-//             hamburger.classList.add('highlight-hamburger');
-//             setTimeout(() => hamburger.classList.remove('highlight-hamburger'), 1000);
-//         }
-//     }
-
-//     function handleScrollAttempt(e) {
-//         if (isScrollLocked()) {
-//             e.preventDefault();
-//             highlightHamburger();
-//         }
-//     }
-
-//     // Listen for scroll attempts
-//     window.addEventListener('wheel', handleScrollAttempt, { passive: false });
-//     window.addEventListener('touchmove', handleScrollAttempt, { passive: false });
-//     window.addEventListener('keydown', (e) => {
-//         const keys = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' '];
-//         if (keys.includes(e.key) && isScrollLocked()) {
-//             e.preventDefault();
-//             highlightHamburger();
-//         }
-//     });
-
-
 
 });
 

@@ -1,13 +1,20 @@
 function updateBlockFields(blockDiv) {
     const typeSelect = blockDiv.querySelector('.block-type');
+
     const contentLabel = blockDiv.querySelector('.content-label');
     const contentInput = blockDiv.querySelector('.block-content');
+
     const imageUrlLabel = blockDiv.querySelector('.image-url-label');
     const imageUrlInput = blockDiv.querySelector('.block-image-url');
+
     const altTextLabel = blockDiv.querySelector('.alt-text-label');
     const altTextInput = blockDiv.querySelector('.block-alt-text');
+
     const urlTextLabel = blockDiv.querySelector(".url-text-label");
     const urlTextInput = blockDiv.querySelector(".block-url-text");
+
+    const colourLabel = blockDiv.querySelector(".colour-label");
+    const colourInput = blockDiv.querySelector(".block-colour");
 
 
     if (!typeSelect) return;
@@ -25,135 +32,116 @@ function updateBlockFields(blockDiv) {
             el.disabled = true;
         }
     }
+
+
+    // Define all the config states for different dropdown values
+    const visibilityConfig = {
+        image: {
+            content: false,
+            contentLabel: false,
+            imageUrl: true,
+            imageUrlLabel: true,
+            altText: true,
+            altTextLabel: true,
+            urlText: false,
+            urlTextLabel: false,
+            colourInput: false,
+            colourLabel: false,
+            labelText: "Content"
+        },
+        thumbnail: {
+            content: false,
+            contentLabel: false,
+            imageUrl: true,
+            imageUrlLabel: true,
+            altText: true,
+            altTextLabel: true,
+            urlText: false,
+            urlTextLabel: false,
+            colourInput: false,
+            colourLabel: false,
+            labelText: "Content"
+        },
+        subheading: {
+            content: true,
+            contentLabel: true,
+            imageUrl: false,
+            imageUrlLabel: false,
+            altText: false,
+            altTextLabel: false,
+            urlText: false,
+            urlTextLabel: false,
+            colourInput: false,
+            colourLabel: false,
+            labelText: "Content"
+        },
+        paragraph: {
+            content: true,
+            contentLabel: true,
+            imageUrl: false,
+            imageUrlLabel: false,
+            altText: false,
+            altTextLabel: false,
+            urlText: false,
+            urlTextLabel: false,
+            colourInput: false,
+            colourLabel: false,
+            labelText: "Content"
+        },
+        button: {
+            content: true,
+            contentLabel: true,
+            imageUrl: false,
+            imageUrlLabel: false,
+            altText: false,
+            altTextLabel: false,
+            urlText: true,
+            urlTextLabel: true,
+            colourInput: true,
+            colourLabel: true,
+            labelText: "Button Text",
+            urlLabelText: "Button Link"
+        },
+        default: {
+            content: true,
+            contentLabel: true,
+            imageUrl: false,
+            imageUrlLabel: false,
+            altText: false,
+            altTextLabel: false,
+            urlText: false,
+            urlTextLabel: false,
+            colourInput: true,
+            colourLabel: true,
+            labelText: "Content"
+        }
+    };
+
+    // Apply changes based on selected value
     
+        const config = visibilityConfig[val] || visibilityConfig.default;
 
+        // Update label text if shown
+        if (config.contentLabel && typeof config.labelText === "string") {
+            contentLabel.textContent = config.labelText;
+        }
 
-    // Update label text first
-    if (val === "figure") {
-        contentLabel.textContent = "Caption";
-    } else {
-        contentLabel.textContent = "Content";
-    }
+        if (config.urlTextLabel && typeof config.labelText === "string") {
+            urlTextLabel.textContent = config.urlLabelText;
+        }
 
-    if (val === "image") {
-        // no content field needed
-        setVisibility(contentLabel, false);
-        setVisibility(contentInput, false);
+        // Apply all visibility states
+        setVisibility(contentLabel, config.contentLabel);
+        setVisibility(contentInput, config.content);
+        setVisibility(imageUrlLabel, config.imageUrlLabel);
+        setVisibility(imageUrlInput, config.imageUrl);
+        setVisibility(altTextLabel, config.altTextLabel);
+        setVisibility(altTextInput, config.altText);
+        setVisibility(urlTextLabel, config.urlTextLabel);
+        setVisibility(urlTextInput, config.urlText);
+        setVisibility(colourLabel, config.colourLabel);
+        setVisibility(colourInput, config.colourInput);
 
-        // add url field
-        setVisibility(imageUrlLabel, true);
-        setVisibility(imageUrlInput, true);
-
-        // add alt text field
-        setVisibility(altTextLabel, true);
-        setVisibility(altTextInput, true);
-
-        // remove link text
-        setVisibility(urlTextLabel, false);
-        setVisibility(urlTextInput, false);
-
-
-    } else if (val === "figure") {
-
-        // use content label
-        contentLabel.textContent = "Caption";
-        setVisibility(contentLabel, true);
-        setVisibility(contentInput, true);
-
-        // caption field
-        setVisibility(imageUrlLabel, true);
-        setVisibility(imageUrlInput, true);
-
-        // add alt text field for image
-        setVisibility(altTextLabel, true);
-        setVisibility(altTextInput, true);
-
-        // remove link text
-        setVisibility(urlTextLabel, false);
-        setVisibility(urlTextInput, false);
-
-
-    } else if (val === "link") {
-
-        // use content label
-        contentLabel.textContent = "URL";
-        setVisibility(contentLabel, true);
-        setVisibility(contentInput, true);
-
-        // caption field
-        setVisibility(imageUrlLabel, false);
-        setVisibility(imageUrlInput, false);
-
-        // no alt text
-        setVisibility(altTextLabel, false);
-        setVisibility(altTextInput, false);
-
-
-        // add text field for link
-        setVisibility(urlTextLabel, true);
-        setVisibility(urlTextInput, true);
-
-
-    }
-    else if (val === "paragraph") {
-
-        // use content label
-        setVisibility(contentLabel, true);
-        setVisibility(contentInput, true);
-
-        // caption field
-        setVisibility(imageUrlLabel, false);
-        setVisibility(imageUrlInput, false);
-
-        // no alt text
-        setVisibility(altTextLabel, false);
-        setVisibility(altTextInput, false);
-
-
-        // add text field for link
-        setVisibility(urlTextLabel, false);
-        setVisibility(urlTextInput, false);
-
-
-    }
-    else if (val === "break") {
-
-        // no labels
-        setVisibility(contentLabel, false);
-        setVisibility(contentInput, false);
-
-        // caption field
-        setVisibility(imageUrlLabel, false);
-        setVisibility(imageUrlInput, false);
-
-        // no alt text
-        setVisibility(altTextLabel, false);
-        setVisibility(altTextInput, false);
-
-
-        // add text field for link
-        setVisibility(urlTextLabel, false);
-        setVisibility(urlTextInput, false);
-
-
-    }
-    else {
-        // use content label nothing else
-        contentLabel.textContent = "Content";
-        setVisibility(contentLabel, true);
-        setVisibility(contentInput, true);
-
-        setVisibility(imageUrlLabel, false);
-        setVisibility(imageUrlInput, false);
-
-        setVisibility(altTextLabel, false);
-        setVisibility(altTextInput, false);
-
-        // remove link text
-        setVisibility(urlTextLabel, false);
-        setVisibility(urlTextInput, false);
-
-    }
 }
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -165,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     submitBtn.addEventListener('click', function (e) {
-        if (!confirm("Are you sure you want to upload this article?")) {
+        if (!confirm("Are you sure you want to upload this newsletter?")) {
             e.preventDefault();
         }
     });
@@ -262,27 +250,17 @@ document.addEventListener("DOMContentLoaded", function () {
         blockContainer.appendChild(newBlock);
         currentIndex++;
 
+        updateBlockFields(newBlock);
+
     });
 
-    function prefixAttributes(html, prefix = "preview-") {
-        return html
-            .replace(/id="([^"]+)"/g, (_, id) => `id="${prefix}${id}"`)
-            .replace(/for="([^"]+)"/g, (_, id) => `for="${prefix}${id}"`)
-            .replace(/name="([^"]+)"/g, (_, name) => `name="${prefix}${name}"`)
-            .replace(/class="([^"]+)"/g, (_, classes) =>
-                `class="${classes
-                    .split(" ")
-                    .map(cls => `${prefix}${cls}`)
-                    .join(" ")}"`
-            );
-    }
+
 
 
     document.getElementById("preview-button").addEventListener("click", async function () {
 
         const form = document.getElementById("article-form");
         const formData = new FormData(form);
-        const host = document.getElementById("preview-shadow-host");
         const spinner = document.getElementById('preview-spinner');
         const errorBox = document.getElementById('preview-error');
 
@@ -291,7 +269,7 @@ document.addEventListener("DOMContentLoaded", function () {
         spinner.style.display = 'flex';
         errorBox.textContent = "";
 
-        await fetch(`/HDPSC-admin-panel/preview-article?ts=${timestamp}`, {
+        await fetch(`/HDPSC-admin-panel/download-newsletter?ts=${timestamp}`, {
             method: "POST",
             body: formData
         })
@@ -300,7 +278,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     const data = await response.json();
 
                     if (data.errors) {
-                        // You can loop over each field's errors
                         let allErrors = '';
                         for (const [field, messages] of Object.entries(data.errors)) {
                             allErrors += `${field}: ${messages.join(', ')}\n`;
@@ -314,36 +291,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 return response.text();
             })
             .then(html => {
-                const scopedHtml = prefixAttributes(html, "preview-");
-
-                if (!host.shadowRoot) {
-                    host.attachShadow({ mode: "open" });
-                }
-
-                const shadow = host.shadowRoot;
-                shadow.innerHTML = "";
-
-                const link = document.createElement("link");
-                link.rel = "stylesheet";
-                link.href = "/static/css/preview-base.css";
-                shadow.appendChild(link);
-
-                const link2 = document.createElement("link");
-                link2.rel = "stylesheet";
-                link2.href = "/static/css/preview-article.css";
-                shadow.appendChild(link2);
-
-
-                const wrapper = document.createElement("div");
-                wrapper.innerHTML = scopedHtml;
-                shadow.appendChild(wrapper);
+                const blob = new Blob([html], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `newsletter-${timestamp}.html`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
             })
             .catch(err => {
                 console.error(err);
                 errorBox.textContent = err.message;
             })
             .finally(() => {
-                host.classList.remove('hidden-rendered')
                 spinner.style.display = 'none';
             });
 
