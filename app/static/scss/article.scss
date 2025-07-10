@@ -28,6 +28,17 @@ $bg-secondary: global-vars.$bg-secondary;
     padding-top: 120px;
 }
 
+.main-content[aria-expanded="true"] {
+    flex: 1 1 0;
+    align-self: stretch;
+    background: global-vars.$bg-primary;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    display: inline-flex;
+    padding-top: 340px;
+}
+
 p {
     width: 96%;
 }

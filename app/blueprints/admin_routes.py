@@ -407,7 +407,8 @@ def donwload_newsletter():
             url_base=url_base,
             book_recs=form.book_recs.data,
             date=date,
-            path_date=path_date
+            path_date=path_date,
+            for_download=True
         )
 
         new_newsletter = mjml_convert(new_newsletter)

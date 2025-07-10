@@ -30,52 +30,52 @@ document.addEventListener("DOMContentLoaded", function () {
     // load more newsletters
     const cards = document.querySelectorAll('.newsletter-card');
     const loadMoreBtn = document.getElementById('load-more-btn');
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', () => {
+            const nextBatch = Array.from(cards).slice(newsletterShown, newsletterShown + BATCH_SIZE);
 
-    loadMoreBtn.addEventListener('click', () => {
-        const nextBatch = Array.from(cards).slice(newsletterShown, newsletterShown + BATCH_SIZE);
+            nextBatch.forEach(card => {
+                card.classList.remove('hidden');
 
-        nextBatch.forEach(card => {
-            card.classList.remove('hidden');
+                const img = card.querySelector('img[data-src]');
+                if (img) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                }
+            });
 
-            const img = card.querySelector('img[data-src]');
-            if (img) {
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
+            newsletterShown += nextBatch.length;
+
+            if (newsletterShown >= cards.length) {
+                loadMoreBtn.style.display = 'none';
             }
         });
-
-        newsletterShown += nextBatch.length;
-
-        if (newsletterShown >= cards.length) {
-            loadMoreBtn.style.display = 'none';
-        }
-    });
-
+    }
     // load more articles
     const articleCards = document.querySelectorAll('.article-card');
     const loadMoreBtnArticle = document.getElementById('load-more-btn-article');
 
+    if (loadMoreBtnArticle) {
+        loadMoreBtnArticle.addEventListener('click', () => {
+            const nextBatch = Array.from(articleCards).slice(articleShown, articleShown + BATCH_SIZE);
 
-    loadMoreBtnArticle.addEventListener('click', () => {
-        const nextBatch = Array.from(articleCards).slice(articleShown, articleShown + BATCH_SIZE);
+            nextBatch.forEach(card => {
+                card.classList.remove('hidden');
 
-        nextBatch.forEach(card => {
-            card.classList.remove('hidden');
+                const img = card.querySelector('img[data-src]');
+                if (img) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                }
+            });
 
-            const img = card.querySelector('img[data-src]');
-            if (img) {
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
+            articleShown += nextBatch.length;
+
+            if (articleShown >= articleCards.length) {
+                loadMoreBtnArticle.style.display = 'none';
             }
         });
-
-        articleShown += nextBatch.length;
-
-        if (articleShown >= articleCards.length) {
-            loadMoreBtnArticle.style.display = 'none';
-        }
-    });
-
+    }
     //to main body arrow functionality - not using anymore keeping for the time being
     // toBodyArrow = document.getElementById("toBodyArrow");
     // if (toBodyArrow) {

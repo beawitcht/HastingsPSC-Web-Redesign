@@ -181,7 +181,6 @@ def allowed_role_action(actor_roles, action, actor=None, target=None, target_rol
 
 
 def process_image(input, image_path, file_name, max_size=800, news=False):
-    print(input, image_path, file_name, news)
 
     # Open image
     img = Image.open(input)

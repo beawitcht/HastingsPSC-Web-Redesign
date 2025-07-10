@@ -6,20 +6,15 @@
 
 $primary: global-vars.$primary;
 
-@keyframes slideIn {
-    from {
-        width: 0;
-    }
 
-    to {
-        width: 100%;
-    }
+html{
+    scrollbar-gutter: stable;
 }
-
 
 html,
 body {
     height: 100%;
+    width: 100%;
     min-height: 100vh;
     margin: 0;
     padding: 0;
@@ -29,6 +24,10 @@ body {
 body {
     display: flex;
     flex-direction: column;
+}
+
+html[aria-expanded="true"]{
+    overflow: hidden;
 }
 
 .footer {
@@ -97,8 +96,8 @@ body {
 .back-to-top-btn {
     display: none;
     position: fixed;
-    bottom: 150px;
-    right: 8px;
+    bottom: 24px;
+    right: 24px;
     background: transparent;
     border: none;
     z-index: 9999;
