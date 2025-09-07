@@ -25,7 +25,7 @@ function updateBlockFields(blockDiv) {
             el.disabled = true;
         }
     }
-    
+
 
 
     // Update label text first
@@ -173,45 +173,85 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // Attach change listener to remove
-    function attachRemoveListener(button, blockId, index) {
+    function attachRemoveListener(button, blockId) {
         button.addEventListener("click", function (e) {
             e.preventDefault();
             const blockToRemove = document.getElementById(blockId);
             if (blockToRemove) {
                 blockToRemove.remove();
-                reindexBlocks(index);
-                currentIndex--;
+                reindexBlocks(); // reindex everything fresh
+                currentIndex = blockContainer.querySelectorAll(".article-block").length;
             }
-
+        });
+    }
+    function attachUpListener(button, index) {
+        button.addEventListener("click", function (e) {
+            e.preventDefault();
+            const block = document.getElementById(`block-${index}`);
+            const prev = block.previousElementSibling;
+            if (prev && prev.classList.contains("article-block")) {
+                block.parentNode.insertBefore(block, prev);
+                reindexBlocks();
+            }
         });
     }
 
-    function reindexBlocks(startIndex) {
-        const blocks = blockContainer.querySelectorAll(".article-block");
-        for (let i = 0; i < blocks.length; i++) {
-            const block = blocks[i];
-            const oldIndex = parseInt(block.id.split("-")[1]);
-            if (oldIndex > startIndex) {
-                const newIndex = oldIndex - 1;
-
-                // Update block ID
-                block.id = `block-${newIndex}`;
-
-                // Update all name, id, for attributes inside the block
-                block.querySelectorAll("[name], [id], [for]").forEach(el => {
-                    if (el.name) el.name = el.name.replace(`article-blocks-${oldIndex}-`, `article-blocks-${newIndex}-`);
-                    if (el.id) el.id = el.id.replace(`article-blocks-${oldIndex}-`, `article-blocks-${newIndex}-`);
-                    if (el.htmlFor) el.htmlFor = el.htmlFor.replace(`article-blocks-${oldIndex}-`, `article-blocks-${newIndex}-`);
-                });
-
-                // Update remove button ID and rebind listener
-                const oldBtn = block.querySelector(`#rmv-block-btn-${oldIndex}`);
-                if (oldBtn) {
-                    oldBtn.id = `rmv-block-btn-${newIndex}`;
-                    attachRemoveListener(oldBtn, `block-${newIndex}`, newIndex);
-                }
+    function attachDownListener(button, index) {
+        button.addEventListener("click", function (e) {
+            e.preventDefault();
+            const block = document.getElementById(`block-${index}`);
+            const next = block.nextElementSibling;
+            if (next && next.classList.contains("article-block")) {
+                block.parentNode.insertBefore(next, block);
+                reindexBlocks();
             }
-        }
+        });
+    }
+
+    function reindexBlocks() {
+        const blocks = blockContainer.querySelectorAll(".article-block");
+        blocks.forEach((block, newIndex) => {
+            block.id = `block-${newIndex}`;
+
+            block.querySelectorAll("[name], [id], [for]").forEach(el => {
+                if (el.name) el.name = el.name.replace(/article-blocks-\d+-/, `article-blocks-${newIndex}-`);
+                if (el.id) el.id = el.id.replace(/article-blocks-\d+-/, `article-blocks-${newIndex}-`);
+                if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/article-blocks-\d+-/, `article-blocks-${newIndex}-`);
+            });
+
+            // reset remove button
+            const rmvBtn = block.querySelector(`[id^="rmv-block-btn-"]`);
+            if (rmvBtn) {
+                rmvBtn.id = `rmv-block-btn-${newIndex}`;
+                rmvBtn.replaceWith(rmvBtn.cloneNode(true));
+                const freshRmv = block.querySelector(`#rmv-block-btn-${newIndex}`);
+                attachRemoveListener(freshRmv, `block-${newIndex}`);
+            }
+
+            // Reset up/down buttons
+            const upBtn = block.querySelector(`[id^="up-block-btn-"]`);
+            if (upBtn) {
+                upBtn.id = `up-block-btn-${newIndex}`;
+                upBtn.replaceWith(upBtn.cloneNode(true));
+                const freshUp = block.querySelector(`#up-block-btn-${newIndex}`);
+                attachUpListener(freshUp, newIndex);
+            }
+
+            const downBtn = block.querySelector(`[id^="down-block-btn-"]`);
+            if (downBtn) {
+                downBtn.id = `down-block-btn-${newIndex}`;
+                downBtn.replaceWith(downBtn.cloneNode(true));
+                const freshDown = block.querySelector(`#down-block-btn-${newIndex}`);
+                attachDownListener(freshDown, newIndex);
+            }
+
+            // reset type select
+            const typeSelect = block.querySelector(".block-type");
+            if (typeSelect) {
+                typeSelect.addEventListener("change", () => updateBlockFields(block));
+                updateBlockFields(block);
+            }
+        });
     }
 
 
@@ -227,11 +267,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Try to initialize index from existing blocks
     const existingBlocks = document.querySelectorAll(".article-block");
-    if (existingBlocks.length) {
-        if (existingBlocks.length > 0) {
-            currentIndex = existingBlocks.length - 1;
-        }
-
+    if (existingBlocks.length > 0) {
+        currentIndex = existingBlocks.length;
+        reindexBlocks(); // keep everything in sync
     }
 
     addBlockBtn.addEventListener("click", function (e) {
@@ -258,9 +296,20 @@ document.addEventListener("DOMContentLoaded", function () {
         if (rmvBtn) {
             attachRemoveListener(rmvBtn, `block-${currentIndex}`, currentIndex);
         }
+        // Attach up/down listeners
+        const upBtn = newBlock.querySelector(`#up-block-btn-${currentIndex}`);
+        if (upBtn) {
+            attachUpListener(upBtn, currentIndex);
+        }
+
+        const downBtn = newBlock.querySelector(`#down-block-btn-${currentIndex}`);
+        if (downBtn) {
+            attachDownListener(downBtn, currentIndex);
+        }
 
         blockContainer.appendChild(newBlock);
         currentIndex++;
+        updateBlockFields(newBlock); // ensure correct field visibility immediately
 
     });
 
@@ -351,4 +400,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
-
