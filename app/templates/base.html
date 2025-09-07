@@ -20,27 +20,21 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@700&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="preload" as="style">
+    <link
+        href="https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@700&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
         rel="stylesheet">
     {% if "preview" not in request.path %}
+        <link rel="preload" href="/static/css/base.css" as="style">
         <link rel="stylesheet" href="/static/css/base.css">
     {% else %}
         <link rel="stylesheet" href="/static/css/preview-base.css">
     {% endif %}
     {% if "HDPSC-admin-panel" not in request.path %}
-    <script defer src="/static/js/HPSC.min.js"></script>
+    <script src="/static/js/HPSC.min.js" defer></script>
+    <script src="/static/js/mobile-nav.min.js" defer></script>
     {% endif %}
 
-    {% if "/articles" in request.path %}
-        <!-- FOUC fix -->
-    <script nonce="{{ '{{ nonce }}' }}">(_ => { let a })()</script>
-    {% endif %}
-    {% if "/articles" in request.path or request.path == "/" %}
-    <script src="/static/js/mobile-nav.min.js"></script>
-    {% endif %}
-    {% if "/articles" not in request.path %}
-    <!-- FOUC fix -->
-    <script nonce="{{ nonce }}">(_ => { let a })()</script>
-    {% endif %}
     {% endblock %}
 </head>
 
