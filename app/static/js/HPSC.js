@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const BATCH_SIZE = 3;
 
     // load more newsletters
-    const cards = document.querySelectorAll('.newsletter-card');
+    const cards = document.querySelectorAll('.newzletter-card');
     const loadMoreBtn = document.getElementById('load-more-btn');
     if (loadMoreBtn) {
         loadMoreBtn.addEventListener('click', () => {
