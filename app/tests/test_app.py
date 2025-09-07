@@ -6,9 +6,9 @@ def test_index_route(client):
     assert b"Hastings & District Palestine Solidarity Campaign" in response.data
 
 def test_article_route_success(client):
-    response = client.get("/articles/test-article")
+    response = client.get("/articles/Hastings_Three_Found_Not_Guilty_In_Case_Against_General_Dynamics")
     assert response.status_code == 200
-    assert b"COUNCIL LEADER SLAMS ISRAEL'S 'INHUMANE' ATTACK ON AL MAWASI" in response.data
+    assert b"Hastings Three Found Not Guilty In Case Against General Dynamics" in response.data
 
 def test_article_route_not_found(client):
     response = client.get("/articles/nonexistent-article")
