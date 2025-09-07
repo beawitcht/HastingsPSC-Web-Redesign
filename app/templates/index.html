@@ -69,11 +69,11 @@
 
             </div>
 
-            <div class="layout-card-container" id="newsletter-cards">
+            <div class="layout-card-container" id="newzletter-cards">
                 {% for letter in newsletters %}
                 <a href="/newsletters/{{ letter.id }}">
                     <div
-                        class="card-container animate-slide-up newsletter-card {% if loop.index > 3 %}hidden{% endif %}">
+                        class="card-container animate-slide-up newzletter-card {% if loop.index > 3 %}hidden{% endif %}">
                         <div class="card-image-container">
                             <img class="card-image" alt="{{ letter.alt }}" {% if loop.index <=3 %}
                                 src="/static/images/uploaded/thumbs/{{ letter.id }}.webp" {% else %}

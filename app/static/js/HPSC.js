@@ -1,22 +1,20 @@
 //back to top button functionality
 document.addEventListener("DOMContentLoaded", function () {
     var backToTop = document.getElementById("backToTop");
+    var content = document.getElementById("body");
 
-    function scrollDetected() {
-        if (backToTop) {
-            if (document.body.scrollTop > 120 || document.documentElement.scrollTop > 120) {
-                backToTop.style.display = "block";
-            } else {
-                backToTop.style.display = "none";
-            }
+    content.addEventListener("scroll", function () {
+        if (content.scrollTop > 120) {
+            backToTop.classList.add("show");
+        } else {
+            backToTop.classList.remove("show");
         }
-    }
+    });
 
-    window.onscroll = function () { scrollDetected() };
 
     if (backToTop) {
         backToTop.addEventListener("click", () => {
-            document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+            content.scrollTo({ top: 0, behavior: 'smooth' });
             setTimeout(function () {
                 document.getElementById("homeLogo").focus();
             }, 500);
@@ -136,8 +134,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
-
-
-
-
-

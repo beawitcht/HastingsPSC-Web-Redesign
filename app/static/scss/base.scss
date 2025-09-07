@@ -93,16 +93,19 @@ html[aria-expanded="true"]{
     transition: text-decoration-color global-vars.$nav-link-hover-transition-in, text-underline-offset global-vars.$nav-link-hover-transition-in;
 }
 
-.back-to-top-btn {
+.btt-btn {
     display: none;
     position: fixed;
     bottom: 24px;
     right: 24px;
     background: transparent;
     border: none;
-    z-index: 9999;
+    z-index: 99999999999;
     opacity: 0.8;
     filter: drop-shadow(1px 1px 1.5px black);
+}
+.btt-btn.show {
+    display: block;
 }
 
 .skip-to-main {
