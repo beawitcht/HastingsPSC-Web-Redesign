@@ -1,3 +1,6 @@
+{% if not for_download %}
+    {% set url_base = "" %}
+{% endif %}
 <mjml>
     <mj-head>
         <mj-title>Hastings and District Palestine Solidarity Campaign</mj-title>
@@ -7,7 +10,7 @@
         <mj-section background-color="white">
             <mj-column width="100%">
                 <mj-text align="center" font-size="17px">
-                    <a href="{{ url_base + path_date}}"
+                    <a href="{{ url_base + '/newsletters/' + path_date}}"
                         style="color:#0073e6; text-decoration:none;">View online version</a>
                 </mj-text>
                 <mj-image src="{{ url_base }}/static/images/banner.jpg"

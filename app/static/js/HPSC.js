@@ -1,22 +1,20 @@
 //back to top button functionality
 document.addEventListener("DOMContentLoaded", function () {
     var backToTop = document.getElementById("backToTop");
+    var content = document.getElementById("body");
 
-    function scrollDetected() {
-        if (backToTop) {
-            if (document.body.scrollTop > 120 || document.documentElement.scrollTop > 120) {
-                backToTop.style.display = "block";
-            } else {
-                backToTop.style.display = "none";
-            }
+    content.addEventListener("scroll", function () {
+        if (content.scrollTop > 120) {
+            backToTop.classList.add("show");
+        } else {
+            backToTop.classList.remove("show");
         }
-    }
+    });
 
-    window.onscroll = function () { scrollDetected() };
 
     if (backToTop) {
         backToTop.addEventListener("click", () => {
-            document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+            content.scrollTo({ top: 0, behavior: 'smooth' });
             setTimeout(function () {
                 document.getElementById("homeLogo").focus();
             }, 500);
@@ -28,54 +26,54 @@ document.addEventListener("DOMContentLoaded", function () {
     const BATCH_SIZE = 3;
 
     // load more newsletters
-    const cards = document.querySelectorAll('.newsletter-card');
+    const cards = document.querySelectorAll('.newzletter-card');
     const loadMoreBtn = document.getElementById('load-more-btn');
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', () => {
+            const nextBatch = Array.from(cards).slice(newsletterShown, newsletterShown + BATCH_SIZE);
 
-    loadMoreBtn.addEventListener('click', () => {
-        const nextBatch = Array.from(cards).slice(newsletterShown, newsletterShown + BATCH_SIZE);
+            nextBatch.forEach(card => {
+                card.classList.remove('hidden');
 
-        nextBatch.forEach(card => {
-            card.classList.remove('hidden');
+                const img = card.querySelector('img[data-src]');
+                if (img) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                }
+            });
 
-            const img = card.querySelector('img[data-src]');
-            if (img) {
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
+            newsletterShown += nextBatch.length;
+
+            if (newsletterShown >= cards.length) {
+                loadMoreBtn.style.display = 'none';
             }
         });
-
-        newsletterShown += nextBatch.length;
-
-        if (newsletterShown >= cards.length) {
-            loadMoreBtn.style.display = 'none';
-        }
-    });
-
+    }
     // load more articles
     const articleCards = document.querySelectorAll('.article-card');
     const loadMoreBtnArticle = document.getElementById('load-more-btn-article');
 
+    if (loadMoreBtnArticle) {
+        loadMoreBtnArticle.addEventListener('click', () => {
+            const nextBatch = Array.from(articleCards).slice(articleShown, articleShown + BATCH_SIZE);
 
-    loadMoreBtnArticle.addEventListener('click', () => {
-        const nextBatch = Array.from(articleCards).slice(articleShown, articleShown + BATCH_SIZE);
+            nextBatch.forEach(card => {
+                card.classList.remove('hidden');
 
-        nextBatch.forEach(card => {
-            card.classList.remove('hidden');
+                const img = card.querySelector('img[data-src]');
+                if (img) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                }
+            });
 
-            const img = card.querySelector('img[data-src]');
-            if (img) {
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
+            articleShown += nextBatch.length;
+
+            if (articleShown >= articleCards.length) {
+                loadMoreBtnArticle.style.display = 'none';
             }
         });
-
-        articleShown += nextBatch.length;
-
-        if (articleShown >= articleCards.length) {
-            loadMoreBtnArticle.style.display = 'none';
-        }
-    });
-
+    }
     //to main body arrow functionality - not using anymore keeping for the time being
     // toBodyArrow = document.getElementById("toBodyArrow");
     // if (toBodyArrow) {
@@ -136,8 +134,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
-
-
-
-
-

@@ -118,29 +118,29 @@ function updateBlockFields(blockDiv) {
     };
 
     // Apply changes based on selected value
-    
-        const config = visibilityConfig[val] || visibilityConfig.default;
 
-        // Update label text if shown
-        if (config.contentLabel && typeof config.labelText === "string") {
-            contentLabel.textContent = config.labelText;
-        }
+    const config = visibilityConfig[val] || visibilityConfig.default;
 
-        if (config.urlTextLabel && typeof config.labelText === "string") {
-            urlTextLabel.textContent = config.urlLabelText;
-        }
+    // Update label text if shown
+    if (config.contentLabel && typeof config.labelText === "string") {
+        contentLabel.textContent = config.labelText;
+    }
 
-        // Apply all visibility states
-        setVisibility(contentLabel, config.contentLabel);
-        setVisibility(contentInput, config.content);
-        setVisibility(imageUrlLabel, config.imageUrlLabel);
-        setVisibility(imageUrlInput, config.imageUrl);
-        setVisibility(altTextLabel, config.altTextLabel);
-        setVisibility(altTextInput, config.altText);
-        setVisibility(urlTextLabel, config.urlTextLabel);
-        setVisibility(urlTextInput, config.urlText);
-        setVisibility(colourLabel, config.colourLabel);
-        setVisibility(colourInput, config.colourInput);
+    if (config.urlTextLabel && typeof config.labelText === "string") {
+        urlTextLabel.textContent = config.urlLabelText;
+    }
+
+    // Apply all visibility states
+    setVisibility(contentLabel, config.contentLabel);
+    setVisibility(contentInput, config.content);
+    setVisibility(imageUrlLabel, config.imageUrlLabel);
+    setVisibility(imageUrlInput, config.imageUrl);
+    setVisibility(altTextLabel, config.altTextLabel);
+    setVisibility(altTextInput, config.altText);
+    setVisibility(urlTextLabel, config.urlTextLabel);
+    setVisibility(urlTextInput, config.urlText);
+    setVisibility(colourLabel, config.colourLabel);
+    setVisibility(colourInput, config.colourInput);
 
 }
 document.addEventListener("DOMContentLoaded", function () {
@@ -167,42 +167,12 @@ document.addEventListener("DOMContentLoaded", function () {
             const blockToRemove = document.getElementById(blockId);
             if (blockToRemove) {
                 blockToRemove.remove();
-                reindexBlocks(index);
+                reindexAllBlocks();
                 currentIndex--;
             }
 
         });
     }
-
-    function reindexBlocks(startIndex) {
-        const blocks = blockContainer.querySelectorAll(".article-block");
-        for (let i = 0; i < blocks.length; i++) {
-            const block = blocks[i];
-            const oldIndex = parseInt(block.id.split("-")[1]);
-            if (oldIndex > startIndex) {
-                const newIndex = oldIndex - 1;
-
-                // Update block ID
-                block.id = `block-${newIndex}`;
-
-                // Update all name, id, for attributes inside the block
-                block.querySelectorAll("[name], [id], [for]").forEach(el => {
-                    if (el.name) el.name = el.name.replace(`article-blocks-${oldIndex}-`, `article-blocks-${newIndex}-`);
-                    if (el.id) el.id = el.id.replace(`article-blocks-${oldIndex}-`, `article-blocks-${newIndex}-`);
-                    if (el.htmlFor) el.htmlFor = el.htmlFor.replace(`article-blocks-${oldIndex}-`, `article-blocks-${newIndex}-`);
-                });
-
-                // Update remove button ID and rebind listener
-                const oldBtn = block.querySelector(`#rmv-block-btn-${oldIndex}`);
-                if (oldBtn) {
-                    oldBtn.id = `rmv-block-btn-${newIndex}`;
-                    attachRemoveListener(oldBtn, `block-${newIndex}`, newIndex);
-                }
-            }
-        }
-    }
-
-
 
     // Attach change listener to dropdown
     blockContainer.querySelectorAll(".article-block").forEach((block) => {
@@ -211,6 +181,10 @@ document.addEventListener("DOMContentLoaded", function () {
             typeSelect.addEventListener("change", () => updateBlockFields(block));
             updateBlockFields(block); // run once to initialize display state
         }
+        const upBtn = block.querySelector(`#up-block-btn-${idx}`);
+        if (upBtn) attachUpListener(upBtn, idx);
+        const downBtn = block.querySelector(`#down-block-btn-${idx}`);
+        if (downBtn) attachDownListener(downBtn, idx);
     });
 
     // Try to initialize index from existing blocks
@@ -245,6 +219,16 @@ document.addEventListener("DOMContentLoaded", function () {
         const rmvBtn = newBlock.querySelector(`#rmv-block-btn-${currentIndex}`);
         if (rmvBtn) {
             attachRemoveListener(rmvBtn, `block-${currentIndex}`, currentIndex);
+        }
+
+        const upBtn = newBlock.querySelector(`#up-block-btn-${currentIndex}`);
+        if (upBtn) {
+            attachUpListener(upBtn, currentIndex);
+        }
+
+        const downBtn = newBlock.querySelector(`#down-block-btn-${currentIndex}`);
+        if (downBtn) {
+            attachDownListener(downBtn, currentIndex);
         }
 
         blockContainer.appendChild(newBlock);
@@ -311,6 +295,83 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     });
+
+    // Move block up
+    function moveBlockUp(index) {
+        const block = document.getElementById(`block-${index}`);
+        if (!block) return;
+        const prevBlock = block.previousElementSibling;
+        if (prevBlock && prevBlock.classList.contains("article-block")) {
+            block.parentNode.insertBefore(block, prevBlock);
+            reindexAllBlocks();
+        }
+    }
+
+    // Move block down
+    function moveBlockDown(index) {
+        const block = document.getElementById(`block-${index}`);
+        if (!block) return;
+        const nextBlock = block.nextElementSibling;
+        if (nextBlock && nextBlock.classList.contains("article-block")) {
+            block.parentNode.insertBefore(block, nextBlock.nextSibling);
+            reindexAllBlocks();
+        }
+    }
+
+
+    // Reindex all blocks after move or remove
+    function reindexAllBlocks() {
+        const blocks = blockContainer.querySelectorAll(".article-block");
+        blocks.forEach((block, newIndex) => {
+            // Always recalc from current index
+            block.id = `block-${newIndex}`;
+            block.querySelectorAll("[name], [id], [for]").forEach(el => {
+                if (el.name) el.name = el.name.replace(/article-blocks-\d+-/, `article-blocks-${newIndex}-`);
+                if (el.id) el.id = el.id.replace(/article-blocks-\d+-/, `article-blocks-${newIndex}-`);
+                if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/article-blocks-\d+-/, `article-blocks-${newIndex}-`);
+            });
+
+            // Rebind listeners safely (remove old ones first)
+            const rmvBtn = block.querySelector(`[id^="rmv-block-btn-"]`);
+            if (rmvBtn) {
+                rmvBtn.id = `rmv-block-btn-${newIndex}`;
+                rmvBtn.replaceWith(rmvBtn.cloneNode(true)); // remove old listeners
+                const freshRmv = block.querySelector(`#rmv-block-btn-${newIndex}`);
+                attachRemoveListener(freshRmv, `block-${newIndex}`, newIndex);
+            }
+
+            const upBtn = block.querySelector(`[id^="up-block-btn-"]`);
+            if (upBtn) {
+                upBtn.id = `up-block-btn-${newIndex}`;
+                upBtn.replaceWith(upBtn.cloneNode(true));
+                const freshUp = block.querySelector(`#up-block-btn-${newIndex}`);
+                attachUpListener(freshUp, newIndex);
+            }
+
+            const downBtn = block.querySelector(`[id^="down-block-btn-"]`);
+            if (downBtn) {
+                downBtn.id = `down-block-btn-${newIndex}`;
+                downBtn.replaceWith(downBtn.cloneNode(true));
+                const freshDown = block.querySelector(`#down-block-btn-${newIndex}`);
+                attachDownListener(freshDown, newIndex);
+            }
+        });
+    }
+
+    // Attach up/down listeners
+    function attachUpListener(button, index) {
+        button.addEventListener("click", function (e) {
+            e.preventDefault();
+            moveBlockUp(index);
+        });
+    }
+    function attachDownListener(button, index) {
+        button.addEventListener("click", function (e) {
+            e.preventDefault();
+            moveBlockDown(index);
+        });
+    }
+
 
 });
 

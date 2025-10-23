@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, request, jsonify
+from flask import Blueprint, render_template, flash, redirect, url_for, request, jsonify, Response
 from app.utilities import security, db, User, Role, role_at_least, allowed_role_action, flatten_errors, build_blocks, mjml_convert, process_thumbnail
 from app.forms.admin_forms import AddUserForm, ManageUserForm, UploadArticleForm, ArticleBlockForm, NewsBlockForm, UploadNewsForm, ManageFilesForm
 from flask_security import auth_required, hash_password, current_user
@@ -342,6 +342,22 @@ def post_newsletter():
         date = path_date
         alt_text = form.thumb_alt.data
         id = date
+        # create email version
+        email_ver_html = render_template(
+            "newsletter_frame.html",
+            blocks=blocks,
+            url_base=url_base,
+            book_recs=form.book_recs.data,
+            date=date,
+            path_date=path_date,
+            for_download=True
+        )
+        email_ver_html = mjml_convert(email_ver_html)
+        email_ver_path = Path(__file__).resolve().parent.parent / "templates" / "newsletters" / "email_ver"
+        email_ver_path.mkdir(parents=True, exist_ok=True)
+
+        with open(email_ver_path / f"{date}.html", "w+") as f:
+            f.write(email_ver_html)
 
         with open(data_path / "newsletters.json", 'r') as f:
             json_data = json.load(f)
@@ -350,6 +366,7 @@ def post_newsletter():
             "id": id,
             "alt": alt_text
         }
+
         for entry in json_data:
             if entry["id"] == id:
                 flash(
@@ -407,7 +424,8 @@ def donwload_newsletter():
             url_base=url_base,
             book_recs=form.book_recs.data,
             date=date,
-            path_date=path_date
+            path_date=path_date,
+            for_download=True
         )
 
         new_newsletter = mjml_convert(new_newsletter)
@@ -433,6 +451,14 @@ def delete_entry_by_id(data, target_id):
 def manage_files():
     current_roles = [r.name for r in current_user.roles]
     form = ManageFilesForm()
+    allowed, message = allowed_role_action(
+        actor_roles=current_roles,
+        action='add-article'
+    )
+    if not allowed:
+        flash(message, "error")
+        return redirect(url_for("admin.manage_files"))
+
     with open(data_path / "newsletters.json", 'r') as f:
         newsletter_data = json.load(f)
 
@@ -454,19 +480,23 @@ def manage_files():
     if request.method == "POST" and form.validate_on_submit():
         letter_id = None
         article_id = None
-        allowed, message = allowed_role_action(
-            actor_roles=current_roles,
-            action='add-article'
-        )
-        if not allowed:
-            flash(message, "error")
-            return redirect(url_for("admin.manage_files"))
+        dl_letter_id = None
 
         if "delete-article" in request.form:
             article_id = request.form["delete-article"]
 
         if "delete-newsletter" in request.form:
             letter_id = request.form["delete-newsletter"]
+
+        if "download-newsletter" in request.form:
+            dl_letter_id = request.form["download-newsletter"]
+
+        if dl_letter_id:
+            return Response(
+                render_template(f"newsletters/email_ver/{secure_filename(dl_letter_id)}.html"),
+                mimetype='text/html',
+                headers={"Content-Disposition": f"attachment;filename={secure_filename(dl_letter_id)}.html"}
+            )
 
         if letter_id:
             letter_id = secure_filename(letter_id)

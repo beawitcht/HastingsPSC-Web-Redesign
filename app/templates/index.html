@@ -4,6 +4,7 @@
 {{ super() }}
 <title>Hastings & District Palestine Solidarity Campaign</title>
 <link rel="canonical" href="https://www.hastingspalestinecampaign.org" />
+<link rel="preload" href="/static/images/banner.webp" as="image">
 <meta name="description"
     content="Hastings and District Palestine Solidarity Campaign aims to raise public awareness about Israel's occupation of Palestine and the struggle of the Palestinian people against the injustice of Israeli apartheid. We support the Boycott, Divestment and Sanctions (BDS) movement.">
 <meta name="twitter:title" content="Hastings and District Palestine Solidarity Campaign">
@@ -13,7 +14,9 @@
 <meta name="og:description"
     content="Hastings and District Palestine Solidarity Campaign aims to raise public awareness about Israel's occupation of Palestine and the struggle of the Palestinian people against the injustice of Israeli apartheid. We support the Boycott, Divestment and Sanctions (BDS) movement.">
 <meta name="keywords" content="palestine,hastings,district,PSC,al-mawasi,solidarity,campaign,">
+<link rel="preload" href="/static/css/index.css" as="style">
 <link rel="stylesheet" href="/static/css/index.css">
+
 {% endblock %}
 
 
@@ -69,11 +72,11 @@
 
             </div>
 
-            <div class="layout-card-container" id="newsletter-cards">
+            <div class="layout-card-container" id="newzletter-cards">
                 {% for letter in newsletters %}
                 <a href="/newsletters/{{ letter.id }}">
                     <div
-                        class="card-container animate-slide-up newsletter-card {% if loop.index > 3 %}hidden{% endif %}">
+                        class="card-container animate-slide-up newzletter-card {% if loop.index > 3 %}hidden{% endif %}">
                         <div class="card-image-container">
                             <img class="card-image" alt="{{ letter.alt }}" {% if loop.index <=3 %}
                                 src="/static/images/uploaded/thumbs/{{ letter.id }}.webp" {% else %}

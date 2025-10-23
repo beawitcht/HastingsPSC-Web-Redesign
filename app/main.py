@@ -124,7 +124,8 @@ def add_headers(response):
         f"font-src 'self' https://fonts.gstatic.com/ https://fonts.googleapis.com/;",
         "connect-src 'self';",
         "frame-src 'self' blob:;",
-        "object-src 'self';"
+        "object-src 'self';",
+        "base-uri 'self';",
     ]
 
     if allow_inline_attr_styles:
@@ -143,9 +144,11 @@ def add_headers(response):
 
     response.headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['Cross-Origin-Opener-Policy'] = 'same-origin'
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-XSS-Protection'] = '1; mode=block'
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+
     return response
 
 
