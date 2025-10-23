@@ -374,3 +374,18 @@ def mjml_convert(mjml):
         json={"mjml": str(mjml)}
     )
     return response.json()["html"]
+
+
+def decide_text_col(bg_color):
+    # Remove leading '#'
+    bg_color = bg_color.lstrip('#')
+
+    # Convert to RGB
+    r, g, b = int(bg_color[0:2], 16), int(
+        bg_color[2:4], 16), int(bg_color[4:6], 16)
+
+    # Formula from W3C for relative luminance
+    luminance = (0.299 * r + 0.587 * g + 0.114 * b)
+
+    # Choose white for dark backgrounds, black for light ones
+    return '#000000' if luminance > 186 else '#FFFFFF'
