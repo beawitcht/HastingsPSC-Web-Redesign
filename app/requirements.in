@@ -4,8 +4,8 @@ python-dotenv==1.1.1
 Flask-Caching==2.3.1
 flask-security[fsqla,common,mfa]==5.6.2
 setuptools<81
-pillow==11.3.0
-markdown==3..9
+pillow==12.0.0
+markdown==3.9
 requests==2.32.5
 zxcvbn==4.5.0
 pymysql==1.1.2
