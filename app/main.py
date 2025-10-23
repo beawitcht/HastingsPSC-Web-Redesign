@@ -1,6 +1,6 @@
 from app.blueprints.main_routes import core_bp
 from app.blueprints.admin_routes import admin_bp
-from app.utilities import cache, db, Role, security, user_datastore
+from app.utilities import cache, db, Role, security, user_datastore, decide_text_col
 from flask import Flask, render_template, g, request
 from flask_security import hash_password
 from flask_wtf.csrf import CSRFProtect
@@ -18,6 +18,7 @@ is_dev = os.getenv('IS_DEV')
 # configure app
 app = Flask(__name__)
 
+app.jinja_env.filters['decide_text_col'] = decide_text_col
 
 app.config['WTF_CSRF_ENABLED'] = True
 

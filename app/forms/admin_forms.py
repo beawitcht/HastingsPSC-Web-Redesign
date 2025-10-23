@@ -45,21 +45,22 @@ class ArticleBlockForm(FlaskForm):
     content = TextAreaField('Content')  # For heading/paragraph/figure caption
     image = FileField('Upload image', validators=[FileAllowed(
         ['jpg', 'png', 'jpeg'], 'Ensure you are uploading an image, supported formats: jpg, jpeg, png')])
-    alt_text = StringField('Alt text',  validators=[])  # for images
+    alt_text = TextAreaField('Alt text',  validators=[])  # for images
     url_text = StringField('Link text')  # for images
 
 
 class UploadArticleForm(FlaskForm):
     user_id = HiddenField("User ID", validators=[DataRequired()])
-    title = StringField('Title', validators=[DataRequired()])
+    title = TextAreaField('Title', validators=[DataRequired()])
     blocks = FieldList(FormField(ArticleBlockForm), min_entries=1)
     post = SubmitField('Post Article')
     preview = SubmitField('Preview Article')
     thumbnail = FileField('Upload thumbnail', validators=[FileAllowed(
         ['jpg', 'png', 'jpeg'], 'Ensure you are uploading an image, supported formats: jpg, jpeg, png'), DataRequired()])
-    thumb_alt = StringField('Thumbnail alt text', validators=[DataRequired()])
-    descriptor = StringField('Article Description',
-                             validators=[DataRequired()])
+    thumb_alt = TextAreaField('Thumbnail alt text',
+                              validators=[DataRequired()])
+    descriptor = TextAreaField('Article Description',
+                               validators=[DataRequired()])
     date = DateField('Date', validators=[DataRequired()])
 
 
@@ -76,7 +77,7 @@ class NewsBlockForm(FlaskForm):
     content = TextAreaField('Content')  # For heading/paragraph/figure caption
     image = FileField('Upload image', validators=[FileAllowed(
         ['jpg', 'png', 'jpeg'], 'Ensure you are uploading an image, supported formats: jpg, jpeg, png')])
-    alt_text = StringField('Alt text',  validators=[])  # for images
+    alt_text = TextAreaField('Alt text',  validators=[])  # for images
     url_text = StringField('Link text')  # for images
     colour = StringField('Colour', validators=[HexColour()])
 
@@ -91,4 +92,5 @@ class UploadNewsForm(FlaskForm):
         'Include Reading recommendations?', default="checked")
     thumbnail = FileField('Upload thumbnail', validators=[FileAllowed(
         ['jpg', 'png', 'jpeg'], 'Ensure you are uploading an image, supported formats: jpg, jpeg, png'), DataRequired()])
-    thumb_alt = StringField('Thumbnail alt text', validators=[DataRequired()])
+    thumb_alt = TextAreaField('Thumbnail alt text',
+                              validators=[DataRequired()])
