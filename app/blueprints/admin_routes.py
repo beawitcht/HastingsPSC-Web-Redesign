@@ -526,6 +526,7 @@ def manage_files():
                 json.dump(output, f, indent=2)
 
             os.remove(newsletter_path / f"{letter_id}.html")
+            os.remove(newsletter_path / 'email_ver' / f"{letter_id}.html")
 
             return render_template('manage_files.html', newsletters=output,
                                    articles=sorted_articles, form=form)
