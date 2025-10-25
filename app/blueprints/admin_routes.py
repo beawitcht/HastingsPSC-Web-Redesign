@@ -327,6 +327,9 @@ def post_newsletter():
 
         blocks = build_blocks(request, form.blocks.entries, news=True)
 
+        with open(data_path / "newsletters.json", 'r') as f:
+            json_data = json.load(f)
+
         date = form.date.data.strftime('%-d %B %Y')
         path_date = date.replace(' ', '-')
         new_newsletter = render_template(
@@ -342,6 +345,13 @@ def post_newsletter():
         date = path_date
         alt_text = form.thumb_alt.data
         id = date
+
+        for entry in json_data:
+            if entry["id"] == id:
+                flash(
+                    "Newsletter already exists, please delete the existing letter before continuing", "error")
+                return redirect(url_for("admin.post_newsletter"))
+
         # create email version
         email_ver_html = render_template(
             "newsletter_frame.html",
@@ -360,19 +370,10 @@ def post_newsletter():
         with open(email_ver_path / f"{date}.html", "w+") as f:
             f.write(email_ver_html)
 
-        with open(data_path / "newsletters.json", 'r') as f:
-            json_data = json.load(f)
-
         new_entry = {
             "id": id,
             "alt": alt_text
         }
-
-        for entry in json_data:
-            if entry["id"] == id:
-                flash(
-                    "Newsletter already exists, please delete the existing letter before continuing", "error")
-                return redirect(url_for("admin.post_newsletter"))
 
         thumbnail = process_thumbnail(request.files.get(
             "article-thumbnail"), image_path / "thumbs", date)
