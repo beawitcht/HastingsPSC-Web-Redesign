@@ -353,7 +353,8 @@ def post_newsletter():
             for_download=True
         )
         email_ver_html = mjml_convert(email_ver_html)
-        email_ver_path = Path(__file__).resolve().parent.parent / "templates" / "newsletters" / "email_ver"
+        email_ver_path = Path(__file__).resolve(
+        ).parent.parent / "templates" / "newsletters" / "email_ver"
         email_ver_path.mkdir(parents=True, exist_ok=True)
 
         with open(email_ver_path / f"{date}.html", "w+") as f:
@@ -483,9 +484,26 @@ def manage_files():
         dl_letter_id = None
 
         if "delete-article" in request.form:
+            allowed, message = allowed_role_action(
+                actor_roles=current_roles,
+                action='delete'
+            )
+            if not allowed:
+                flash("You do not have permission to delete this", "error")
+                return redirect(url_for("admin.manage_files"))
+
             article_id = request.form["delete-article"]
 
         if "delete-newsletter" in request.form:
+
+            allowed, message = allowed_role_action(
+                actor_roles=current_roles,
+                action='delete'
+            )
+            if not allowed:
+                flash("You do not have permission to delete this", "error")
+                return redirect(url_for("admin.manage_files"))
+
             letter_id = request.form["delete-newsletter"]
 
         if "download-newsletter" in request.form:
@@ -493,9 +511,11 @@ def manage_files():
 
         if dl_letter_id:
             return Response(
-                render_template(f"newsletters/email_ver/{secure_filename(dl_letter_id)}.html"),
+                render_template(
+                    f"newsletters/email_ver/{secure_filename(dl_letter_id)}.html"),
                 mimetype='text/html',
-                headers={"Content-Disposition": f"attachment;filename={secure_filename(dl_letter_id)}.html"}
+                headers={
+                    "Content-Disposition": f"attachment;filename={secure_filename(dl_letter_id)}.html"}
             )
 
         if letter_id:
