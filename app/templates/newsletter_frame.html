@@ -33,6 +33,8 @@
         {% set type = block.get("type") %}
         {% set content = block.get("content") %}
         {% set image = block.get("image") %}
+        {% set tall = block.get("tall") %}
+        {% set width = block.get("width") %}
         {% set url_text = block.get("url_text") %}
         {% set link_text = block.get("link_text") %}
         {% set link_url = block.get("link_url") %}
@@ -50,10 +52,18 @@
         </mj-section>
         {% endif %}
 
-        {% if type == "image" and image %}
+        {% if type == "image" and image and not tall %}
         <mj-section background-color="white">
             <mj-column>
                 <mj-image src="{{ url_base + image }}" width="540px" alt="{{ alt_text }}" />
+            </mj-column>
+        </mj-section>
+        {% endif %}
+
+        {% if type == "image" and image and tall %}
+        <mj-section background-color="white">
+            <mj-column>
+                <mj-image src="{{ url_base + image }}" width="{{ width }}px" alt="{{ alt_text }}" />
             </mj-column>
         </mj-section>
         {% endif %}
@@ -227,9 +237,9 @@
             <mj-column>
                 <mj-text font-size="16px" line-height="1.5" color="#000000">
                     <strong>Recent Hastings and District PSC newsletters:</strong><br />
-                    <a href="https://www.hastingspalestinecampaign.org/news-278.html">18 April 2025</a><br />
-                    <a href="https://www.hastingspalestinecampaign.org/news-277.html">11 April 2025</a><br />
-                    <a href="https://www.hastingspalestinecampaign.org/news-276.html">4 April 2025</a><br />
+                    <a href="{{ url_base }}/newsletters/{{ see_recent[0] }}">{{ see_recent[0] }}</a><br />
+                    <a href="{{ url_base }}/newsletters/{{ see_recent[1] }}">{{ see_recent[1] }}</a><br />
+                    <a href="{{ url_base }}/newsletters/{{ see_recent[2] }}">{{ see_recent[2] }}</a><br />
                 </mj-text>
             </mj-column>
         </mj-section>

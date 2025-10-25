@@ -186,9 +186,17 @@ def process_image(input, image_path, file_name, max_size=800, news=False):
     img = Image.open(input)
     original_format = img.format
 
+    # make nl tall images not huge for mobile
+    if news:
+        max_height = 300
+        tall_img = False
+    else:
+        max_height = 600
+
     # Resize if the image is taller than wider and larger than acceptable
-    if img.height > img.width and img.height > 601:
-        new_height = 600
+    if img.height > img.width and img.height > max_height + 1:
+        tall_img = True
+        new_height = max_height
         new_width = int((new_height / img.height) * img.width)
         img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
@@ -210,6 +218,7 @@ def process_image(input, image_path, file_name, max_size=800, news=False):
             break
         quality -= 5
 
+    # webp not widely supported for email clients :(
     if not news:
         file_name = file_name.replace(".jpg", "")
         file_name = file_name.replace(".png", "")
@@ -218,6 +227,13 @@ def process_image(input, image_path, file_name, max_size=800, news=False):
     else:
         img.save(image_path / file_name)
 
+    # ensure tall images arent stupidly big in nl
+    if tall_img:
+        return True, new_width
+    elif news:
+        return False, 0
+    else:
+        return False
 
 # process thumbnail
 
@@ -318,15 +334,15 @@ def build_blocks(request, entries, news=False, tmp=False):
     for i, block_form in enumerate(entries):
         file_key = f'article-blocks-{i}-image'
         uploaded_file = request.files.get(file_key)
-
+        tall = False
         if uploaded_file and uploaded_file.filename:
             filename = secure_filename(uploaded_file.filename)
             # resize and reduce file size
             if news:
-                process_image(
+                tall, width = process_image(
                     uploaded_file, image_path, filename, max_size=600, news=news)
             else:
-                process_image(uploaded_file, image_path, filename)
+                tall = process_image(uploaded_file, image_path, filename)
 
             image = "/" + str((image_path / filename).relative_to(rel_path)
                               )
@@ -341,11 +357,23 @@ def build_blocks(request, entries, news=False, tmp=False):
                 "alt_text": block_form.alt_text.data,
                 "url_text": block_form.url_text.data
             }
+        elif tall:
+            block = {
+                "type": block_form.block_type.data,
+                "content": block_form.content.data,
+                "image": image,
+                "tall": tall,
+                "width": width,
+                "alt_text": block_form.alt_text.data,
+                "url_text": block_form.url_text.data,
+                "colour": block_form.colour.data
+            }
         else:
             block = {
                 "type": block_form.block_type.data,
                 "content": block_form.content.data,
                 "image": image,
+                "tall": tall,
                 "alt_text": block_form.alt_text.data,
                 "url_text": block_form.url_text.data,
                 "colour": block_form.colour.data
