@@ -330,6 +330,15 @@ def post_newsletter():
         with open(data_path / "newsletters.json", 'r') as f:
             json_data = json.load(f)
 
+        # get latest articles for recents at bottom of nl
+        sorted_letters = sorted(
+            json_data,
+            key=lambda d: datetime.strptime(d["id"], "%d-%B-%Y"),
+            reverse=True  # most recent first
+        )
+        latest_3 = sorted_letters[:3]
+        top_3_url = [latest_3[0]["id"], latest_3[1]["id"], latest_3[2]["id"]]
+
         date = form.date.data.strftime('%-d %B %Y')
         path_date = date.replace(' ', '-')
         new_newsletter = render_template(
@@ -337,6 +346,7 @@ def post_newsletter():
             blocks=blocks,
             url_base=url_base,
             book_recs=form.book_recs.data,
+            see_recent=top_3_url,
             date=date,
             path_date=path_date
         )
@@ -358,6 +368,7 @@ def post_newsletter():
             blocks=blocks,
             url_base=url_base,
             book_recs=form.book_recs.data,
+            see_recent=top_3_url,
             date=date,
             path_date=path_date,
             for_download=True
