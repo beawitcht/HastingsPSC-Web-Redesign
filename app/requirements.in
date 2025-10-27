@@ -1,6 +1,6 @@
 gunicorn==23.0.0
 flask==3.1.2
-python-dotenv==1.1.1
+python-dotenv==1.2.1
 Flask-Caching==2.3.1
 flask-security[fsqla,common,mfa]==5.6.2
 setuptools<81
