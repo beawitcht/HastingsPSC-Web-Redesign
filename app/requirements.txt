@@ -97,6 +97,7 @@ blinker==1.9.0 \
     --hash=sha256:ba0efaa9080b619ff2f3459d1d500c57bddea4a6b424b60a91141db6fd2f08bc
     # via
     #   flask
+    #   flask-mail
     #   flask-principal
 cachelib==0.13.0 \
     --hash=sha256:209d8996e3c57595bee274ff97116d1d73c4980b2fd9a34c7846cd07fd2e1a48 \
@@ -378,7 +379,7 @@ flask==3.1.2 \
     #   -r requirements.in
     #   flask-caching
     #   flask-login
-    #   flask-mailman
+    #   flask-mail
     #   flask-principal
     #   flask-security
     #   flask-sqlalchemy
@@ -391,16 +392,16 @@ flask-login==0.6.3 \
     --hash=sha256:5e23d14a607ef12806c699590b89d0f0e0d67baeec599d75947bf9c147330333 \
     --hash=sha256:849b25b82a436bf830a054e74214074af59097171562ab10bfa999e6b78aae5d
     # via flask-security
-flask-mailman==1.1.1 \
-    --hash=sha256:0a66ead606b2ec9e4371d727f82709c7a51270bc5306be57c9f4ce0ed29dbe57 \
-    --hash=sha256:3bc1ffffbd655ba9e468946a5f02e9cc772594fe1e98ace636c2f6717419eefa
+flask-mail==0.10.0 \
+    --hash=sha256:44083e7b02bbcce792209c06252f8569dd5a325a7aaa76afe7330422bd97881d \
+    --hash=sha256:a451e490931bb3441d9b11ebab6812a16bfa81855792ae1bf9c1e1e22c4e51e7
     # via flask-security
 flask-principal==0.4.0 \
     --hash=sha256:f5d6134b5caebfdbb86f32d56d18ee44b080876a27269560a96ea35f75c99453
     # via flask-security
-flask-security[common,fsqla,mfa]==5.6.2 \
-    --hash=sha256:8b7a140805217301cbcb5a7364490184ccf943adb76549dc9df3394cd7bd7b22 \
-    --hash=sha256:e05a81beab01b06e07d9a4c82cb4c82630d46c78db4e1b799a15c01724698778
+flask-security[common,fsqla,mfa]==5.7.1 \
+    --hash=sha256:3131289c5466c6c39ebe7414d03e1a3028388ee844de13a59d2e9dd4bd58e676 \
+    --hash=sha256:62cccbb057b87f04236037576f7c17475ce8e643c75dbafa7b2067a58b2fee5b
     # via -r requirements.in
 flask-sqlalchemy==3.1.1 \
     --hash=sha256:4ba4be7f419dc72f4efd8802d69974803c37259dd42f3913b0dcf75c9447e0a0 \
@@ -476,10 +477,6 @@ idna==3.10 \
     # via
     #   email-validator
     #   requests
-importlib-resources==6.5.2 \
-    --hash=sha256:185f87adef5bcc288449d98fb4fba07cea78bc036455dd44c5fc4a2fe78fed2c \
-    --hash=sha256:789cfdc3ed28c78b67a06acb8126751ced69a3d5f79c095a98298cd8a760ccec
-    # via flask-security
 itsdangerous==2.2.0 \
     --hash=sha256:c6242fc49e35958c8b15141343aa660db5fc54d4f13a1db01a3f5891b98700ef \
     --hash=sha256:e0050c0b7da1eea53ffaf149c0cfbb5c6e2e2b69c4bef22c81fa6eb73e5f6173
@@ -490,6 +487,10 @@ jinja2==3.1.6 \
     --hash=sha256:0137fb05990d35f1275a587e9aee6d56da821fc83491a0fb838183be43f66d6d \
     --hash=sha256:85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67
     # via flask
+libpass==1.9.3 \
+    --hash=sha256:3cbeb14d22086660e92c30d787ea981973d67394e81c8c870e1a83cfe1c84353 \
+    --hash=sha256:7830b9323d9ba96a841ad698a8dec1d43a2b0b7f1c855c76772e7972c1c6d959
+    # via flask-security
 markdown==3.9 \
     --hash=sha256:9f4d91ed810864ea88a6f32c07ba8bee1346c0cc1f6b1f9f6c822f2a9667d280 \
     --hash=sha256:d2900fe1782bd33bdbbd56859defef70c2e78fc46668f8eb9df3128138f2cb6a
@@ -566,10 +567,6 @@ packaging==25.0 \
     --hash=sha256:29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484 \
     --hash=sha256:d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f
     # via gunicorn
-passlib==1.7.4 \
-    --hash=sha256:aa6bca462b8d8bda89c70b382f0c298a20b5560af6cbfa2dce410c0a2fb669f1 \
-    --hash=sha256:defd50f72b65c5402ab2c573830a6978e5f202ad0d984793c8dde2c4152ebe04
-    # via flask-security
 phonenumberslite==9.0.8 \
     --hash=sha256:bb2944a5cd6477597214bf09613b65cda1bf6e454e298fa7426fe8ba318471d9 \
     --hash=sha256:c2840efd67bca0e515570b615ab8de551167bb5989f065d2e1f1131991618ecc
@@ -752,11 +749,6 @@ sqlalchemy==2.0.41 \
     # via
     #   flask-security
     #   flask-sqlalchemy
-    #   sqlalchemy-utils
-sqlalchemy-utils==0.41.2 \
-    --hash=sha256:85cf3842da2bf060760f955f8467b87983fb2e30f1764fd0e24a48307dc8ec6e \
-    --hash=sha256:bc599c8c3b3319e53ce6c5c3c471120bd325d0071fb6f38a10e924e3d07b9990
-    # via flask-security
 typing-extensions==4.14.0 \
     --hash=sha256:8676b788e32f02ab42d9e7c61324048ae4c6d844a399eebace3d4979d75ceef4 \
     --hash=sha256:a1514509136dd0b477638fc68d6a91497af5076466ad0fa6c338e44e359944af
